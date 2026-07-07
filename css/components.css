@@ -56,6 +56,49 @@
   margin-bottom: var(--space-5);
 }
 
+/* ---------------------------------------------------------------------
+   Project-page local masthead (Application Note header) — still used by
+   every page under projects/*.html. Distinct from the homepage hero above;
+   out of scope for the current redesign pass, so restored as-is.
+   --------------------------------------------------------------------- */
+.masthead__eyebrow {
+  display: flex; align-items: center; gap: var(--space-4);
+  flex-wrap: wrap; margin-bottom: var(--space-5);
+}
+.masthead__eyebrow .kicker { color: var(--c-accent); }
+.status-stamp {
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+  border: var(--rule-hair) solid var(--color-border-hairline);
+  padding: 2px var(--space-3);
+  border-radius: 999px;
+}
+.masthead__tagline {
+  font-family: var(--font-body);
+  font-size: var(--fs-body-lg);
+  font-weight: 400;
+  color: var(--color-text-secondary);
+  max-width: var(--measure-wide);
+  margin-bottom: var(--space-6);
+}
+.masthead__meta-table {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--space-4) var(--space-6);
+  padding-top: var(--space-5);
+  border-top: var(--rule-hair) solid var(--color-border-hairline);
+  margin-bottom: var(--space-6);
+}
+.masthead__meta-table dt {
+  font-family: var(--font-mono); font-size: var(--fs-micro);
+  text-transform: uppercase; letter-spacing: var(--tracking-wide);
+  color: var(--color-text-secondary); margin-bottom: 2px;
+}
+.masthead__meta-table dd { margin: 0; font-size: var(--fs-small); }
+
 .masthead__name {
   font-family: var(--font-display);
   font-size: var(--fs-display);

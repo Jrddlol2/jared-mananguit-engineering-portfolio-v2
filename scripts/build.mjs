@@ -8,7 +8,7 @@ import { fileURLToPath } from 'node:url';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const dist = join(root, 'dist');
 
-const INCLUDE = ['index.html', 'css', 'js', 'projects', 'assets', 'public'];
+const INCLUDE = ['index.html', 'css', 'js', 'projects', 'assets', 'Jared_Mananguit_Resume.pdf'];
 
 rmSync(dist, { recursive: true, force: true });
 

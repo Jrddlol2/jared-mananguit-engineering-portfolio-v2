@@ -18,7 +18,7 @@
     background: #FFFFFF; color: #000000;
   }
   h1, h2, h3, h4 { font-family: Georgia, 'Times New Roman', serif; color: #000000; }
-  code, .kicker, .section-kicker, th, .masthead__kicker, .masthead__byline { font-family: 'Courier New', monospace; }
+  code, .kicker, .section-kicker, th, .masthead__kicker, .masthead__byline, .masthead__meta-table dt { font-family: 'Courier New', monospace; }
 
   /* Strip screen-only chrome */
   .bookmark-rail, .toc-mobile, .utility-bar, .skip-link,
