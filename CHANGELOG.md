@@ -9,6 +9,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Added
 
 - Real screenshot of the site (`docs/screenshot.png`) in place of the placeholder README preview image.
+- Five additional real screenshots (desktop, mobile, engineering illustration, projects, certifications) replacing the README's screenshot placeholders.
+- Expanded `README.md`: table of contents, Design Philosophy, expanded Key Features (what/why/benefit), a rationale-driven Technology Stack table, Engineering Illustrations, AI-Assisted Development, and Quality Assurance sections.
 
 ## [1.0.0] - 2026-07-07
 
