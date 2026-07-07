@@ -8,6 +8,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 This repository forked from [`jared-mananguit-engineering-portfolio`](https://github.com/Jrddlol2/jared-mananguit-engineering-portfolio) (V1) to host an editorial redesign without risking the original. Entries below this point are V2-specific; entries further down predate the fork and are shared history.
 
+### Standardized mobile screenshots
+
+- Discovered the previous mobile screenshot batch was inconsistent: 2 of 9 were captured at 390×844 (direct Chrome CLI `--screenshot`) while the other 7 came out at 500×749 — a bug in the ad hoc CDP script used at the time (new tabs created via the DevTools protocol don't inherit the launch-time `--window-size`, only the first tab does).
+- Replaced that script with `scripts/capture-mobile-screenshots.mjs`, a proper reusable tool built on Playwright (already a project dependency) using the `iPhone 15 Pro` device profile (393×852 viewport — height overridden from the profile's default 659 to the full 852 screen height, since we render with Chrome rather than Safari and want maximum content per shot; 3x device pixel ratio). Every one of the 9 screenshots is now byte-identical in size (1179×2556 actual pixels).
+- Recaptured all 9 mobile screenshots with the new script. Caught and fixed one more real bug in the process: the footer screenshot landed mid-Certifications-section rather than at the actual footer, because `scrollIntoView` was called before the page's fonts/layout had fully settled on a long page; fixed by waiting for `networkidle` before scrolling.
+- No device frame/bezel added — kept plain to match the desktop screenshots already in the README.
+
 ### Mobile screenshots, Responsive Design section, and Vercel deployment prep
 
 - Added `vercel.json` (`buildCommand: npm run build`, `outputDirectory: dist`, explicit `cleanUrls: false`) so Vercel serves the same clean `dist/` build GitHub Pages does, rather than the raw repo root (which contains `project_documents/`, `docs/`, `CV/`, and `tests/` — none meant to be public). Verified the build output is clean (no source-only directories leak into `dist/`).
