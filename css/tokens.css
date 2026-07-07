@@ -9,24 +9,14 @@
    TYPEFACES — self-hosted, subset to Latin (~200KB total, all weights)
    --------------------------------------------------------------------- */
 @font-face {
-  font-family: 'Fraunces';
-  font-style: normal; font-weight: 400; font-display: swap;
-  src: url('../assets/fonts/fraunces-400.woff2') format('woff2');
+  font-family: 'Newsreader';
+  font-style: normal; font-weight: 400 700; font-display: swap;
+  src: url('../assets/fonts/newsreader-variable.woff2') format('woff2');
 }
 @font-face {
-  font-family: 'Fraunces';
-  font-style: italic; font-weight: 400; font-display: swap;
-  src: url('../assets/fonts/fraunces-italic-400.woff2') format('woff2');
-}
-@font-face {
-  font-family: 'Fraunces';
-  font-style: normal; font-weight: 600; font-display: swap;
-  src: url('../assets/fonts/fraunces-600.woff2') format('woff2');
-}
-@font-face {
-  font-family: 'Fraunces';
-  font-style: normal; font-weight: 900; font-display: swap;
-  src: url('../assets/fonts/fraunces-900.woff2') format('woff2');
+  font-family: 'Newsreader';
+  font-style: italic; font-weight: 400 700; font-display: swap;
+  src: url('../assets/fonts/newsreader-italic-variable.woff2') format('woff2');
 }
 @font-face {
   font-family: 'Inter';
@@ -61,21 +51,21 @@
 
 :root {
   /* ---------------------------------------------------------------------
-     COLOR — "Ink, Paper & Copper": a warm editorial palette with a single
-     engineering-inspired accent (oxidized copper — PCB trace / solder).
+     COLOR — "Ink, Paper & Pine": a warm editorial palette with a single
+     muted forest-green accent, used sparingly and intentionally.
      --------------------------------------------------------------------- */
-  --c-paper: #F0F4F8; /* drafting vellum */   /* warm bone/ivory, not stark white */
-  --c-paper-alt: #E2E8F0; /* deeper vellum */   /* deeper cream for alternating panels   */
-  --c-ink: #0F172A; /* slate near-black */   /* rich near-black, warm charcoal        */
-  --c-ink-secondary: #475569; /* slate gray */   /* warm gray — captions/metadata         */
-  --c-ink-faint: #94A3B8;
+  --c-paper: #F7F3EA; /* warm ivory */        /* genuinely warm off-white, not blue-tinted */
+  --c-paper-alt: #EEE7D8; /* warm parchment */  /* deeper warm cream for alternating panels  */
+  --c-ink: #24211C; /* warm graphite */         /* near-black with a warm cast, not cool slate */
+  --c-ink-secondary: #625C4E; /* warm gray */    /* warm gray — captions/metadata              */
+  --c-ink-faint: #A39C89;
 
-  --c-accent:         #96481F;   /* copper — AA-safe on paper, for text   */
-  --c-accent-bright:  #C2672F;   /* copper — decorative/large-scale only  */
-  --c-accent-tint:    #F0DDCB;   /* pale copper wash for subtle fills     */
+  --c-accent:         #3F5D48;   /* muted forest green — AA-safe on paper, for text */
+  --c-accent-bright:  #4F7057;   /* forest green — decorative/large-scale only      */
+  --c-accent-tint:    #E1E7DD;   /* pale sage wash for subtle fills                 */
 
-  --c-border-subtle: #CBD5E1;   /* warm hairline — most rules            */
-  --c-border-strong: #0F172A;   /* reserved for a few intentional rules  */
+  --c-border-subtle: #DDD6C4;   /* warm hairline — most rules            */
+  --c-border-strong: #24211C;   /* reserved for a few intentional rules  */
 
   --color-bg-page:        var(--c-paper);
   --color-bg-panel:       var(--c-paper-alt);
@@ -92,12 +82,12 @@
   --color-text-inverted:  var(--c-paper);
 
   --color-link:            var(--c-accent);
-  --color-signal-primary:  #7A5C3D;   /* muted bronze — 1st graph trace   */
-  --color-signal-secondary: #96481F;  /* copper — 2nd trace               */
-  --color-signal-tertiary:  #4B6358;  /* muted pine green — 3rd trace     */
-  --color-signal-quaternary: #3D5A73; /* muted instrument blue — 4th trace*/
+  --color-signal-primary:  #7A5C3D;   /* muted bronze — 1st graph trace     */
+  --color-signal-secondary: #96481F;  /* rust — 2nd trace                   */
+  --color-signal-tertiary:  #3D5A73;  /* muted instrument blue — 3rd trace  */
+  --color-signal-quaternary: #6B4C5E; /* muted plum — 4th trace             */
 
-  --color-status-pass:    #4B6B4E;
+  --color-status-pass:    var(--c-accent-bright);
   --color-status-fail:    #A13F26;
   --color-status-warn:    #A13F26;
   --color-status-neutral: var(--c-ink-secondary);
@@ -111,8 +101,8 @@
   /* ---------------------------------------------------------------------
      TYPOGRAPHY — three-family system
      --------------------------------------------------------------------- */
-  --font-display: 'Fraunces', Georgia, 'Iowan Old Style', 'Times New Roman', serif;
-  --font-heading: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --font-display: 'Newsreader', Georgia, 'Iowan Old Style', 'Times New Roman', serif;
+  --font-heading: 'Newsreader', Georgia, 'Times New Roman', serif;
   --font-body:    'Inter', -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   --font-mono:    'IBM Plex Mono', 'JetBrains Mono', 'SF Mono', Consolas, 'Liberation Mono', monospace;
 
@@ -174,24 +164,24 @@
    DARK / "NEGATIVE" MODE — deep espresso, not a stark black SaaS theme
    --------------------------------------------------------------------- */
 [data-theme="dark"] {
-  --c-paper: #0F172A; /* CAD dark */
-  --c-paper-alt: #1E293B; /* CAD dark alt */
-  --c-ink: #F8FAFC;
-  --c-ink-secondary: #94A3B8;
-  --c-ink-faint: #475569;
+  --c-paper: #201B16; /* warm espresso, not cool slate */
+  --c-paper-alt: #2B2419; /* warm espresso panel */
+  --c-ink: #F3EEE3;
+  --c-ink-secondary: #B5AC98;
+  --c-ink-faint: #6B6354;
 
-  --c-accent:         #E08A4F;
-  --c-accent-bright:  #F0A868;
-  --c-accent-tint: #431407;
+  --c-accent:         #7FA88C;   /* sage green — legible on dark warm bg */
+  --c-accent-bright:  #97BFA1;
+  --c-accent-tint: #263129;
 
-  --c-border-subtle: #334155;
-  --c-border-strong: #F8FAFC;
+  --c-border-subtle: #3D362B;
+  --c-border-strong: #F3EEE3;
 
   --color-bg-page:        var(--c-paper);
   --color-bg-panel:       var(--c-paper-alt);
   --color-bg-inverted:    var(--c-ink);
   --color-bg-accent-tint: var(--c-accent-tint);
-  --color-bg-crosshatch: #1E293B;
+  --color-bg-crosshatch: #2B2419;
   --color-bg-field:       var(--c-paper-alt);
   --color-bg-code:        var(--c-paper-alt);
 
@@ -202,12 +192,12 @@
   --color-text-inverted:  var(--c-paper);
 
   --color-link:            var(--c-accent);
-  --color-signal-primary:  #C7A47C;
+  --color-signal-primary:  #D9B98C;
   --color-signal-secondary: #E08A4F;
-  --color-signal-tertiary:  #7FA893;
-  --color-signal-quaternary: #7FA0BD;
+  --color-signal-tertiary:  #8FB4CE;
+  --color-signal-quaternary: #B98CA6;
 
-  --color-status-pass:    #7FA37F;
+  --color-status-pass:    #8FBF9B;
   --color-status-fail:    #E08A6B;
   --color-status-warn:    #E08A6B;
 
