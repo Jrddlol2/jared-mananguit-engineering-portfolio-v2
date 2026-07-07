@@ -58,6 +58,26 @@
   .eng-bg__grid { background-size: 36px 36px; }
 }
 
+/* Editorial background evolution — the blueprint grid drifts almost
+   imperceptibly denser as the reader descends the document. Scroll-driven
+   (not time-driven), so it never animates on its own; degrades to a static
+   grid where scroll timelines are unsupported (Safari, older Firefox) and
+   under reduced-motion. */
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .eng-bg__grid {
+      animation-name: eng-grid-drift;
+      animation-timeline: scroll(root block);
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+    }
+    @keyframes eng-grid-drift {
+      from { opacity: 0.03; }
+      to   { opacity: 0.055; }
+    }
+  }
+}
+
 /* ---------------------------------------------------------------------
    2. SCROLL PROGRESS INDICATOR
    --------------------------------------------------------------------- */
@@ -106,11 +126,9 @@
   box-shadow: 0 0 0 1px color-mix(in srgb, var(--c-accent) 35%, transparent);
 }
 
-/* Certification hover */
-.cert-entry { transition: background-color var(--motion-base) var(--ease-editorial); }
-.cert-entry:hover { background: var(--color-bg-accent-tint); }
+/* Certification hover — flat editorial rows: only the mounted thumbnail
+   frame responds (transition defined in components.css), no card elevation. */
 .cert-entry:hover .cert-entry__thumb { border-color: var(--c-accent); }
-.cert-entry__thumb { transition: border-color var(--motion-base) var(--ease-editorial); }
 
 /* ---------------------------------------------------------------------
    5. STATUS LEDS — badge dot becomes a small animated indicator

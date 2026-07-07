@@ -64,24 +64,3 @@
     i = (i + 1) % lines.length;
   }, 2600);
 })();
-
-/* 4. Mouse Coordinates */
-(function mouseCoords() {
-  var el = document.querySelector('.blueprint-coords');
-  if (!el) return;
-  var ticking = false;
-  var targetX = 0, targetY = 0;
-  window.addEventListener('mousemove', function (e) {
-    targetX = e.clientX;
-    targetY = e.clientY;
-    if (!ticking) {
-      window.requestAnimationFrame(function() {
-        var x = (targetX / window.innerWidth * 100).toFixed(2);
-        var y = (targetY / window.innerHeight * 100).toFixed(2);
-        el.textContent = 'X: ' + x + ' Y: ' + y + ' // REF: ECE-2026-V1';
-        ticking = false;
-      });
-      ticking = true;
-    }
-  }, { passive: true });
-})();

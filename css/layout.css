@@ -84,6 +84,46 @@
 }
 
 /* ---------------------------------------------------------------------
+   Section variants — surface & opener rhythm so each section reads as a
+   new chapter rather than another instance of one template.
+   --------------------------------------------------------------------- */
+
+/* Full-bleed alternate "stock" band (reference-table sections). The band is
+   painted by a deliberately oversized pseudo-element rather than a 100vw
+   breakout, so it spans the viewport regardless of the content column's
+   offset from the rail. body { overflow-x: clip } contains the overflow.
+   This repurposes the shared .doc-section::before top-rule for band sections;
+   the band's own top/bottom hairline provides the section's edges instead. */
+.doc-section--band { isolation: isolate; }
+.doc-section--band::before {
+  inset: 0 -100vw;
+  width: auto;
+  height: auto;
+  background: var(--color-bg-panel);
+  border-top: var(--rule-hair) solid var(--color-border-hairline);
+  border-bottom: var(--rule-hair) solid var(--color-border-hairline);
+  opacity: 1;
+  z-index: -1;
+}
+
+/* The desktop node dot would collide with the band's top rule — drop it here. */
+@media (min-width: 1024px) {
+  .doc-section--band::after { display: none; }
+}
+
+/* Feature opener — the centerpiece section (Engineering Projects) reads a
+   notch larger than a standard section title, signalling the main body. */
+.section-rule--feature .section-title {
+  font-size: clamp(2.5rem, 1.8rem + 3.6vw, 4.75rem);
+  line-height: 1.04;
+}
+.section-rule--feature .section-human {
+  font-family: var(--font-display);
+  font-size: var(--fs-body-lg);
+  margin-top: var(--space-3);
+}
+
+/* ---------------------------------------------------------------------
    Editorial grids
    --------------------------------------------------------------------- */
 .l-two-col {
@@ -186,19 +226,48 @@
   }
 }
 
-/* Page Coordinates */
-.blueprint-coords {
+/* ---------------------------------------------------------------------
+   CHAPTER INDICATOR — right-margin companion to the left Contents rail.
+   Shows the same active-section label, driven by the same scroll-spy
+   observer (js/nav.js), so both sides update in one coordinated motion.
+   Fixed-position overlay chrome: gated to wide viewports only, so it can
+   never overlap page content (the left rail, by contrast, reserves its own
+   grid column and so is safe at every width the rail itself appears at).
+   --------------------------------------------------------------------- */
+.chapter-indicator {
+  display: none;
   position: fixed;
-  bottom: var(--space-4);
-  left: var(--space-4);
-  font-family: var(--font-mono);
-  font-size: 10px;
-  color: var(--color-text-faint);
+  top: 50%;
+  right: var(--space-5);
+  transform: translateY(-50%);
   z-index: 10;
   pointer-events: none;
+}
+@media (min-width: 1440px) {
+  .chapter-indicator { display: block; }
+}
+.chapter-indicator__text {
+  display: inline-block;
   writing-mode: vertical-rl;
-  transform: rotate(180deg);
-  letter-spacing: 1px;
+  transform-origin: center;
+  transform: rotate(180deg) scale(1);
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  font-weight: 400;
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--color-text-secondary);
+  opacity: 0.55;
+  transition: opacity var(--motion-base) var(--ease-editorial),
+              transform var(--motion-base) var(--ease-editorial),
+              color var(--motion-base) var(--ease-editorial);
+}
+.chapter-indicator__text.is-active {
+  opacity: 1;
+  font-weight: 600;
+  color: var(--c-accent);
+  transform: rotate(180deg) scale(1.18);
 }
 
 @media (min-width: 1024px) {

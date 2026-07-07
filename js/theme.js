@@ -9,6 +9,9 @@
   function syncButton() {
     var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
     toggle.setAttribute('aria-pressed', String(isDark));
+    var nextLabel = isDark ? 'Switch to light mode' : 'Switch to dark mode';
+    toggle.setAttribute('aria-label', nextLabel);
+    toggle.setAttribute('title', nextLabel);
     if (stateLabel) stateLabel.textContent = isDark ? 'On' : 'Off';
   }
 
