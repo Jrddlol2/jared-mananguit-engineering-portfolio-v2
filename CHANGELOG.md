@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### Added
+
+- Real screenshot of the site (`docs/screenshot.png`) in place of the placeholder README preview image.
+
 ## [1.0.0] - 2026-07-07
 
 ### Changed

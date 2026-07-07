@@ -2,8 +2,7 @@
 
 > A systems and electronics engineering portfolio, built to read like an official engineering datasheet rather than a typical résumé site.
 
-<!-- TODO: replace with an actual screenshot of index.html before publishing -->
-![Site preview placeholder](https://placehold.co/1200x630?text=Engineering+Portfolio+Preview)
+![Site preview](docs/screenshot.png)
 
 ## Overview
 
