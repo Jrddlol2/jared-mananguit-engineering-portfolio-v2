@@ -8,6 +8,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 This repository forked from [`jared-mananguit-engineering-portfolio`](https://github.com/Jrddlol2/jared-mananguit-engineering-portfolio) (V1) to host an editorial redesign without risking the original. Entries below this point are V2-specific; entries further down predate the fork and are shared history.
 
+### README overhaul, screenshot refresh, and E2E testing docs
+
+- Removed "— Available for OJT / Internship" from the homepage hero kicker (`index.html`) — a real content change, not just documentation, since the phrase only existed as text in the live site and was visible in the README's screenshots rather than in the README's own prose.
+- Recaptured the 4 screenshots affected by that change (homepage, hero, dark mode, mobile); the other 4 (projects section, certifications, project detail, illustration) don't show the homepage hero and were left as-is.
+- Replaced the brief `## Testing` section with a comprehensive `## End-to-End Testing` section: why E2E testing is used, the testing framework and exactly which browsers are actually configured (Chrome only, via `channel: 'chrome'` — not Firefox/WebKit), test file layout, installation, every real `npm`/`npx playwright` command for running tests, an accurate rundown of existing coverage per spec file, guidance for adding new tests, and how CI actually behaves on failure. Also names what isn't covered yet (cross-browser, visual regression, a dedicated perf budget) rather than leaving that ambiguous.
+- General polish: fixed a stale `#testing` anchor link left over from the section rename, and renamed two nested subheadings ("Overview", "Project Structure") that duplicated top-level heading names, to avoid GitHub's duplicate-heading-slug disambiguation (`-1` suffixes).
+
 ### Production readiness pass
 
 - **Documentation:** rewrote `README.md` for V2's actual current state (design system + hero redesigned, remaining sections unchanged from V1), and added `docs/ARCHITECTURE.md`, `docs/DESIGN_SYSTEM.md`, `docs/CONTRIBUTING.md`, `docs/TESTING.md`, `docs/DEPLOYMENT.md`, and `docs/PROMPT_ENGINEERING.md`.

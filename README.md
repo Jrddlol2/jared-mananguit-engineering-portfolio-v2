@@ -20,7 +20,7 @@
 - [Design Philosophy](#design-philosophy)
 - [AI-Assisted Development](#ai-assisted-development)
 - [Local Development](#local-development)
-- [Testing](#testing)
+- [End-to-End Testing](#end-to-end-testing)
 - [Deployment](#deployment)
 - [Future Improvements](#future-improvements)
 - [Author](#author)
@@ -144,7 +144,7 @@ See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for what each directory is re
 | **Newsreader + Inter + IBM Plex Mono** | Self-hosted `woff2` type system — serif display, sans body, mono for data/labels. |
 | **Node.js + npm scripts** | Local dev server, linting, link-checking, build packaging — no bundler, because none is needed. |
 | **htmlhint / stylelint** | Static analysis for HTML validity and real CSS defects (duplicate selectors, invalid rules). |
-| **Playwright + axe-core** | End-to-end and automated accessibility testing — see [Testing](#testing). |
+| **Playwright + axe-core** | End-to-end and automated accessibility testing — see [End-to-End Testing](#end-to-end-testing). |
 | **GitHub Actions** | CI (lint, build, test) on every push/PR, plus automatic GitHub Pages deployment on `main`. |
 
 ## Design Philosophy
@@ -185,15 +185,92 @@ npm run build    # assembles a deployable copy in dist/
 > [!NOTE]
 > **No environment variables required.** This is a static site with no backend.
 
-## Testing
+## End-to-End Testing
 
-```bash
-npm test              # link-check + full Playwright E2E suite
-npm run test:e2e      # Playwright only
-npm run test:e2e:ui   # Playwright's interactive UI mode
+### Why End-to-End Testing
+
+The site has no server and no application logic to unit-test — its risk lives entirely in the browser: does the hero render, does search actually filter, does the theme toggle persist, does a certificate link resolve to a real PDF. End-to-end (E2E) testing exercises those things directly in a real browser instead of asserting them from the markup, which is what catches regressions that pure HTML/CSS linting cannot — see [Existing Test Coverage](#existing-test-coverage) below for concrete examples this suite has already caught.
+
+**User journeys validated:** landing on the homepage and reading the hero, navigating via the bookmark rail and skip link, opening a project's Application Note page, using the command palette to jump to a section or project, toggling and persisting dark mode, following a certificate/résumé link through to a real file, and using the site on a phone-sized viewport.
+
+### Testing Framework
+
+- **[Playwright](https://playwright.dev/)** (`@playwright/test`), configured in [`playwright.config.ts`](playwright.config.ts).
+- **Browsers actually configured:** two Playwright *projects*, both using the machine's real installed **Google Chrome** (`channel: 'chrome'`, not Playwright's bundled Chromium) — `chromium` (Desktop Chrome viewport) and `mobile-chrome` (Pixel 7 device emulation). Firefox and WebKit are not currently configured; see [Missing/Optional Follow-ups](#missing--optional-follow-ups-not-yet-implemented) below.
+- **Why Chrome via `channel`, not Playwright's bundled browser:** it reuses an already-installed browser for local development instead of downloading a second one; CI installs the same channel explicitly (`npx playwright install --with-deps chrome`) so local and CI runs match.
+- **Headless vs. headed:** tests run **headless** by default (`headless` is left unset in the config, which defaults to `true`). Run with `--headed` to watch them execute in a visible browser window — see [Running Tests](#running-tests).
+
+### Test File Layout
+
+```text
+playwright.config.ts     # Playwright configuration (browsers, web server, reporters)
+tests/e2e/                # every test file — no fixtures/ or utils/ directory yet, each spec is self-contained
+├── navigation.spec.ts     # bookmark rail, skip link, back-links, full internal-link crawl
+├── homepage.spec.ts        # title, hero content, all six sections, load-time smoke test
+├── projects.spec.ts        # each of the 5 Application Note pages
+├── certificates.spec.ts    # certificate + résumé links, including a real PDF fetch check
+├── responsive.spec.ts      # desktop/tablet/mobile layout behavior
+├── search.spec.ts          # the Ctrl+K command palette
+├── theme.spec.ts           # dark mode toggle + persistence
+└── accessibility.spec.ts   # axe-core scans + heading hierarchy + keyboard reachability
 ```
 
-84 end-to-end tests across navigation, homepage, project pages, certificates, responsive layout, search, theme persistence, and accessibility (including automated `axe-core` scans). Full breakdown in [`docs/TESTING.md`](docs/TESTING.md).
+Generated, gitignored output (not committed): `test-results/` (per-test traces/screenshots on failure) and `playwright-report/` (the HTML report).
+
+### Installation
+
+```bash
+npm install                              # installs @playwright/test and @axe-core/playwright
+npx playwright install --with-deps chrome   # only needed if Google Chrome isn't already installed
+```
+
+### Running Tests
+
+All of the following are real, currently-working commands in this repository:
+
+```bash
+npm test                          # link-check (scripts/check-links.mjs) + the full Playwright suite
+npm run test:e2e                   # Playwright suite only, both browser projects
+
+npx playwright test tests/e2e/search.spec.ts     # a single test file
+npx playwright test --headed                      # headed (visible browser) mode
+npx playwright test --debug                        # Playwright's step-through debug mode
+npx playwright test --project=chromium              # a single browser project (chromium or mobile-chrome)
+
+npm run test:e2e:ui                # Playwright's interactive UI mode (npx playwright test --ui)
+npm run test:e2e:report            # opens the last HTML report (npx playwright show-report)
+```
+
+### Existing Test Coverage
+
+Based on the actual spec files in `tests/e2e/` — 84 tests total across both browser projects:
+
+- **Navigation** — every bookmark rail link scrolls its target section into view, the skip link is keyboard-reachable and actually moves focus (not just scrolls), project-page back-links return to the right homepage section, and every unique internal link across all 6 pages is crawled and fetched to confirm it doesn't 404.
+- **Homepage** — correct page title, zero console errors, hero content (name/standfirst/byline/actions), presence of all six document sections, and a load-time smoke check.
+- **Project pages** — each of the 5 Application Notes: correct title/heading, its SVG diagram renders with an accessible name, zero console errors.
+- **Certificates & résumé** — both certificate links and the résumé link are checked for correct `target`/`rel`, *and* the linked PDF is actually fetched and asserted to return `200` with a PDF content type.
+- **Responsive layouts** — bookmark rail vs. mobile table-of-contents visibility across desktop/tablet/mobile widths, the mobile ToC actually opens on click, no horizontal overflow, and the hero name never overflows from 375px to 1600px.
+- **Search** — opening via `Ctrl+K` and via the trigger button, live filtering, the empty-results state, `Enter`-to-navigate, `Escape`-to-close with focus restoration, and backdrop-click-to-close.
+- **Theme** — respecting the OS `prefers-color-scheme` on first visit, the toggle flipping both the `data-theme` attribute and its visible label, and persistence across a reload and across navigating to a project page.
+- **Accessibility** — automated `@axe-core/playwright` scans of the homepage and a project page (failing on `serious`/`critical` violations), every diagram having an accessible name, correct heading hierarchy, and keyboard reachability of the skip link and utility-bar controls.
+
+This list intentionally does not include a few items from common E2E checklists that this suite does not cover yet — see below.
+
+### Adding New Tests
+
+- New spec files go in `tests/e2e/`, named `<area>.spec.ts` to match the existing convention (`navigation.spec.ts`, `theme.spec.ts`, etc.) — Playwright picks up anything matching `*.spec.ts` under `testDir` automatically, no registration needed.
+- Keep one `test.describe` block per feature area, with individual `test()`s for each specific behavior — that's the pattern every existing file follows.
+- Prefer asserting on real user-visible outcomes (text content, attribute values, visibility, a fetched resource's status code) over implementation details, so tests stay valid across visual redesigns.
+- If a new project page is added, `navigation.spec.ts`'s internal-link crawl and `projects.spec.ts`'s per-project loop both need a new entry — they intentionally hardcode the current 5 pages so an omission is caught rather than silently skipped.
+- Run `npm run test:e2e` locally before committing; see [`docs/TESTING.md`](docs/TESTING.md) for debugging tips and the specific reasoning behind this suite's configuration choices (why `python -m http.server` instead of `serve`, why `workers` is capped, etc.).
+
+### Continuous Integration
+
+Yes — [`.github/workflows/ci.yml`](.github/workflows/ci.yml) runs on every push and pull request to `main`. It installs dependencies and Playwright's Chrome, then runs `npm run lint`, `npm run build`, and `npm run test` (link-check + the full Playwright suite) in that order. The HTML test report is uploaded as a workflow artifact on every run (`if: always()`), so a failure's report is downloadable even though the job itself failed. A failing step turns the workflow red on the commit/PR; there is no separate "flaky test auto-retry in CI beyond what's configured" — see `retries` in `playwright.config.ts` for the one automatic retry that already applies to both local and CI runs.
+
+### Missing / Optional Follow-ups (not yet implemented)
+
+In the interest of not overstating coverage: this suite does not currently include cross-browser testing beyond Chrome (no Firefox/WebKit projects), a dedicated performance budget beyond the one load-time smoke assertion, or visual regression (screenshot-diff) testing. None of these are configured today — if any of them would be valuable, they'd need to be added deliberately rather than assumed to exist.
 
 ## Deployment
 
