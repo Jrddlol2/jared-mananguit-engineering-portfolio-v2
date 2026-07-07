@@ -20,11 +20,22 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Install Playwright's Chrome
+        run: npx playwright install --with-deps chrome
+
       - name: Lint
         run: npm run lint
 
       - name: Build
         run: npm run build
 
-      - name: Test (link check)
+      - name: Test (link check + Playwright E2E)
         run: npm run test
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 14

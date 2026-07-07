@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://jrddlol2.github.io/jared-mananguit-engineering-portfolio-v2/sitemap.xml

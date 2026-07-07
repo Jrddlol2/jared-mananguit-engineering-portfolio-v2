@@ -13,10 +13,10 @@ npm run dev     # http://localhost:3000
 
 ```bash
 npm run lint    # HTML + CSS linting
-npm run test    # verifies all local href/src references resolve
+npm test        # link-check + full Playwright E2E suite
 ```
 
-Both must pass — this is also enforced in CI.
+Both must pass — this is also enforced in CI. See [`docs/CONTRIBUTING.md`](docs/CONTRIBUTING.md) for the detailed workflow and [`docs/TESTING.md`](docs/TESTING.md) for how the test suite is organized.
 
 ## Code Style
 

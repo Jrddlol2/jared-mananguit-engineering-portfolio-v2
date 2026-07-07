@@ -4,7 +4,13 @@ export default defineConfig({
   testDir: './tests/e2e',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 1 : 0,
+  retries: 1,
+  // Capped rather than unlimited: `python -m http.server` (chosen over `serve`
+  // to match GitHub Pages' literal static-file behavior — see below) can
+  // occasionally refuse a connection under very high parallel request load.
+  // A modest worker cap plus a single retry makes the suite reliable without
+  // giving up meaningful parallelism.
+  workers: 4,
   reporter: process.env.CI ? [['github'], ['html', { open: 'never' }]] : [['list'], ['html', { open: 'never' }]],
   use: {
     baseURL: 'http://127.0.0.1:4173',
