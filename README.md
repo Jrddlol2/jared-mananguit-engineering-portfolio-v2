@@ -107,7 +107,7 @@ This README, the documentation in [`docs/`](docs/), the CI pipeline, the GitHub 
 </tr>
 </table>
 
-### Mobile (390×844, iPhone-class viewport)
+### Mobile (iPhone 15 Pro, 393×852 @ 3x)
 
 Captured against the actual current site — where a requested shot didn't match an existing section (no standalone "Featured Project" or "Contact" section yet, and "Experience" is a table rather than a visual timeline — see [Status](#status-this-is-v2-in-progress)), the closest real equivalent is shown and captioned accordingly rather than invented.
 
