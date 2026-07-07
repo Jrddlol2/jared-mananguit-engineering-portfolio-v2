@@ -96,10 +96,7 @@
    the band's own top/bottom hairline provides the section's edges instead. */
 .doc-section--band { isolation: isolate; }
 .doc-section--band::before {
-  top: 0;
-  bottom: 0;
-  left: -100vw;
-  right: -100vw;
+  inset: 0 -100vw;
   width: auto;
   height: auto;
   background: var(--color-bg-panel);
@@ -108,6 +105,7 @@
   opacity: 1;
   z-index: -1;
 }
+
 /* The desktop node dot would collide with the band's top rule — drop it here. */
 @media (min-width: 1024px) {
   .doc-section--band::after { display: none; }

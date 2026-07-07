@@ -151,6 +151,7 @@
   top: var(--space-6);
   align-self: start;
   padding-top: var(--space-6);
+
   /* Explicit stacking layer: without this, the rail and .content-col are both
      "positioned, z-index:auto" siblings, which stack by DOM order — letting
      full-bleed section bands (see .doc-section--band) paint over the rail
@@ -159,6 +160,7 @@
   z-index: 5;
 }
 @media (max-width: 1080px) { .bookmark-rail { display: none; } }
+
 /* The rail's own content (title + 6 links) is short and never needs to
    scroll on ordinary viewports; only constrain and scroll it as a genuine
    accessibility fallback on very short viewports. */
@@ -192,6 +194,7 @@
               font-weight var(--motion-base) var(--ease-editorial),
               padding-left var(--motion-base) var(--ease-editorial);
 }
+
 /* Animated indicator bar — grows from the item's centre as it becomes the
    active section, and retracts as focus moves on. */
 .bookmark-rail a::before {
@@ -329,13 +332,19 @@
 /* ---------------------------------------------------------------------
    APPLICATION CIRCUIT ROW — hero project block
    --------------------------------------------------------------------- */
-.app-circuit-row { 
-  padding: var(--space-6); 
-  border: var(--rule-hair) solid var(--color-border-hairline); 
+.app-circuit-row {
+  padding: var(--space-6);
+  border: var(--rule-hair) solid var(--color-border-hairline);
   border-radius: 6px;
   margin-bottom: var(--space-6);
   background: var(--color-bg-page);
   transition: transform var(--motion-base), border-color var(--motion-base), box-shadow var(--motion-base);
+
+  /* Position context so the ::before accent-tint sweep and ::after fill
+     (below) anchor to the card itself, not to the positioned .content-col
+     ancestor. */
+  position: relative;
+  z-index: 1;
 }
 .app-circuit-row:hover {
   transform: translateY(-2px);
@@ -375,6 +384,7 @@
 /* ---------------------------------------------------------------------
    CERTIFICATION ENTRY
    --------------------------------------------------------------------- */
+
 /* Flat editorial "credentials plate" — hairline-divided rows with a mounted
    thumbnail. Deliberately quieter and un-elevated so it reads as a curated
    index, distinct from the raised project cards in §4. */
@@ -472,14 +482,8 @@
 
 
 /* ---------------------------------------------------------------------
-   Depth and glow for the raised project cards — position context so the
-   ::before accent-tint sweep and ::after fill anchor to the card itself,
-   not to the positioned .content-col ancestor.
+   Depth and glow for the raised project cards
    --------------------------------------------------------------------- */
-.app-circuit-row {
-  position: relative;
-  z-index: 1;
-}
 .app-circuit-row::before {
   content: "";
   position: absolute;

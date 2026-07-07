@@ -7,6 +7,7 @@
 html {
   -webkit-text-size-adjust: 100%;
   scrollbar-gutter: stable;
+
   /* Contains the full-bleed section bands (see .doc-section--band). `clip`,
      unlike `hidden`, does not create a scroll container, so `position: sticky`
      on the bookmark rail and smooth scrolling are both preserved. */
@@ -18,6 +19,7 @@ html {
 
 body {
   margin: 0;
+
   /* Paired with html { overflow-x: clip } to fully contain the full-bleed
      section bands; both are required in some engines. `clip` keeps vertical
      scroll and the sticky rail intact (it creates no scroll container). */
