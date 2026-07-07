@@ -1,6 +1,8 @@
 # Deployment
 
-## How it works
+Two static hosts are configured: **GitHub Pages** (automatic, via GitHub Actions) and **Vercel** (via `vercel.json`, either CLI or dashboard-triggered). Both deploy the exact same `npm run build` output — there's no host-specific branching in the build itself.
+
+## GitHub Pages — how it works
 
 This site deploys to **GitHub Pages** via GitHub Actions — not the older "push to a branch and let Pages build it with Jekyll" method. The workflow at [`.github/workflows/deploy.yml`](../.github/workflows/deploy.yml) runs on every push to `main`:
 
@@ -17,6 +19,38 @@ Before the workflow can deploy, GitHub Pages needs to be pointed at "GitHub Acti
 2. Under **Build and deployment** → **Source**, select **GitHub Actions**
 
 Once set, every push to `main` deploys automatically — no further manual steps.
+
+## Vercel
+
+Configured via [`vercel.json`](../vercel.json):
+
+```json
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "cleanUrls": false
+}
+```
+
+**Why an explicit `outputDirectory` is needed here, unlike some Vercel projects.** Vercel's zero-config static detection assumes conventions tied to a recognized framework (Vite → `dist`, CRA → `build`, etc.). This project has no framework dependency for Vercel to detect, and — critically — the repo root itself contains valid-looking static files (`index.html`, `css/`, `js/`, `assets/`) *alongside* directories that must never be served publicly: `project_documents/` (raw coursework PDFs), `docs/` (this documentation), `CV/`, and `tests/`. Without `outputDirectory: "dist"`, a zero-config deploy would serve the repo root as-is, publishing all of those. Pointing at `dist/` — the same build output GitHub Pages uses — guarantees only the intended public files ship.
+
+**Why `cleanUrls: false` is explicit rather than left at Vercel's default.** The site's internal links use literal `.html` extensions (e.g. `../index.html#sec-projects`). Vercel's default for `cleanUrls` is already `false`, so this doesn't change behavior — it documents the reasoning, since this exact class of bug (a static-file server silently rewriting `/index.html` → `/`) already caused false test failures once during local E2E testing when the `serve` npm package was briefly used as the test web server (see [TESTING.md](TESTING.md)). Making it explicit here is a deliberate guard against the same mistake recurring on this host.
+
+**No environment variables or secrets are required** — same as GitHub Pages, this is a static site with no backend.
+
+### Deploying to Vercel
+
+**Option A — CLI:**
+
+```bash
+npm install -g vercel
+vercel          # first run: authenticates, links the project, deploys a preview
+vercel --prod   # promotes to the production domain
+```
+
+**Option B — Dashboard / GitHub integration:** import the repository at [vercel.com/new](https://vercel.com/new). Vercel detects `vercel.json` automatically and applies the same build command and output directory; every push to the connected branch then deploys automatically, the same way GitHub Actions does for Pages.
+
+Either path requires your Vercel account (and, for Option B, granting Vercel access to the GitHub repo) — this is not something that can be done without you present.
 
 ## Why no base-path / Vite configuration is needed
 
@@ -39,15 +73,16 @@ cd dist && python -m http.server 8080
 
 This serves the *exact* files that ship — a more faithful check than `npm run dev` (which serves the source tree directly) if you specifically want to verify the build step itself.
 
-## Manual deployment (without the workflow)
+## Manual deployment (without the GitHub Actions workflow)
 
 Not normally needed — the workflow handles this — but if GitHub Actions is unavailable:
 
 ```bash
 npm run build
 # then push the contents of dist/ to a `gh-pages` branch, or upload
-# them to any static host (Netlify, Vercel, S3, etc.) — dist/ is a
-# complete, self-contained static site with no server dependency.
+# them to any static host — dist/ is a complete, self-contained
+# static site with no server dependency. For Vercel specifically,
+# see the dedicated section above.
 ```
 
 ## Troubleshooting

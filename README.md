@@ -15,6 +15,7 @@
 - [Status: this is V2, in progress](#status-this-is-v2-in-progress)
 - [Features](#features)
 - [Screenshots](#screenshots)
+- [Responsive Design](#responsive-design)
 - [Project Structure](#project-structure)
 - [Technologies](#technologies)
 - [Design Philosophy](#design-philosophy)
@@ -106,9 +107,83 @@ This README, the documentation in [`docs/`](docs/), the CI pipeline, the GitHub 
 </tr>
 </table>
 
-**Mobile**
+### Mobile (390×844, iPhone-class viewport)
 
-<img src="docs/screenshot-mobile.png" alt="Mobile responsive layout" width="360">
+Captured against the actual current site — where a requested shot didn't match an existing section (no standalone "Featured Project" or "Contact" section yet, and "Experience" is a table rather than a visual timeline — see [Status](#status-this-is-v2-in-progress)), the closest real equivalent is shown and captioned accordingly rather than invented.
+
+<table>
+<tr>
+<td width="33%">
+
+**Hero**
+<img src="docs/screenshot-mobile-hero.png" alt="Mobile hero" width="260">
+
+</td>
+<td width="33%">
+
+**Mobile navigation** (expanded)
+<img src="docs/screenshot-mobile-nav.png" alt="Mobile navigation expanded" width="260">
+
+</td>
+<td width="33%">
+
+**Dark mode**
+<img src="docs/screenshot-mobile-dark.png" alt="Mobile dark mode" width="260">
+
+</td>
+</tr>
+<tr>
+<td width="33%">
+
+**Projects** (closest match for "Featured Project" — there isn't a single spotlighted project yet)
+<img src="docs/screenshot-mobile-projects.png" alt="Mobile projects section" width="260">
+
+</td>
+<td width="33%">
+
+**Project case study**
+<img src="docs/screenshot-mobile-project-case-study.png" alt="Mobile project case study page" width="260">
+
+</td>
+<td width="33%">
+
+**Skills / Technologies** (the "Technical Competencies" section)
+<img src="docs/screenshot-mobile-skills.png" alt="Mobile skills and technologies" width="260">
+
+</td>
+</tr>
+<tr>
+<td width="33%">
+
+**Experience** (currently a table, not a visual timeline)
+<img src="docs/screenshot-mobile-experience.png" alt="Mobile experience section" width="260">
+
+</td>
+<td width="33%">
+
+**Contact** (a link in the hero's action row — there's no standalone contact section yet)
+<img src="docs/screenshot-mobile-contact.png" alt="Mobile contact link" width="260">
+
+</td>
+<td width="33%">
+
+**Footer**
+<img src="docs/screenshot-mobile-footer.png" alt="Mobile footer" width="260">
+
+</td>
+</tr>
+</table>
+
+## Responsive Design
+
+The layout is built mobile-up from a single CSS breakpoint: above ~1080px, the bookmark rail sits alongside a wide reading column; below it, the rail is replaced by the collapsible `<details>` mobile table of contents shown above, and the reading column takes the full viewport width. Every other adjustment (hero type scale, section padding, card grids) uses fluid `clamp()` sizing rather than a series of fixed breakpoints — see [`docs/DESIGN_SYSTEM.md`](docs/DESIGN_SYSTEM.md#typography) for the exact scale.
+
+| | Desktop | Mobile |
+| :--- | :---: | :---: |
+| **Hero** | <img src="docs/screenshot-hero.png" width="320"> | <img src="docs/screenshot-mobile-hero.png" width="160"> |
+| **Project case study** | <img src="docs/screenshot-project-detail.png" width="320"> | <img src="docs/screenshot-mobile-project-case-study.png" width="160"> |
+
+This is verified, not just designed-and-assumed: [`tests/e2e/responsive.spec.ts`](tests/e2e/responsive.spec.ts) checks rail/ToC visibility at desktop, tablet, and mobile widths, confirms the mobile ToC actually opens on click, asserts zero horizontal overflow, and checks the hero name never overflows its container from 375px through 1600px — see [End-to-End Testing](#end-to-end-testing).
 
 ## Project Structure
 
@@ -274,7 +349,39 @@ In the interest of not overstating coverage: this suite does not currently inclu
 
 ## Deployment
 
-Pushes to `main` automatically build and deploy to GitHub Pages via [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml). See [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) for how it works, manual deployment steps, and troubleshooting.
+The site is a static build with no server-side dependency, so it deploys the same way to any static host. Two are set up:
+
+### GitHub Pages (automatic)
+
+Pushes to `main` automatically build and deploy via [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) — no action needed beyond pushing.
+
+### Vercel
+
+[`vercel.json`](vercel.json) configures the project:
+
+```json
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "cleanUrls": false
+}
+```
+
+`outputDirectory: "dist"` matters here specifically: the repo root also contains `project_documents/`, `docs/`, `CV/`, and `tests/`, none of which are meant to be public. Pointing Vercel at the `npm run build` output (the same `dist/` folder GitHub Pages deploys) ensures only the intended files are served, rather than Vercel serving the raw repo root as-is. `cleanUrls: false` is explicit rather than left to Vercel's default for the same reason it mattered during local testing (see [`docs/TESTING.md`](docs/TESTING.md)): the site's internal links use literal `.html` extensions, and clean-URL rewriting would break them.
+
+**To deploy:**
+
+```bash
+npm install -g vercel   # if you don't already have the CLI
+vercel                   # first run: links the project, deploys a preview
+vercel --prod            # promotes to the production URL
+```
+
+Or connect the GitHub repository directly from the [Vercel dashboard](https://vercel.com/new) — it will detect `vercel.json` automatically. No environment variables are required either way.
+
+**Live URL:** not yet deployed — this section will be updated with the production URL once available.
+
+See [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) for how the GitHub Pages workflow works, manual deployment steps for either host, and troubleshooting.
 
 ## Future Improvements
 

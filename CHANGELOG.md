@@ -8,6 +8,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 This repository forked from [`jared-mananguit-engineering-portfolio`](https://github.com/Jrddlol2/jared-mananguit-engineering-portfolio) (V1) to host an editorial redesign without risking the original. Entries below this point are V2-specific; entries further down predate the fork and are shared history.
 
+### Mobile screenshots, Responsive Design section, and Vercel deployment prep
+
+- Added `vercel.json` (`buildCommand: npm run build`, `outputDirectory: dist`, explicit `cleanUrls: false`) so Vercel serves the same clean `dist/` build GitHub Pages does, rather than the raw repo root (which contains `project_documents/`, `docs/`, `CV/`, and `tests/` — none meant to be public). Verified the build output is clean (no source-only directories leak into `dist/`).
+- Captured 9 real mobile screenshots (390×844) — hero, expanded mobile navigation, projects list, a project case study page, Technical Competencies, the Experience table, the hero's contact link, the footer, and dark mode — substituting accurately-captioned real equivalents for three requested categories that don't exist yet as distinct sections ("Featured Project," a standalone "Contact" section, and a visual "Timeline").
+- Added a `## Responsive Design` section to `README.md` with a desktop-vs-mobile comparison table, cross-referencing the actual breakpoint behavior in `docs/DESIGN_SYSTEM.md` and the assertions in `tests/e2e/responsive.spec.ts`.
+- Rewrote `README.md`'s `## Deployment` section to cover GitHub Pages and Vercel side by side; expanded `docs/DEPLOYMENT.md` with a full Vercel section explaining the `outputDirectory`/`cleanUrls` reasoning and both CLI and dashboard deploy paths. Live Vercel URL is not yet available — actual deployment requires account access this session doesn't have.
+- Removed the old generic `docs/screenshot-mobile.png`, superseded by the more specific `docs/screenshot-mobile-hero.png`.
+
 ### README overhaul, screenshot refresh, and E2E testing docs
 
 - Removed "— Available for OJT / Internship" from the homepage hero kicker (`index.html`) — a real content change, not just documentation, since the phrase only existed as text in the live site and was visible in the README's screenshots rather than in the README's own prose.
