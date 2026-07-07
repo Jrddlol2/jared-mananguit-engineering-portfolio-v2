@@ -7,6 +7,10 @@
 html {
   -webkit-text-size-adjust: 100%;
   scrollbar-gutter: stable;
+  /* Contains the full-bleed section bands (see .doc-section--band). `clip`,
+     unlike `hidden`, does not create a scroll container, so `position: sticky`
+     on the bookmark rail and smooth scrolling are both preserved. */
+  overflow-x: clip;
 }
 @media (prefers-reduced-motion: no-preference) {
   html { scroll-behavior: smooth; }
@@ -14,6 +18,10 @@ html {
 
 body {
   margin: 0;
+  /* Paired with html { overflow-x: clip } to fully contain the full-bleed
+     section bands; both are required in some engines. `clip` keeps vertical
+     scroll and the sticky rail intact (it creates no scroll container). */
+  overflow-x: clip;
   background: var(--color-bg-page);
   color: var(--color-text-primary);
   font-family: var(--font-body);
@@ -186,6 +194,35 @@ html.js-ready .reveal {
 html.js-ready .reveal.is-visible { opacity: 1; transform: translateY(0); }
 @media (prefers-reduced-motion: reduce) {
   html.js-ready .reveal { opacity: 1; transform: none; transition: none; }
+}
+
+/* Chapter opener — the section opener reveals its lines in sequence
+   (number → heading → standfirst) rather than as one block, so each section
+   reads like the turn of a new chapter. The container itself stays put; only
+   its children stagger in. */
+html.js-ready .section-rule.reveal { opacity: 1; transform: none; }
+html.js-ready .section-rule.reveal > * {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 460ms var(--ease-editorial), transform 460ms var(--ease-editorial);
+}
+html.js-ready .section-rule.reveal.is-visible > * { opacity: 1; transform: translateY(0); }
+html.js-ready .section-rule.reveal.is-visible > *:nth-child(2) { transition-delay: 90ms; }
+html.js-ready .section-rule.reveal.is-visible > *:nth-child(3) { transition-delay: 180ms; }
+
+/* Within split layouts, the diagram trails the copy by a beat, reinforcing
+   information hierarchy (read, then see). Only applies where copy and figure
+   are independently revealed direct children of the split. */
+html.js-ready .l-split > .figure.reveal { transition-delay: 130ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  html.js-ready .section-rule.reveal > *,
+  html.js-ready .l-split > .figure.reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+    transition-delay: 0ms;
+  }
 }
 
 

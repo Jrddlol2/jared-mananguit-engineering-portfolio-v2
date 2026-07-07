@@ -150,11 +150,24 @@
   position: sticky;
   top: var(--space-6);
   align-self: start;
-  max-height: calc(100vh - var(--space-7));
-  overflow-y: auto;
   padding-top: var(--space-6);
+  /* Explicit stacking layer: without this, the rail and .content-col are both
+     "positioned, z-index:auto" siblings, which stack by DOM order — letting
+     full-bleed section bands (see .doc-section--band) paint over the rail
+     instead of behind it. This makes the rail its own stable editorial
+     layer, independent of whatever scrolls past beneath it. */
+  z-index: 5;
 }
 @media (max-width: 1080px) { .bookmark-rail { display: none; } }
+/* The rail's own content (title + 6 links) is short and never needs to
+   scroll on ordinary viewports; only constrain and scroll it as a genuine
+   accessibility fallback on very short viewports. */
+@media (min-width: 1081px) and (max-height: 640px) {
+  .bookmark-rail {
+    max-height: calc(100vh - var(--space-7));
+    overflow-y: auto;
+  }
+}
 
 .bookmark-rail__title {
   font-family: var(--font-mono);
@@ -168,21 +181,39 @@
 .bookmark-rail li + li { margin-top: var(--space-3); }
 .bookmark-rail a {
   display: block;
+  position: relative;
   font-family: var(--font-body);
   font-size: var(--fs-small);
   text-decoration: none;
   color: var(--color-text-secondary);
-  border-left: 2px solid transparent;
-  padding-left: var(--space-3);
-  transition: color var(--motion-fast) var(--ease-editorial), border-color var(--motion-fast) var(--ease-editorial);
+  padding-left: var(--space-4);
+  transition: color var(--motion-base) var(--ease-editorial),
+              font-size var(--motion-base) var(--ease-editorial),
+              font-weight var(--motion-base) var(--ease-editorial),
+              padding-left var(--motion-base) var(--ease-editorial);
+}
+/* Animated indicator bar — grows from the item's centre as it becomes the
+   active section, and retracts as focus moves on. */
+.bookmark-rail a::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 2px;
+  height: 0;
+  background: var(--c-accent);
+  transform: translateY(-50%);
+  transition: height var(--motion-base) var(--ease-editorial);
 }
 .bookmark-rail a:hover,
 .bookmark-rail a:focus-visible { color: var(--color-text-primary); }
 .bookmark-rail a[aria-current="location"] {
   color: var(--c-accent);
-  border-left-color: var(--c-accent);
-  font-weight: 500;
+  font-weight: 600;
+  padding-left: calc(var(--space-4) + 3px);
+  font-size: calc(var(--fs-small) * 1.12);
 }
+.bookmark-rail a[aria-current="location"]::before { height: 1.15em; }
 
 .toc-mobile { display: none; border-bottom: var(--rule-hair) solid var(--color-border-hairline); }
 @media (max-width: 1080px) { .toc-mobile { display: block; } }
@@ -344,49 +375,27 @@
 /* ---------------------------------------------------------------------
    CERTIFICATION ENTRY
    --------------------------------------------------------------------- */
+/* Flat editorial "credentials plate" — hairline-divided rows with a mounted
+   thumbnail. Deliberately quieter and un-elevated so it reads as a curated
+   index, distinct from the raised project cards in §4. */
 .cert-entry {
-  padding: var(--space-6);
-  border: var(--rule-hair) solid var(--color-border-hairline);
-  border-radius: 6px;
-  margin-bottom: var(--space-5);
+  padding: var(--space-6) 0;
+  border-top: var(--rule-hair) solid var(--color-border-hairline);
   display: grid;
-  grid-template-columns: 130px 1fr;
+  grid-template-columns: 120px 1fr;
   gap: var(--space-6);
-  background: var(--color-bg-page);
-  position: relative;
-  z-index: 1;
-  transition: transform var(--motion-base), border-color var(--motion-base), box-shadow var(--motion-base);
+  align-items: start;
 }
-.cert-entry::before {
-  content: "";
-  position: absolute;
-  inset: -1px;
-  border-radius: 7px;
-  background: linear-gradient(120deg, transparent, var(--c-accent-tint), transparent);
-  z-index: -1;
-  opacity: 0;
-  transition: opacity 0.5s var(--ease-editorial);
-  pointer-events: none;
-}
-.cert-entry:hover::before {
-  opacity: 0.5;
-}
-.cert-entry::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 6px;
-  background: var(--color-bg-page);
-  z-index: -1;
-}
-.cert-entry:hover {
-  transform: translateY(-2px);
-  border-color: var(--c-accent);
-  box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.15), 0 0 0 1px var(--c-accent);
-}
+.cert-entry:last-of-type { border-bottom: var(--rule-hair) solid var(--color-border-hairline); }
 
 @media (max-width: 480px) { .cert-entry { grid-template-columns: 1fr; } }
-.cert-entry__thumb { min-height: 100px; }
+.cert-entry__thumb {
+  min-height: 100px;
+  padding: var(--space-3);
+  border: var(--rule-hair) solid var(--color-border-hairline);
+  background: var(--color-bg-page);
+  transition: border-color var(--motion-base) var(--ease-editorial);
+}
 .cert-entry__meta { font-family: var(--font-mono); font-size: var(--fs-small); color: var(--color-text-secondary); margin-bottom: var(--space-2); }
 
 /* ---------------------------------------------------------------------
@@ -463,13 +472,10 @@
 
 
 /* ---------------------------------------------------------------------
-   BIG PULL NUMBER — editorial device for standout stats
+   Depth and glow for the raised project cards — position context so the
+   ::before accent-tint sweep and ::after fill anchor to the card itself,
+   not to the positioned .content-col ancestor.
    --------------------------------------------------------------------- */
-
-.pull-number + 
-
-
-/* Depth and Glow for Circuit Rows */
 .app-circuit-row {
   position: relative;
   z-index: 1;
