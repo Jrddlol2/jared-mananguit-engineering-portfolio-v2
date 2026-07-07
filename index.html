@@ -65,90 +65,29 @@
     </div>
 
     <!-- ================= MASTHEAD (HERO) ================= -->
-        <header class="masthead" style="position: relative; z-index: 1;">
-      <!-- Hero Background -->
-      <div aria-hidden="true" class="hero-bg-layer" style="position: absolute; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; mask-image: linear-gradient(to right, black 40%, transparent 100%); -webkit-mask-image: linear-gradient(to right, black 40%, transparent 100%);">
-        <svg width="100%" height="100%" style="position: absolute; top: 0; left: 0; opacity: 0.25;">
-          <defs>
-            <pattern id="hero-grid" width="40" height="40" patternUnits="userSpaceOnUse">
-              <path d="M 40 0 L 0 0 0 40" fill="none" stroke="var(--color-text-secondary)" stroke-width="0.5" opacity="0.3"/>
-              <circle cx="40" cy="40" r="1.5" fill="var(--color-text-secondary)" opacity="0.4"/>
-            </pattern>
-            <pattern id="hero-grid-micro" width="8" height="8" patternUnits="userSpaceOnUse">
-              <path d="M 8 0 L 0 0 0 8" fill="none" stroke="var(--color-text-secondary)" stroke-width="0.25" opacity="0.15"/>
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#hero-grid-micro)" />
-          <rect width="100%" height="100%" fill="url(#hero-grid)" />
-          
-          <g fill="none" stroke="var(--c-accent)" stroke-width="1.5" opacity="0.4" class="eng-bg__traces">
-            <!-- Animated traces -->
-            <path class="trace trace--a" d="M -50 120 H 220 L 260 160 H 600" />
-            <path class="trace trace--b" d="M 180 -20 V 80 L 220 120 V 300" />
-            <path class="trace trace--c" d="M 800 40 V 150 L 750 200 H 300" />
-            <circle cx="220" cy="120" r="2.5" fill="var(--color-bg-page)" stroke="var(--c-accent)" stroke-width="1" />
-            <circle cx="600" cy="160" r="2.5" fill="var(--color-bg-page)" stroke="var(--c-accent)" stroke-width="1" />
-            <circle cx="300" cy="200" r="2.5" fill="var(--color-bg-page)" stroke="var(--c-accent)" stroke-width="1" />
-          </g>
+    <header class="masthead">
+      <p class="masthead__kicker">BS Electronics Engineering — University of Santo Tomas — Available for OJT / Internship</p>
 
-          <g font-family="var(--font-mono)" font-size="10" fill="var(--color-text-secondary)" opacity="0.5">
-            <text x="230" y="115">NODE 01</text>
-            <text x="610" y="155">BUS-A</text>
-            <text x="310" y="195">CLK_IN</text>
-          </g>
-          
-          <!-- System architecture abstract -->
-          <g transform="translate(650, 100)" fill="none" stroke="var(--color-text-secondary)" stroke-width="1" opacity="0.4">
-             <rect x="0" y="0" width="120" height="120" rx="4" stroke-dasharray="4,4" />
-             <circle cx="60" cy="60" r="40" />
-             <circle cx="60" cy="60" r="30" stroke-dasharray="2,2" />
-             <path d="M 60 10 L 60 20 M 60 100 L 60 110 M 10 60 L 20 60 M 100 60 L 110 60" />
-          </g>
-        </svg>
+      <h1 class="masthead__name">Jared Asher<br>Mananguit</h1>
+
+      <p class="masthead__standfirst">
+        A single-board engineer for systems that span analog circuits, digital hardware, embedded
+        firmware, and the networks and infrastructure that tie them together — reading for a BS in
+        Electronics Engineering at the University of Santo Tomas, with a working interest in
+        instrumentation, controls, and systems engineering.
+      </p>
+
+      <hr class="masthead__rule">
+
+      <p class="masthead__byline">
+        3rd Year, 2023 – Present · Manila, Philippines · Dean&#39;s Lister (AY 2023–2024), DOST-SEI Scholar · <a href="mailto:jaredasher.mananguit.eng@ust.edu.ph">jaredasher.mananguit.eng@ust.edu.ph</a>
+      </p>
+
+      <div class="masthead__actions">
+        <a href="Jared_Mananguit_Resume.pdf" target="_blank" rel="noopener noreferrer">View résumé (PDF)</a>
+        <a href="#sec-projects">Application circuits</a>
+        <a href="mailto:jaredasher.mananguit.eng@ust.edu.ph">Get in touch</a>
       </div>
-
-      <div class="masthead__layout" style="display: block; max-width: var(--measure-wide);">
-        <div>
-          <div class="masthead__eyebrow">
-            <span class="kicker">ECE-2026-V1 · Rev. D · Preliminary<span class="term-cursor" aria-hidden="true"></span></span>
-            <span class="status-stamp">Available for OJT / Internship</span>
-          </div>
-
-          <h1 class="masthead__name">Jared Asher<br>Mananguit</h1>
-          
-          <p class="masthead__tagline">
-            A single-board engineer for systems that span analog circuits, digital hardware, embedded
-            firmware, and the networks and infrastructure that tie them together — reading for a BS in
-            Electronics Engineering at the University of Santo Tomas, with a working interest in
-            instrumentation, controls, and systems engineering.
-          </p>
-
-          <dl class="masthead__meta-table">
-            <div><dt>Institution</dt><dd>University of Santo Tomas</dd></div>
-            <div><dt>Programme</dt><dd>BS Electronics Engineering (ECE)</dd></div>
-            <div><dt>Status</dt><dd>3rd Year, 2023 – Present</dd></div>
-            <div><dt>Honors</dt><dd>Dean&#39;s Lister (AY 2023–2024), DOST-SEI Scholar</dd></div>
-            <div><dt>Location</dt><dd>Manila, Philippines</dd></div>
-            <div><dt>Contact</dt><dd><a href="mailto:jaredasher.mananguit.eng@ust.edu.ph">jaredasher.mananguit.eng@ust.edu.ph</a></dd></div>
-          </dl>
-
-          <div class="masthead__telemetry">
-            <span><span class="led" aria-hidden="true"></span>Documentation status: Active</span>
-            <span>Build v1.4.0</span>
-            <span id="liveClock"></span>
-            <svg class="eng-waveform" viewBox="0 0 120 28" aria-hidden="true" focusable="false">
-              <path d="M0,14 H14 L20,4 L28,24 L36,14 H50 L56,4 L64,24 L72,14 H120"/>
-            </svg>
-          </div>
-
-          <div class="masthead__actions">
-            <a href="Jared_Mananguit_Resume.pdf" target="_blank" rel="noopener noreferrer">View résumé (PDF)</a>
-            <a href="#sec-projects">Application circuits, §4</a>
-            <a href="mailto:jaredasher.mananguit.eng@ust.edu.ph">Get in touch</a>
-          </div>
-        </div>
-        
-        </div>
     </header>
 
     <!-- ================= MOBILE TOC ================= -->

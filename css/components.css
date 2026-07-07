@@ -40,23 +40,20 @@
 .utility-bar button.link-style:focus-visible { color: var(--c-accent); }
 
 /* ---------------------------------------------------------------------
-   MASTHEAD — the hero
+   MASTHEAD — the hero: magazine masthead + standfirst, no card/border chrome
    --------------------------------------------------------------------- */
-.masthead { padding: var(--space-7) 0 var(--space-8); }
-.masthead__eyebrow {
-  display: flex; align-items: center; gap: var(--space-4);
-  flex-wrap: wrap; margin-bottom: var(--space-5);
+.masthead {
+  padding: var(--space-8) 0 var(--space-8);
+  max-width: var(--measure-wide);
 }
-.masthead__eyebrow .kicker { color: var(--c-accent); }
-.status-stamp {
+
+.masthead__kicker {
   font-family: var(--font-mono);
-  font-size: var(--fs-micro);
+  font-size: var(--fs-kicker);
   letter-spacing: var(--tracking-wide);
   text-transform: uppercase;
-  color: var(--color-text-secondary);
-  border: var(--rule-hair) solid var(--color-border-hairline);
-  padding: 2px var(--space-3);
-  border-radius: 999px;
+  color: var(--c-accent);
+  margin-bottom: var(--space-5);
 }
 
 .masthead__name {
@@ -65,11 +62,13 @@
   font-weight: 600;
   line-height: var(--lh-display);
   letter-spacing: -0.01em;
-  margin-bottom: var(--space-5);
+  margin-bottom: var(--space-6);
   max-width: none;
 }
-.masthead__tagline {
-  font-family: var(--font-body);
+
+.masthead__standfirst {
+  font-family: var(--font-display);
+  font-style: italic;
   font-size: var(--fs-body-lg);
   font-weight: 400;
   color: var(--color-text-secondary);
@@ -77,20 +76,20 @@
   margin-bottom: var(--space-6);
 }
 
-.masthead__meta-table {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: var(--space-4) var(--space-6);
-  padding-top: var(--space-5);
+.masthead__rule {
+  border: none;
   border-top: var(--rule-hair) solid var(--color-border-hairline);
+  margin: 0 0 var(--space-4);
+}
+
+.masthead__byline {
+  font-family: var(--font-mono);
+  font-size: var(--fs-small);
+  color: var(--color-text-secondary);
   margin-bottom: var(--space-6);
 }
-.masthead__meta-table dt {
-  font-family: var(--font-mono); font-size: var(--fs-micro);
-  text-transform: uppercase; letter-spacing: var(--tracking-wide);
-  color: var(--color-text-secondary); margin-bottom: 2px;
-}
-.masthead__meta-table dd { margin: 0; font-size: var(--fs-small); }
+.masthead__byline a { color: inherit; }
+.masthead__byline a:hover { color: var(--c-accent); }
 
 .masthead__actions { display: flex; gap: var(--space-6); flex-wrap: wrap; }
 .masthead__actions a {

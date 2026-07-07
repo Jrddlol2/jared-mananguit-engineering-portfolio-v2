@@ -143,55 +143,6 @@
   .term-cursor { animation: none; opacity: 1; }
 }
 
-.masthead__telemetry {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-4);
-  align-items: center;
-  font-family: var(--font-mono);
-  font-size: var(--fs-micro);
-  letter-spacing: var(--tracking-wide);
-  color: var(--color-text-secondary);
-  margin-top: var(--space-3);
-}
-.masthead__telemetry .led {
-  display: inline-block;
-  width: 7px; height: 7px;
-  border-radius: 50%;
-  background: var(--color-status-pass);
-  margin-right: 0.4em;
-  box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-status-pass) 20%, transparent);
-  animation: eng-led-soft-pulse 2.6s ease-in-out infinite;
-}
-@keyframes eng-led-soft-pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.6; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .masthead__telemetry .led { animation: none; }
-}
-
-.eng-waveform {
-  display: block;
-  height: 28px;
-  width: 120px;
-  opacity: 0.8;
-}
-.eng-waveform path {
-  fill: none;
-  stroke: var(--c-accent);
-  stroke-width: 1.25;
-  stroke-dasharray: 220;
-  animation: eng-waveform-draw 4.5s ease-in-out infinite;
-}
-@keyframes eng-waveform-draw {
-  0% { stroke-dashoffset: 220; }
-  50% { stroke-dashoffset: 0; }
-  100% { stroke-dashoffset: -220; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .eng-waveform path { animation: none; stroke-dashoffset: 0; }
-}
 
 /* ---------------------------------------------------------------------
    7. BLOCK DIAGRAM SIGNAL FLOW — applies to every .figure__media svg
