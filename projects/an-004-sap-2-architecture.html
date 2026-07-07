@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AN-004 — SAP-2 Architecture — Jared Asher Mananguit</title>
+<meta name="description" content="Application Note AN-004: a full custom 8-bit CPU (SAP-2 architecture) designed and verified in Verilog from the ground up — datapath, control unit, and a 42-instruction ISA.">
+<meta name="color-scheme" content="light dark">
+<script>
+(function(){try{var t=localStorage.getItem('theme');if(!t){t=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
+</script>
+<link rel="preload" href="../assets/fonts/fraunces-600.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../assets/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../css/tokens.css">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/layout.css">
+<link rel="stylesheet" href="../css/components.css">
+<link rel="stylesheet" href="../css/utilities.css">
+<link rel="stylesheet" href="../css/motion.css">
+<link rel="stylesheet" href="../css/print.css" media="print">
+</head>
+<body>
+
+<a class="skip-link" href="#main-content">Skip to main content</a>
+
+<div class="eng-bg" aria-hidden="true">
+  <div class="eng-bg__grid"></div>
+  <svg class="eng-bg__traces" viewBox="0 0 1000 700" preserveAspectRatio="none" focusable="false">
+    <path class="trace trace--a" d="M-20,120 H260 V300 H600 V80 H1020"/>
+    <path class="trace trace--b" d="M-20,480 H340 V620 H720 V420 H1020"/>
+    <path class="trace trace--c" d="M120,-20 V180 H480 V520 H860 V720"/>
+  </svg>
+</div>
+<div class="scroll-progress" aria-hidden="true"></div>
+
+<div class="page-shell" style="grid-template-columns: 1fr;">
+  <div class="content-col" style="max-width: var(--content-max); margin-inline: auto;">
+
+    <div class="utility-bar">
+      <div class="utility-bar__group">
+        <a href="../index.html#sec-projects">← Application Circuits, §4</a>
+      </div>
+      <div class="utility-bar__group">
+        <button type="button" class="link-style" id="themeToggle" aria-pressed="false">Night reading: <span id="themeState">Off</span></button>
+        <button type="button" class="link-style" id="printTrigger">Print</button>
+      </div>
+    </div>
+
+    <header class="masthead reveal">
+      <div class="masthead__eyebrow">
+        <span class="kicker">Application Note AN-004<span class="term-cursor" aria-hidden="true"></span></span>
+        <span class="status-stamp"><span class="led" aria-hidden="true"></span>Validated</span>
+      </div>
+      <h1 class="masthead__name" style="font-size: var(--fs-h1);">SAP-2<br>Architecture</h1>
+      <p class="masthead__tagline">A full custom 8-bit CPU designed and verified in Verilog from the ground up — not a black-box IP core — spanning the datapath, control unit, and a 42-instruction ISA.</p>
+      <dl class="masthead__meta-table">
+        <div><dt>Prepared By</dt><dd>J. A. Mananguit</dd></div>
+        <div><dt>Classification</dt><dd>Public / Portfolio Release</dd></div>
+        <div><dt>Team</dt><dd>9-member team</dd></div>
+        <div><dt>Role</dt><dd>ALU, control-matrix logic, instruction verification</dd></div>
+      </dl>
+    </header>
+
+    <nav aria-label="Application note sections" class="toc-mobile" style="display:block;">
+      <ol style="columns:2;">
+        <li><a href="#an4-overview">1. Overview</a></li>
+        <li><a href="#an4-cycle">2. Instruction Cycle</a></li>
+        <li><a href="#an4-datapath">3. Datapath</a></li>
+        <li><a href="#an4-registers">4. Registers</a></li>
+        <li><a href="#an4-control">5. Control Logic</a></li>
+        <li><a href="#an4-block">6. Block Diagram</a></li>
+        <li><a href="#an4-implementation">7. Implementation</a></li>
+        <li><a href="#an4-testing">8. Testing</a></li>
+        <li><a href="#an4-lessons">9. Lessons Learned</a></li>
+      </ol>
+    </nav>
+
+    <main id="main-content">
+
+      <section id="an4-overview" class="doc-section reveal" aria-labelledby="h-an4-overview">
+        <div class="section-rule"><div class="section-kicker">1</div><h2 id="h-an4-overview" class="section-title">Overview</h2></div>
+        <p class="lede">A full custom 8-bit CPU based on the SAP-2 (Simple-As-Possible) architecture, designed and
+          verified in Verilog from the ground up rather than assembled from a black-box IP core. The design
+          spans a complete datapath, a hand-built control unit, and a 42-instruction ISA, with every
+          instruction's fetch-decode-execute cycle verified against ModelSim waveforms.</p>
+      </section>
+
+      <section id="an4-cycle" class="doc-section reveal" aria-labelledby="h-an4-cycle">
+        <div class="section-rule"><div class="section-kicker">2</div><h2 id="h-an4-cycle" class="section-title">Instruction Cycle</h2></div>
+        <p>Each instruction executes across a sequence of T-states generated by a ring-counter sequencer: fetch
+          states retrieve the opcode from memory into the instruction register, decode states resolve it into a
+          one-hot active-instruction signal, and execute states assert exactly the register loads, bus enables,
+          and ALU controls that instruction requires for that T-state. Multi-byte and multi-cycle instructions
+          (such as CALL/RET and memory-reference addressing) extend the T-state sequence accordingly before the
+          cycle resets to fetch the next instruction.</p>
+      </section>
+
+      <section id="an4-datapath" class="doc-section reveal" aria-labelledby="h-an4-datapath">
+        <div class="section-rule"><div class="section-kicker">3</div><h2 id="h-an4-datapath" class="section-title">Datapath</h2></div>
+        <p>An 8-bit data bus (the W-Bus) and a 16-bit address bus connect every functional register, with
+          tri-state bus arbitration ensuring only one register drives the W-Bus per T-state. Program memory is
+          256 bytes (128 B ROM / 128 B RAM), with the initial program image loaded via Verilog's
+          <code>$readmemh</code> from a hex file.</p>
+      </section>
+
+      <section id="an4-registers" class="doc-section reveal" aria-labelledby="h-an4-registers">
+        <div class="section-rule"><div class="section-kicker">4</div><h2 id="h-an4-registers" class="section-title">Registers</h2></div>
+        <table class="spec-table spec-table--reflow">
+          <caption>Table AN4-1 — Register Set</caption>
+          <thead><tr><th scope="col">Register</th><th scope="col">Width</th><th scope="col">Purpose</th></tr></thead>
+          <tbody>
+            <tr><td data-label="Register">Accumulator (A)</td><td data-label="Width">8-bit</td><td data-label="Purpose">Primary ALU operand and result register</td></tr>
+            <tr><td data-label="Register">TMP</td><td data-label="Width">8-bit</td><td data-label="Purpose">ALU second-operand latch</td></tr>
+            <tr><td data-label="Register">B, C</td><td data-label="Width">8-bit each</td><td data-label="Purpose">General-purpose register operands</td></tr>
+            <tr><td data-label="Register">MDR</td><td data-label="Width">8-bit</td><td data-label="Purpose">Memory data register — staging for memory reads/writes</td></tr>
+            <tr><td data-label="Register">MAR</td><td data-label="Width">16-bit</td><td data-label="Purpose">Memory address register</td></tr>
+            <tr><td data-label="Register">PC</td><td data-label="Width">16-bit</td><td data-label="Purpose">Program counter</td></tr>
+            <tr><td data-label="Register">Return-address register</td><td data-label="Width">16-bit</td><td data-label="Purpose">Dedicated register supporting subroutine CALL/RET</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="an4-control" class="doc-section reveal" aria-labelledby="h-an4-control">
+        <div class="section-rule"><div class="section-kicker">5</div><h2 id="h-an4-control" class="section-title">Control Logic</h2></div>
+        <p>The control unit is built from three parts: a ring counter acting as the T-state sequencer; an
+          instruction decoder that turns the fetched opcode into a 32-bit one-hot active-instruction signal; and
+          a combinational control matrix that ANDs the active-instruction signal against the current T-state to
+          generate every register load/enable line and ALU control signal directly — no microcode ROM. This
+          made the timing of every control signal explicit and traceable back to a specific instruction/T-state
+          combination.</p>
+      </section>
+
+      <section id="an4-block" class="doc-section reveal" aria-labelledby="h-an4-block">
+        <div class="section-rule"><div class="section-kicker">6</div><h2 id="h-an4-block" class="section-title">Block Diagram</h2></div>
+        <figure class="figure figure--hero">
+          <div class="figure__media">
+            <svg viewBox="0 0 420 170" role="img" aria-labelledby="an4-block-title">
+              <title id="an4-block-title">Block diagram: ring counter T-state sequencer and instruction decoder feeding a combinational control matrix, which drives the register file, ALU, and W-Bus datapath, connected to 256-byte ROM/RAM memory via MAR and MDR</title>
+              <g fill="none" stroke="currentColor" stroke-width="1">
+                <rect x="8" y="16" width="130" height="32"/>
+                <rect x="8" y="66" width="130" height="32"/>
+                <rect x="166" y="41" width="120" height="32"/>
+                <rect x="316" y="16" width="96" height="32"/>
+                <rect x="316" y="66" width="96" height="32"/>
+                <line x1="73" y1="48" x2="106" y2="66"/>
+                <line x1="106" y1="66" x2="106" y2="66"/>
+                <line x1="138" y1="32" x2="166" y2="50" marker-end="url(#a4)"/>
+                <line x1="138" y1="82" x2="166" y2="65" marker-end="url(#a4)"/>
+                <line x1="286" y1="50" x2="316" y2="32" marker-end="url(#a4)"/>
+                <line x1="286" y1="65" x2="316" y2="82" marker-end="url(#a4)"/>
+              </g>
+              <defs><marker id="a4" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="currentColor"/></marker></defs>
+              <g font-family="IBM Plex Mono, monospace" font-size="9" fill="currentColor" text-anchor="middle">
+                <text x="73" y="36">RING COUNTER</text>
+                <text x="73" y="86">INSTR. DECODER</text>
+                <text x="226" y="61">CONTROL MATRIX</text>
+                <text x="364" y="36">REGS + ALU</text>
+                <text x="364" y="86">256B ROM/RAM</text>
+              </g>
+            </svg>
+          </div>
+          <figcaption>Fig. 1 — AN-004 SAP-2 control-unit and datapath block diagram.</figcaption>
+        </figure>
+      </section>
+
+      <section id="an4-implementation" class="doc-section reveal" aria-labelledby="h-an4-implementation">
+        <div class="section-rule"><div class="section-kicker">7</div><h2 id="h-an4-implementation" class="section-title">Implementation</h2></div>
+        <ul>
+          <li>42-instruction ISA spanning memory-reference, register, jump/call, logical, and special (conditional
+            jump/call/return-if-minus) categories, including subroutine CALL/RET via a dedicated return-address
+            register.</li>
+          <li>ALU supporting add/subtract (two's-complement), AND/OR/XOR, increment/decrement, and left/right
+            rotate, with sign and zero flags feeding conditional control flow.</li>
+          <li>256-byte memory (128 B ROM / 128 B RAM) with the program image loaded via <code>$readmemh</code>.</li>
+          <li>Tri-state bus arbitration across every register sharing the 8-bit W-Bus.</li>
+        </ul>
+      </section>
+
+      <section id="an4-testing" class="doc-section reveal" aria-labelledby="h-an4-testing">
+        <div class="section-rule"><div class="section-kicker">8</div><h2 id="h-an4-testing" class="section-title">Testing</h2></div>
+        <table class="spec-table spec-table--reflow">
+          <caption>Table AN4-2 — Verification Coverage</caption>
+          <thead><tr><th scope="col">Test Category</th><th scope="col">Instructions Covered</th></tr></thead>
+          <tbody>
+            <tr><td data-label="Test Category">Arithmetic / logic</td><td data-label="Instructions Covered">INR, DCR, ADD, SUB, AND/OR/XOR, RAL/RAR</td></tr>
+            <tr><td data-label="Test Category">Data movement</td><td data-label="Instructions Covered">MOV, LDA/STA, IN/OUT</td></tr>
+            <tr><td data-label="Test Category">Control flow</td><td data-label="Instructions Covered">JMP/JZ/JM, CALL/RET, HLT</td></tr>
+            <tr><td data-label="Test Category">Integrated</td><td data-label="Instructions Covered">Full fetch-decode-execute simulation across the complete ISA</td></tr>
+          </tbody>
+        </table>
+        <p>Each instruction was verified against a dedicated ModelSim testbench before the full integrated
+          fetch-decode-execute simulation was run, so failures could be isolated to a specific instruction rather
+          than debugged from a whole-program waveform.</p>
+      </section>
+
+      <section id="an4-lessons" class="doc-section reveal" aria-labelledby="h-an4-lessons">
+        <div class="section-rule"><div class="section-kicker">9</div><h2 id="h-an4-lessons" class="section-title">Lessons Learned</h2></div>
+        <p>Building the control matrix combinationally, rather than as a microcode ROM, forced a much more
+          precise understanding of exactly which control line needed to assert on exactly which T-state for
+          every instruction — a shortcut microcode approach would have hidden bugs that per-T-state combinational
+          logic surfaced immediately in simulation. Verifying instructions individually before integrated testing
+          also caught several control-matrix timing bugs far earlier than a whole-program-first approach would have.</p>
+      </section>
+
+      <div class="reference-block reveal">
+        <div class="reference-block__label">See Also</div>
+        <ul>
+          <li>§3 Electrical Characteristics — Verilog / HDL proficiency</li>
+          <li>§4 Typical Application Circuits — AN-003 Communications System</li>
+          <li>Repository: <span class="cell-na">N/A — pending publication</span></li>
+          <li>Demonstration: <span class="cell-na">N/A — waveform capture pending</span></li>
+        </ul>
+      </div>
+
+    </main>
+
+    <footer class="doc-footer">
+      <p>Specifications subject to change without notice.</p>
+      <p>Document Control No. AN-004 &nbsp;·&nbsp; Revision A &nbsp;·&nbsp; Issued 2026-07-06 &nbsp;·&nbsp; Copyright © 2026 Jared Asher Mananguit.</p>
+      <div class="console-footer" role="status" aria-live="off">
+        <div class="console-footer__row"><span>Documentation Loaded</span><span class="console-footer__fill"></span><span class="console-footer__status">OK</span></div>
+        <div class="console-footer__row"><span>Projects Verified</span><span class="console-footer__fill"></span><span class="console-footer__status">PASS</span></div>
+        <div class="console-footer__row"><span>System Status</span><span class="console-footer__fill"></span><span class="console-footer__status">ONLINE</span></div>
+      </div>
+    </footer>
+
+  </div>
+</div>
+
+<script type="module" src="../js/theme.js"></script>
+<script type="module" src="../js/reveal.js"></script>
+<script type="module" src="../js/engineering-fx.js"></script>
+<script type="module" src="../js/main.js"></script>
+</body>
+</html>

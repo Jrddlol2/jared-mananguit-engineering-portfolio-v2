@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AN-002 — Class AB Audio Power Amplifier — Jared Asher Mananguit</title>
+<meta name="description" content="Application Note AN-002: a discrete-transistor 25 W Class AB audio power amplifier, derived analytically, simulated, fabricated, and bench-tested.">
+<meta name="color-scheme" content="light dark">
+<script>
+(function(){try{var t=localStorage.getItem('theme');if(!t){t=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
+</script>
+<link rel="preload" href="../assets/fonts/fraunces-600.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../assets/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../css/tokens.css">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/layout.css">
+<link rel="stylesheet" href="../css/components.css">
+<link rel="stylesheet" href="../css/utilities.css">
+<link rel="stylesheet" href="../css/motion.css">
+<link rel="stylesheet" href="../css/print.css" media="print">
+</head>
+<body>
+
+<a class="skip-link" href="#main-content">Skip to main content</a>
+
+<div class="eng-bg" aria-hidden="true">
+  <div class="eng-bg__grid"></div>
+  <svg class="eng-bg__traces" viewBox="0 0 1000 700" preserveAspectRatio="none" focusable="false">
+    <path class="trace trace--a" d="M-20,120 H260 V300 H600 V80 H1020"/>
+    <path class="trace trace--b" d="M-20,480 H340 V620 H720 V420 H1020"/>
+    <path class="trace trace--c" d="M120,-20 V180 H480 V520 H860 V720"/>
+  </svg>
+</div>
+<div class="scroll-progress" aria-hidden="true"></div>
+
+<div class="page-shell" style="grid-template-columns: 1fr;">
+  <div class="content-col" style="max-width: var(--content-max); margin-inline: auto;">
+
+    <div class="utility-bar">
+      <div class="utility-bar__group">
+        <a href="../index.html#sec-projects">← Application Circuits, §4</a>
+      </div>
+      <div class="utility-bar__group">
+        <button type="button" class="link-style" id="themeToggle" aria-pressed="false">Night reading: <span id="themeState">Off</span></button>
+        <button type="button" class="link-style" id="printTrigger">Print</button>
+      </div>
+    </div>
+
+    <header class="masthead reveal">
+      <div class="masthead__eyebrow">
+        <span class="kicker">Application Note AN-002<span class="term-cursor" aria-hidden="true"></span></span>
+        <span class="status-stamp"><span class="led" aria-hidden="true"></span>Validated</span>
+      </div>
+      <h1 class="masthead__name" style="font-size: var(--fs-h1);">Class AB Audio<br>Power Amplifier</h1>
+      <p class="masthead__tagline">A discrete-transistor amplifier designed backward from a hard 25 W / 4 Ω spec — analytically derived, simulated, fabricated, and bench-validated.</p>
+      <dl class="masthead__meta-table">
+        <div><dt>Prepared By</dt><dd>J. A. Mananguit</dd></div>
+        <div><dt>Classification</dt><dd>Public / Portfolio Release</dd></div>
+        <div><dt>Team</dt><dd>4-person team</dd></div>
+        <div><dt>Role</dt><dd>Circuit design, LTspice verification, PCB layout/fabrication</dd></div>
+      </dl>
+    </header>
+
+    <nav aria-label="Application note sections" class="toc-mobile" style="display:block;">
+      <ol style="columns:2;">
+        <li><a href="#an2-summary">1. Executive Summary</a></li>
+        <li><a href="#an2-problem">2. Problem Statement</a></li>
+        <li><a href="#an2-objectives">3. Design Objectives</a></li>
+        <li><a href="#an2-block">4. Functional Block Diagram</a></li>
+        <li><a href="#an2-architecture">5. System Architecture</a></li>
+        <li><a href="#an2-implementation">6. Implementation</a></li>
+        <li><a href="#an2-testing">7. Testing</a></li>
+        <li><a href="#an2-results">8. Results</a></li>
+        <li><a href="#an2-decisions">9. Engineering Decisions</a></li>
+        <li><a href="#an2-lessons">10. Lessons Learned</a></li>
+        <li><a href="#an2-future">11. Future Improvements</a></li>
+      </ol>
+    </nav>
+
+    <main id="main-content">
+
+      <section id="an2-summary" class="doc-section reveal" aria-labelledby="h-an2-summary">
+        <div class="section-rule"><div class="section-kicker">1</div><h2 id="h-an2-summary" class="section-title">Executive Summary</h2></div>
+        <p class="lede">A three-stage discrete Class AB audio power amplifier was derived analytically from a 25 W into 4 Ω
+          target spec at ±22 V supply rails — not copied from a reference design — then verified in LTspice,
+          laid out and fabricated as a PCB, hand-soldered, and bench-tested against a live 4 Ω speaker load.
+          Measured output power came within 0.72% of the 25 W target.</p>
+      </section>
+
+      <section id="an2-problem" class="doc-section reveal" aria-labelledby="h-an2-problem">
+        <div class="section-rule"><div class="section-kicker">2</div><h2 id="h-an2-problem" class="section-title">Problem Statement</h2></div>
+        <p>Design and physically build an audio power amplifier meeting a specific power/load/supply target while
+          avoiding crossover distortion inherent to naive Class B output stages — and prove the result with
+          measured hardware data, not just a simulation.</p>
+      </section>
+
+      <section id="an2-objectives" class="doc-section reveal" aria-labelledby="h-an2-objectives">
+        <div class="section-rule"><div class="section-kicker">3</div><h2 id="h-an2-objectives" class="section-title">Design Objectives</h2></div>
+        <table class="spec-table spec-table--reflow">
+          <caption>Table AN2-1 — Design Targets</caption>
+          <thead><tr><th scope="col">Metric</th><th scope="col">Target</th></tr></thead>
+          <tbody>
+            <tr><td data-label="Metric">Output power</td><td data-label="Target">25 W into 4 Ω</td></tr>
+            <tr><td data-label="Metric">Supply rails</td><td data-label="Target">±22 V</td></tr>
+            <tr><td data-label="Metric">Output stage class</td><td data-label="Target">Class AB (conduction angle &gt; 180°, no crossover distortion)</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="an2-block" class="doc-section reveal" aria-labelledby="h-an2-block">
+        <div class="section-rule"><div class="section-kicker">4</div><h2 id="h-an2-block" class="section-title">Functional Block Diagram</h2></div>
+        <figure class="figure figure--hero">
+          <div class="figure__media">
+            <svg viewBox="0 0 420 140" role="img" aria-labelledby="an2-block-title">
+              <title id="an2-block-title">Block diagram: audio input into differential input stage, into bootstrapped voltage amplification stage, into Class AB output stage, driving 4 ohm speaker load, with feedback path back to differential stage</title>
+              <g fill="none" stroke="currentColor" stroke-width="1">
+                <rect x="10" y="50" width="90" height="40"/>
+                <rect x="150" y="50" width="100" height="40"/>
+                <rect x="300" y="50" width="100" height="40"/>
+                <line x1="100" y1="70" x2="150" y2="70" marker-end="url(#a2)"/>
+                <line x1="250" y1="70" x2="300" y2="70" marker-end="url(#a2)"/>
+                <path d="M300,90 L300,115 L55,115 L55,90" marker-end="url(#a2)"/>
+              </g>
+              <defs><marker id="a2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="currentColor"/></marker></defs>
+              <g font-family="IBM Plex Mono, monospace" font-size="9.5" fill="currentColor" text-anchor="middle">
+                <text x="55" y="66">DIFF INPUT</text>
+                <text x="55" y="78">(2N5401/5551)</text>
+                <text x="200" y="66">BOOTSTRAPPED</text>
+                <text x="200" y="78">VAS</text>
+                <text x="350" y="66">CLASS AB</text>
+                <text x="350" y="78">OUTPUT / 4Ω</text>
+                <text x="180" y="130" text-anchor="start">feedback</text>
+              </g>
+            </svg>
+          </div>
+          <figcaption>Fig. 1 — AN-002 three-stage amplifier block diagram.</figcaption>
+        </figure>
+      </section>
+
+      <section id="an2-architecture" class="doc-section reveal" aria-labelledby="h-an2-architecture">
+        <div class="section-rule"><div class="section-kicker">5</div><h2 id="h-an2-architecture" class="section-title">System Architecture</h2></div>
+        <p>Three stages: a differential input pair (2N5401/2N5551) providing error sensing and feedback summing;
+          a bootstrapped voltage-amplification stage (VAS) providing the bulk of open-loop gain; and an improved
+          push-pull Class AB output stage (TIP3055/TIP2955 power devices driven through TIP41C/TIP42 Darlington
+          drivers). Every stage's component values were derived analytically from the 25 W / 4 Ω / ±22 V spec.</p>
+        <table class="spec-table spec-table--reflow">
+          <caption>Table AN2-2 — Bill of Materials</caption>
+          <thead><tr><th scope="col">Item</th><th scope="col">Designator</th><th scope="col">Description</th></tr></thead>
+          <tbody>
+            <tr><td data-label="Item">Differential pair</td><td data-label="Designator">Q1/Q2</td><td data-label="Description">2N5401 / 2N5551</td></tr>
+            <tr><td data-label="Item">Output power devices</td><td data-label="Designator">Q5/Q6</td><td data-label="Description">TIP3055 / TIP2955</td></tr>
+            <tr><td data-label="Item">Darlington drivers</td><td data-label="Designator">Q3/Q4</td><td data-label="Description">TIP41C / TIP42</td></tr>
+            <tr><td data-label="Item">PCB</td><td data-label="Designator">-</td><td data-label="Description">UV photolithography, ferric-chloride etched</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="an2-implementation" class="doc-section reveal" aria-labelledby="h-an2-implementation">
+        <div class="section-rule"><div class="section-kicker">6</div><h2 id="h-an2-implementation" class="section-title">Implementation</h2></div>
+        <ul>
+          <li>Hand-derived every stage: supply headroom from required peak voltage/current, emitter-degeneration
+            resistor sizing and power dissipation, Vbe-multiplier bias generation for crossover-distortion-free
+            Class AB operation, and passive filter corner frequencies (input high-pass, feedback DC-block).</li>
+          <li>Fabricated the PCB via UV photolithography and ferric-chloride etching.</li>
+          <li>Hand-soldered all components and bench-tested with a live 4 Ω speaker load.</li>
+        </ul>
+      </section>
+
+      <section id="an2-testing" class="doc-section reveal" aria-labelledby="h-an2-testing">
+        <div class="section-rule"><div class="section-kicker">7</div><h2 id="h-an2-testing" class="section-title">Testing</h2></div>
+        <p>Verified first in LTspice against the analytical targets, then re-measured on the physical board under
+          a live 4 Ω resistive/speaker load, including collector-current waveform inspection to confirm true
+          Class AB conduction.</p>
+      </section>
+
+      <section id="an2-results" class="doc-section reveal" aria-labelledby="h-an2-results">
+        <div class="section-rule"><div class="section-kicker">8</div><h2 id="h-an2-results" class="section-title">Results</h2></div>
+        <table class="spec-table spec-table--reflow">
+          <caption>Table AN2-3 — Measured Results vs. Design Targets</caption>
+          <thead><tr><th scope="col">Metric</th><th scope="col">Target</th><th scope="col">Measured</th><th scope="col">Result</th></tr></thead>
+          <tbody>
+            <tr><td data-label="Metric">Peak output voltage</td><td data-label="Target">14.14 V</td><td data-label="Measured">14.1392 V (0.005% error)</td><td data-label="Result"><span class="badge badge--pass">Pass</span></td></tr>
+            <tr><td data-label="Metric">Average output power</td><td data-label="Target">25 W</td><td data-label="Measured">25.18 W (0.72% error)</td><td data-label="Result"><span class="badge badge--pass">Pass</span></td></tr>
+            <tr><td data-label="Metric">Conduction angle</td><td data-label="Target">&gt; 180°</td><td data-label="Measured">Confirmed &gt; 180°</td><td data-label="Result"><span class="badge badge--pass">Pass</span></td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="an2-decisions" class="doc-section reveal" aria-labelledby="h-an2-decisions">
+        <div class="section-rule"><div class="section-kicker">9</div><h2 id="h-an2-decisions" class="section-title">Engineering Decisions</h2></div>
+        <p>Chose a Vbe-multiplier bias network over fixed-diode biasing to allow fine adjustment of quiescent
+          current post-fabrication — necessary because component tolerances on hand-soldered discrete boards
+          shift the ideal bias point from the simulated value.</p>
+      </section>
+
+      <section id="an2-lessons" class="doc-section reveal" aria-labelledby="h-an2-lessons">
+        <div class="section-rule"><div class="section-kicker">10</div><h2 id="h-an2-lessons" class="section-title">Lessons Learned</h2></div>
+        <p>Deriving every stage analytically from the spec — rather than adapting a published reference
+          topology — made it possible to explain and defend every component value, and made the sub-1% measured
+          error against simulation achievable because every assumption was traceable back to a first-principles
+          equation.</p>
+      </section>
+
+      <section id="an2-future" class="doc-section reveal" aria-labelledby="h-an2-future">
+        <div class="section-rule"><div class="section-kicker">11</div><h2 id="h-an2-future" class="section-title">Future Improvements</h2></div>
+        <ul>
+          <li>Add short-circuit / thermal protection circuitry for unattended operation.</li>
+          <li>Replace the linear supply with a switching supply to reduce heatsink mass.</li>
+          <li>Characterize THD+N across the full audio band with an audio analyzer.</li>
+        </ul>
+      </section>
+
+      <div class="reference-block reveal">
+        <div class="reference-block__label">See Also</div>
+        <ul>
+          <li>§3 Electrical Characteristics — LTspice, KiCad, PCB Design proficiency</li>
+          <li>§4 Typical Application Circuits — AN-001 Ball-and-Beam PID Control System</li>
+          <li>Repository: <span class="cell-na">N/A — pending publication</span></li>
+          <li>Demonstration: <span class="cell-na">N/A — video pending</span></li>
+        </ul>
+      </div>
+
+    </main>
+
+    <footer class="doc-footer">
+      <p>Specifications subject to change without notice.</p>
+      <p>Document Control No. AN-002 &nbsp;·&nbsp; Revision A &nbsp;·&nbsp; Issued 2026-07-06 &nbsp;·&nbsp; Copyright © 2026 Jared Asher Mananguit.</p>
+      <div class="console-footer" role="status" aria-live="off">
+        <div class="console-footer__row"><span>Documentation Loaded</span><span class="console-footer__fill"></span><span class="console-footer__status">OK</span></div>
+        <div class="console-footer__row"><span>Projects Verified</span><span class="console-footer__fill"></span><span class="console-footer__status">PASS</span></div>
+        <div class="console-footer__row"><span>System Status</span><span class="console-footer__fill"></span><span class="console-footer__status">ONLINE</span></div>
+      </div>
+    </footer>
+
+  </div>
+</div>
+
+<script type="module" src="../js/theme.js"></script>
+<script type="module" src="../js/reveal.js"></script>
+<script type="module" src="../js/engineering-fx.js"></script>
+<script type="module" src="../js/main.js"></script>
+</body>
+</html>

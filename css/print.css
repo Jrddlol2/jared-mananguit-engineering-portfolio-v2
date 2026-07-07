@@ -1,0 +1,59 @@
+/* ==========================================================================
+   PRINT — dedicated stylesheet (spec §41). Printing must produce a clean,
+   paginated document suitable for PDF export — ink-economical regardless
+   of the on-screen editorial palette.
+   ========================================================================== */
+
+@media print {
+  @page {
+    size: A4;
+    margin: 18mm 14mm;
+  }
+
+  * { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 11pt; line-height: 1.45;
+    background: #FFFFFF; color: #000000;
+  }
+  h1, h2, h3, h4 { font-family: Georgia, 'Times New Roman', serif; color: #000000; }
+  code, .kicker, .section-kicker, th, .masthead__meta-table dt { font-family: 'Courier New', monospace; }
+
+  /* Strip screen-only chrome */
+  .bookmark-rail, .toc-mobile, .utility-bar, .skip-link,
+  .search-overlay, .theme-toggle, .print-trigger,
+  a.back-to-toc { display: none !important; }
+
+  .page-shell { display: block; padding-inline: 0; }
+  .content-col { max-width: none; }
+
+  a { color: #000000 !important; text-decoration: underline; }
+  a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 9pt;
+    font-family: 'Courier New', monospace;
+  }
+  a[href^="mailto"]::after, a[href^="#"]::after { content: ""; }
+
+  .doc-section { padding: 0 0 12pt; break-inside: avoid-page; border-top-color: #000; }
+  .section-rule { break-after: avoid; }
+  .section-kicker, .kicker { color: #000 !important; }
+  h1, h2, h3 { break-after: avoid; }
+
+  table, .figure, .app-circuit-row, .cert-entry, .callout { break-inside: avoid; }
+
+  .figure__media { border: 1pt solid #000; background: #fff; }
+  .figure__media svg { stroke: #000 !important; }
+  thead th { border-bottom: 1.5pt solid #000; color: #000; }
+  tr { break-inside: avoid; }
+
+  .doc-footer { border-top: 1.5pt solid #000; color: #000; }
+  .badge--pass, .badge--fail, .badge--progress { color: #000 !important; }
+
+  .reveal { opacity: 1 !important; transform: none !important; }
+
+  @top-right { content: "AN / ECE-2026-V1"; font-size: 8pt; font-family: 'Courier New', monospace; }
+  @bottom-left { content: "See document header for revision"; font-size: 8pt; font-family: 'Courier New', monospace; }
+  @bottom-right { content: "Page " counter(page) " of " counter(pages); font-size: 8pt; font-family: 'Courier New', monospace; }
+}

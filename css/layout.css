@@ -1,0 +1,234 @@
+/* ==========================================================================
+   LAYOUT — editorial composition: generous margins, asymmetric splits,
+   confident section rhythm. (ITCSS: 04-objects)
+   ========================================================================== */
+
+.page-shell {
+  display: grid;
+  grid-template-columns: minmax(200px, 220px) 1fr;
+  column-gap: var(--space-7);
+  align-items: start;
+  max-width: 1680px;
+  margin-inline: auto;
+  padding-inline: var(--margin-inline);
+}
+@media (max-width: 1080px) {
+  .page-shell { grid-template-columns: 1fr; }
+}
+
+.content-col {
+  max-width: var(--content-max);
+  position: relative;
+  min-width: 0;
+}
+
+/* ---------------------------------------------------------------------
+   Section rhythm — air-first; hierarchy from space, not borders
+   --------------------------------------------------------------------- */
+.doc-section {
+  padding-top: var(--space-8);
+  padding-bottom: var(--space-8);
+  scroll-margin-top: var(--space-6);
+  position: relative;
+}
+.doc-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(to right, var(--color-border-hairline) 0%, var(--c-accent) 15%, var(--color-border-hairline) 100%);
+  opacity: 0.3;
+}
+
+.doc-section:first-of-type { border-top: none; padding-top: var(--space-6); }
+
+.section-rule {
+  border: none;
+  margin: 0 0 var(--space-6);
+  padding-top: 0;
+  max-width: var(--measure-wide);
+}
+.section-rule .section-kicker {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--fs-kicker);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--c-accent);
+  margin-bottom: var(--space-3);
+}
+.section-rule .section-kicker::before {
+  content: '';
+  display: inline-block;
+  width: 28px;
+  height: 1px;
+  background: currentColor;
+}
+.section-rule .section-title {
+  font-size: var(--fs-h1);
+  font-weight: 600;
+  letter-spacing: var(--tracking-tight);
+}
+.section-rule .section-human {
+  display: block;
+  font-family: var(--font-body);
+  font-style: italic;
+  font-weight: 400;
+  font-size: var(--fs-body-lg);
+  color: var(--color-text-secondary);
+  margin-top: var(--space-2);
+}
+
+/* ---------------------------------------------------------------------
+   Editorial grids
+   --------------------------------------------------------------------- */
+.l-two-col {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--gutter);
+  align-items: start;
+}
+@media (max-width: 900px) { .l-two-col { grid-template-columns: 1fr; } }
+
+/* Asymmetric split — image commands more space than copy, editorial feel */
+.l-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  gap: var(--space-7);
+  align-items: center;
+}
+.l-split--reverse { grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr); }
+.l-split--reverse > *:first-child { order: 2; }
+@media (max-width: 900px) {
+  .l-split, .l-split--reverse { grid-template-columns: 1fr; }
+  .l-split--reverse > *:first-child { order: 0; }
+}
+
+.l-stack > * + * { margin-top: var(--space-4); }
+
+
+/* Full-bleed band — breaks out of the content column for hero imagery */
+
+
+
+/* Subtle blueprint background grid */
+
+
+
+
+/* Engineering Continuation Line (Desktop only) */
+@media (min-width: 1024px) {
+  .page-shell {
+    position: relative;
+  }
+  
+  
+  /* Make doc-sections relative to this line */
+  
+}
+
+/* Coordinate Overlays */
+
+
+
+/* ---------------------------------------------------------------------
+   ENGINEERING PUBLICATION OVERLAYS
+   --------------------------------------------------------------------- */
+.blueprint-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -2;
+}
+
+/* Macro grid */
+.blueprint-overlay::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(to right, var(--color-border-hairline) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--color-border-hairline) 1px, transparent 1px);
+  background-size: 40px 40px;
+  opacity: 0.15;
+}
+
+/* Micro grid */
+.blueprint-overlay::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(to right, var(--color-border-hairline) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--color-border-hairline) 1px, transparent 1px);
+  background-size: 8px 8px;
+  opacity: 0.05;
+}
+
+/* Left-hand vertical continuation line (Desktop) */
+.blueprint-guide-line {
+  display: none;
+}
+@media (min-width: 1024px) {
+  .blueprint-guide-line {
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: max(2rem, calc(50vw - 36rem)); /* Align to the left grid edge */
+    width: 1px;
+    background: var(--color-border-hairline);
+    z-index: -1;
+  }
+}
+
+/* Page Coordinates */
+.blueprint-coords {
+  position: fixed;
+  bottom: var(--space-4);
+  left: var(--space-4);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--color-text-faint);
+  z-index: 10;
+  pointer-events: none;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  letter-spacing: 1px;
+}
+
+@media (min-width: 1024px) {
+  .doc-section::after {
+    content: "";
+    position: absolute;
+    top: var(--space-8);
+    left: calc(max(2rem, calc(50vw - 36rem)) - 3px);
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--color-bg-page);
+    border: 1px solid var(--c-accent);
+    opacity: 0.8;
+  }
+}
+
+/* Masthead Publication Style */
+.masthead {
+  padding-top: var(--space-8);
+  padding-bottom: var(--space-8);
+  border-bottom: 2px solid var(--color-border-heavy);
+  margin-bottom: var(--space-7);
+}
+.masthead__layout {
+  position: relative;
+  z-index: 2;
+  padding: var(--space-6);
+  background: var(--color-bg-page);
+  border: 1px solid var(--color-border-hairline);
+  border-left: 4px solid var(--c-accent);
+  
+}

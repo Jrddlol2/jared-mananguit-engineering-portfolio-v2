@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ECE-2026-V1 — Jared Asher Mananguit — Engineering Portfolio</title>
+<meta name="description" content="Jared Asher Mananguit — BS Electronics Engineering, University of Santo Tomas. Instrumentation &amp; controls, embedded systems, and applied signal processing.">
+<meta name="color-scheme" content="light dark">
+<script>
+(function(){try{var t=localStorage.getItem('theme');if(!t){t=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
+</script>
+<link rel="preload" href="assets/fonts/fraunces-600.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/utilities.css">
+<link rel="stylesheet" href="css/motion.css">
+<link rel="stylesheet" href="css/print.css" media="print">
+</head>
+<body>
+    <div class="blueprint-overlay"></div>
+    <div class="blueprint-guide-line"></div>
+    <div class="blueprint-coords">X: 0.00 Y: 0.00 // REF: ECE-2026-V1</div>
+
+<a class="skip-link" href="#main-content">Skip to main content</a>
+
+<div class="eng-bg" aria-hidden="true">
+  <div class="eng-bg__grid"></div>
+  <svg class="eng-bg__traces" viewBox="0 0 1000 700" preserveAspectRatio="none" focusable="false">
+    <path class="trace trace--a" d="M-20,120 H260 V300 H600 V80 H1020"/>
+    <path class="trace trace--b" d="M-20,480 H340 V620 H720 V420 H1020"/>
+    <path class="trace trace--c" d="M120,-20 V180 H480 V520 H860 V720"/>
+  </svg>
+</div>
+<div class="scroll-progress" aria-hidden="true"></div>
+
+<div class="page-shell">
+
+  <!-- ================= BOOKMARK RAIL ================= -->
+  <nav class="bookmark-rail" aria-label="Document outline" id="bookmarkRail">
+    <div class="bookmark-rail__title">Contents</div>
+    <ol>
+      <li><a href="#sec-introduction">01 — Introduction</a></li>
+      <li><a href="#sec-features">02 — Features</a></li>
+      <li><a href="#sec-characteristics">03 — Electrical Characteristics</a></li>
+      <li><a href="#sec-projects">04 — Application Circuits</a></li>
+      <li><a href="#sec-experience">05 — Professional Experience</a></li>
+      <li><a href="#sec-certifications">06 — Certifications</a></li>
+    </ol>
+  </nav>
+
+  <div class="content-col">
+
+    <!-- ================= UTILITY BAR ================= -->
+    <div class="utility-bar">
+      <div class="utility-bar__group">
+        <button type="button" class="link-style" id="searchTrigger" aria-haspopup="dialog" aria-controls="searchOverlay">Search&nbsp;<span style="color:var(--color-text-faint)">(Ctrl+K)</span></button>
+      </div>
+      <div class="utility-bar__group">
+        <button type="button" class="link-style" id="themeToggle" aria-pressed="false">Night reading: <span id="themeState">Off</span></button>
+        <button type="button" class="link-style" id="printTrigger">Print</button>
+      </div>
+    </div>
+
+    <!-- ================= MASTHEAD (HERO) ================= -->
+        <header class="masthead" style="position: relative; z-index: 1;">
+      <!-- Hero Background -->
+      <div aria-hidden="true" class="hero-bg-layer" style="position: absolute; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; mask-image: linear-gradient(to right, black 40%, transparent 100%); -webkit-mask-image: linear-gradient(to right, black 40%, transparent 100%);">
+        <svg width="100%" height="100%" style="position: absolute; top: 0; left: 0; opacity: 0.25;">
+          <defs>
+            <pattern id="hero-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+              <path d="M 40 0 L 0 0 0 40" fill="none" stroke="var(--color-text-secondary)" stroke-width="0.5" opacity="0.3"/>
+              <circle cx="40" cy="40" r="1.5" fill="var(--color-text-secondary)" opacity="0.4"/>
+            </pattern>
+            <pattern id="hero-grid-micro" width="8" height="8" patternUnits="userSpaceOnUse">
+              <path d="M 8 0 L 0 0 0 8" fill="none" stroke="var(--color-text-secondary)" stroke-width="0.25" opacity="0.15"/>
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#hero-grid-micro)" />
+          <rect width="100%" height="100%" fill="url(#hero-grid)" />
+          
+          <g fill="none" stroke="var(--c-accent)" stroke-width="1.5" opacity="0.4" class="eng-bg__traces">
+            <!-- Animated traces -->
+            <path class="trace trace--a" d="M -50 120 H 220 L 260 160 H 600" />
+            <path class="trace trace--b" d="M 180 -20 V 80 L 220 120 V 300" />
+            <path class="trace trace--c" d="M 800 40 V 150 L 750 200 H 300" />
+            <circle cx="220" cy="120" r="2.5" fill="var(--color-bg-page)" stroke="var(--c-accent)" stroke-width="1" />
+            <circle cx="600" cy="160" r="2.5" fill="var(--color-bg-page)" stroke="var(--c-accent)" stroke-width="1" />
+            <circle cx="300" cy="200" r="2.5" fill="var(--color-bg-page)" stroke="var(--c-accent)" stroke-width="1" />
+          </g>
+
+          <g font-family="var(--font-mono)" font-size="10" fill="var(--color-text-secondary)" opacity="0.5">
+            <text x="230" y="115">NODE 01</text>
+            <text x="610" y="155">BUS-A</text>
+            <text x="310" y="195">CLK_IN</text>
+          </g>
+          
+          <!-- System architecture abstract -->
+          <g transform="translate(650, 100)" fill="none" stroke="var(--color-text-secondary)" stroke-width="1" opacity="0.4">
+             <rect x="0" y="0" width="120" height="120" rx="4" stroke-dasharray="4,4" />
+             <circle cx="60" cy="60" r="40" />
+             <circle cx="60" cy="60" r="30" stroke-dasharray="2,2" />
+             <path d="M 60 10 L 60 20 M 60 100 L 60 110 M 10 60 L 20 60 M 100 60 L 110 60" />
+          </g>
+        </svg>
+      </div>
+
+      <div class="masthead__layout" style="display: block; max-width: var(--measure-wide);">
+        <div>
+          <div class="masthead__eyebrow">
+            <span class="kicker">ECE-2026-V1 · Rev. D · Preliminary<span class="term-cursor" aria-hidden="true"></span></span>
+            <span class="status-stamp">Available for OJT / Internship</span>
+          </div>
+
+          <h1 class="masthead__name">Jared Asher<br>Mananguit</h1>
+          
+          <p class="masthead__tagline">
+            A single-board engineer for systems that span analog circuits, digital hardware, embedded
+            firmware, and the networks and infrastructure that tie them together — reading for a BS in
+            Electronics Engineering at the University of Santo Tomas, with a working interest in
+            instrumentation, controls, and systems engineering.
+          </p>
+
+          <dl class="masthead__meta-table">
+            <div><dt>Institution</dt><dd>University of Santo Tomas</dd></div>
+            <div><dt>Programme</dt><dd>BS Electronics Engineering (ECE)</dd></div>
+            <div><dt>Status</dt><dd>3rd Year, 2023 – Present</dd></div>
+            <div><dt>Honors</dt><dd>Dean&#39;s Lister (AY 2023–2024), DOST-SEI Scholar</dd></div>
+            <div><dt>Location</dt><dd>Manila, Philippines</dd></div>
+            <div><dt>Contact</dt><dd><a href="mailto:jaredasher.mananguit.eng@ust.edu.ph">jaredasher.mananguit.eng@ust.edu.ph</a></dd></div>
+          </dl>
+
+          <div class="masthead__telemetry">
+            <span><span class="led" aria-hidden="true"></span>Documentation status: Active</span>
+            <span>Build v1.4.0</span>
+            <span id="liveClock"></span>
+            <svg class="eng-waveform" viewBox="0 0 120 28" aria-hidden="true" focusable="false">
+              <path d="M0,14 H14 L20,4 L28,24 L36,14 H50 L56,4 L64,24 L72,14 H120"/>
+            </svg>
+          </div>
+
+          <div class="masthead__actions">
+            <a href="Jared_Mananguit_Resume.pdf" target="_blank" rel="noopener noreferrer">View résumé (PDF)</a>
+            <a href="#sec-projects">Application circuits, §4</a>
+            <a href="mailto:jaredasher.mananguit.eng@ust.edu.ph">Get in touch</a>
+          </div>
+        </div>
+        
+        </div>
+    </header>
+
+    <!-- ================= MOBILE TOC ================= -->
+    <details class="toc-mobile">
+      <summary>Contents</summary>
+      <ol>
+        <li><a href="#sec-introduction">01 — Introduction</a></li>
+        <li><a href="#sec-features">02 — Features</a></li>
+        <li><a href="#sec-characteristics">03 — Electrical Characteristics</a></li>
+        <li><a href="#sec-projects">04 — Application Circuits</a></li>
+        <li><a href="#sec-experience">05 — Professional Experience</a></li>
+        <li><a href="#sec-certifications">06 — Certifications</a></li>
+      </ol>
+    </details>
+
+    <main id="main-content">
+
+      <!-- ============================================================
+           1.0 INTRODUCTION
+           ============================================================ -->
+      <section id="sec-introduction" class="doc-section" aria-labelledby="h-introduction">
+        <div class="section-rule reveal">
+          <div class="section-kicker">§ 1.0 Introduction</div>
+          <h2 id="h-introduction" class="section-title">Introduction</h2>
+        </div>
+        <div class="l-split">
+          <div class="l-stack reveal">
+            <p class="lede">
+              I am a BS Electronics Engineering student (University of Santo Tomas,
+              Class of 2027) with a systems-integration mindset. I am comfortable moving between
+              the analog front end, the digital logic behind it, the firmware that drives it, and the
+              network and infrastructure layer that makes it observable and maintainable.
+            </p>
+            <p>
+              Areas of applied interest include <strong>instrumentation and controls</strong>,
+              <strong>embedded systems</strong>, <strong>analog and digital electronics</strong>,
+              <strong>networking</strong>, and <strong>Linux/system administration</strong>. Coursework and independent projects (§4) have been used
+              deliberately to exercise each of these areas rather than specialize prematurely.
+            </p>
+            <p class="u-text-secondary">
+              Relevant coursework: Computer Networks 1 &amp; 2, Microcomputer Systems and Design, Switching
+              Circuits and Logic Design, Digital Communications, Communication Systems Theory, Signal
+              Processing Theory and Applications, and Control Systems Theory.
+            </p>
+          </div>
+          <figure class="figure figure--hero reveal" aria-label="Device summary">
+            <div class="figure__media">
+              <svg viewBox="0 0 260 170" role="img" aria-labelledby="devblock-title">
+                <title id="devblock-title">Block diagram: Integration of analog, digital, and network layers</title>
+                <!-- Blueprint / Grid Background -->
+                <defs>
+                  <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+                    <path d="M 20 0 L 0 0 0 20" fill="none" stroke="var(--color-text-secondary)" stroke-width="0.25" opacity="0.3"/>
+                  </pattern>
+                  <marker id="arrow" markerWidth="6" markerHeight="6" refX="5.75" refY="3" orient="auto-start-reverse">
+                    <path d="M 0 0 L 6 3 L 0 6 z" fill="currentColor"/>
+                  </marker>
+                </defs>
+                <rect width="100%" height="100%" fill="url(#grid)" />
+                <g fill="none" stroke="currentColor" stroke-width="1">
+                  <!-- Analog Front-End Block -->
+                  <rect x="20" y="20" width="60" height="40"/>
+                  <!-- Digital Core Block -->
+                  <rect x="20" y="110" width="60" height="40"/>
+                  <!-- Processing / Integration -->
+                  <rect x="130" y="65" width="80" height="40"/>
+                  
+                  <!-- PCB Traces / Signal routing -->
+                  <!-- Analog to Processing -->
+                  <path d="M 80 40 L 105 40 L 105 75 L 130 75" marker-end="url(#arrow)" />
+                  <!-- Digital to Processing -->
+                  <path d="M 80 130 L 105 130 L 105 95 L 130 95" marker-end="url(#arrow)" />
+                  <!-- Processing Output -->
+                  <path d="M 210 85 L 240 85" marker-end="url(#arrow)" />
+
+                  <!-- Schematic Accents (Resistor symbol on Analog line) -->
+                  <path d="M 85 40 l 3 -4 l 4 8 l 4 -8 l 4 8 l 3 -4" stroke="currentColor" fill="var(--color-bg-page)" />
+                  <!-- Capacitor symbol on Digital line -->
+                  <line x1="88" y1="125" x2="88" y2="135" stroke-width="1.25" />
+                  <line x1="92" y1="125" x2="92" y2="135" stroke-width="1.25" />
+                  <rect x="80" y="128" width="16" height="4" fill="var(--color-bg-page)" stroke="none" />
+                  
+                  <!-- Contact pads / vias -->
+                  <circle cx="105" cy="40" r="1.5" fill="currentColor" />
+                  <circle cx="105" cy="130" r="1.5" fill="currentColor" />
+                </g>
+                <g style="font-family: var(--font-body); " font-size="8" fill="currentColor" letter-spacing="0.5">
+                  <text x="25" y="44">ANALOG IN</text>
+                  <text x="25" y="134">DIGITAL IN</text>
+                  <text x="135" y="88">SYS. CONTROL</text>
+                  <text x="215" y="80" font-size="6" fill="var(--c-accent)">TX/RX</text>
+                </g>
+              </svg>
+            </div>
+            <figcaption><strong>Engineering Focus Areas</strong> Functional summary of applied skills and domains.</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           2.0 FEATURES — Core Competencies
+           ============================================================ -->
+      <section id="sec-features" class="doc-section" aria-labelledby="h-features">
+        <div class="section-rule reveal">
+          <div class="section-kicker">§ 2.0 Features</div>
+          <h2 id="h-features" class="section-title">Core Competencies</h2>
+        </div>
+        <div class="reveal">
+        <table class="spec-table">
+          <caption>Table 1 — Feature Summary</caption>
+          <thead>
+            <tr><th scope="col">Feature</th><th scope="col">Description</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Closed-Loop Control</td><td>First-principles plant modeling and hand-tuned PID control, verified on physical hardware (see AN-001, §4).</td></tr>
+            <tr><td>Analog Circuit Design</td><td>Discrete-transistor analog design derived analytically from a target spec, simulated, fabricated, and bench-validated (see AN-002, §4).</td></tr>
+            <tr><td>Digital Hardware Design</td><td>Register-transfer-level digital design and verification in Verilog / Quartus II, including a full custom 8-bit ISA and ALU (see AN-004, §4).</td></tr>
+            <tr><td>Embedded Firmware</td><td>C/C++ firmware on Arduino/PlatformIO targets, including sensor filtering, anti-windup, and real-time coordination logic.</td></tr>
+            <tr><td>Applied Signal Processing</td><td>MATLAB/Simulink modeling of modulation, filtering, and windowing techniques from first-principles transfer functions (see AN-003, §4).</td></tr>
+            <tr><td>Networking Fundamentals</td><td>CCNA-track routing/switching fundamentals (§6), applied to a self-hosted network storage platform (see AN-005, §4).</td></tr>
+            <tr><td>Systems Documentation</td><td>Every project is documented as a full engineering Application Note — problem statement through lessons learned — not just a finished demo.</td></tr>
+          </tbody>
+        </table>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           3.0 ELECTRICAL CHARACTERISTICS — Technical Competencies
+           ============================================================ -->
+      <section id="sec-characteristics" class="doc-section" aria-labelledby="h-characteristics">
+        <div class="section-rule reveal">
+          <div class="section-kicker">§ 3.0 Electrical Characteristics</div>
+          <h2 id="h-characteristics" class="section-title">Technical Competencies</h2>
+          <span class="section-human">Tools and platforms applied directly in coursework and independent projects — see §4 for validating evidence.</span>
+        </div>
+        <div class="l-split reveal">
+          <div>
+            <div class="l-two-col" style="grid-template-columns: 1fr;">
+              <div>
+                <h4 class="kicker" style="margin-bottom: var(--space-2); display:block;">Programming</h4>
+                <p>Python, C++, Verilog / HDL</p>
+                <h4 class="kicker" style="margin-bottom: var(--space-2); display:block;">Simulation &amp; Design</h4>
+                <p>MATLAB / Simulink, LTspice, KiCad, Quartus II</p>
+                <h4 class="kicker" style="margin-bottom: var(--space-2); display:block;">Embedded &amp; Hardware</h4>
+                <p>Arduino, PlatformIO, PCB design &amp; fabrication</p>
+              </div>
+              <div>
+                <h4 class="kicker" style="margin-bottom: var(--space-2); display:block;">Networking &amp; Systems</h4>
+                <p>CCNA-track routing/switching (§6), Linux, Docker, system administration</p>
+                <h4 class="kicker" style="margin-bottom: var(--space-2); display:block;">Tooling</h4>
+                <p>Git</p>
+              </div>
+            </div>
+          </div>
+          <figure class="figure figure--hero" aria-label="Measurement plots">
+            <div class="figure__media">
+              <svg viewBox="0 0 260 170" role="img" aria-labelledby="char-fig-title">
+                <title id="char-fig-title">Oscilloscope waveform and frequency response diagrams</title>
+                <!-- Grid Background -->
+                <defs>
+                  <pattern id="scope-grid" width="10" height="10" patternUnits="userSpaceOnUse">
+                    <path d="M 10 0 L 0 0 0 10" fill="none" stroke="var(--color-text-secondary)" stroke-width="0.15" opacity="0.4"/>
+                  </pattern>
+                </defs>
+                <rect x="5" y="5" width="250" height="75" fill="url(#scope-grid)" stroke="currentColor" stroke-width="0.5"/>
+                <rect x="5" y="90" width="250" height="75" fill="url(#scope-grid)" stroke="currentColor" stroke-width="0.5"/>
+                
+                <g fill="none" stroke="currentColor">
+                  <!-- Top: Oscilloscope Waveform (Damped Sine) -->
+                  <!-- Centerline -->
+                  <line x1="5" y1="42.5" x2="255" y2="42.5" stroke-width="0.25" stroke-dasharray="2,2"/>
+                  <!-- Waveform -->
+                  <path d="M 5 42.5 Q 15 -10 25 42.5 T 45 42.5 T 65 42.5 T 85 42.5 T 105 42.5 T 125 42.5 T 145 42.5 T 165 42.5 T 185 42.5 T 205 42.5 T 225 42.5 T 245 42.5" stroke="var(--c-accent)" stroke-width="1" fill="none" />
+                  <!-- Wait, a damped sine path manually is hard, let's just do a clean sine/square/triangle composite -->
+                  <path d="M 5 42.5 C 15 5 25 5 35 42.5 C 45 80 55 80 65 42.5 C 75 15 85 15 95 42.5 C 105 70 115 70 125 42.5 C 135 25 145 25 155 42.5 C 165 60 175 60 185 42.5 C 195 32 205 32 215 42.5 C 225 53 235 53 245 42.5" stroke="var(--c-accent)" stroke-width="1"/>
+
+                  <!-- Bottom: Frequency Response (Bode Plot) -->
+                  <path d="M 5 100 L 100 100 C 130 100 150 160 255 160" stroke="currentColor" stroke-width="1"/>
+                  <!-- -3dB Marker -->
+                  <line x1="125" y1="90" x2="125" y2="165" stroke-width="0.5" stroke-dasharray="2,2"/>
+                  <line x1="5" y1="120" x2="125" y2="120" stroke-width="0.5" stroke-dasharray="2,2"/>
+                </g>
+                <g style="font-family: var(--font-mono);" font-size="6" fill="currentColor">
+                  <text x="8" y="14">CH1 10mV/DIV</text>
+                  <text x="210" y="14">1ms/DIV</text>
+                  <text x="8" y="155">MAGNITUDE [dB]</text>
+                  <text x="130" y="160">fc (CUTOFF)</text>
+                  <text x="130" y="118">-3 dB</text>
+                </g>
+              </svg>
+            </div>
+            <figcaption><strong>System Response Characteristics</strong> Typical frequency and time-domain analysis plots.</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           4.0 TYPICAL APPLICATION CIRCUITS — Engineering Projects
+           ============================================================ -->
+      <section id="sec-projects" class="doc-section" aria-labelledby="h-projects">
+        <div class="section-rule reveal">
+          <div class="section-kicker">§ 4.0 Typical Application Circuits</div>
+          <h2 id="h-projects" class="section-title">Engineering Projects</h2>
+          <span class="section-human">Every project below is documented as a full Engineering Application Note — Executive Summary through Lessons Learned — not a portfolio blurb.</span>
+        </div>
+
+        <article class="app-circuit-row reveal" aria-labelledby="an-001-title">
+          <div class="l-split">
+            <figure class="figure figure--hero">
+              <div class="figure__media">
+                <svg viewBox="0 0 260 110" role="img" aria-labelledby="an001-fig-title">
+                  <title id="an001-fig-title">Block diagram: PID control loop with ultrasonic sensor and servo</title>
+                  <defs>
+                    <marker id="arrow-an001" markerWidth="6" markerHeight="6" refX="5.75" refY="3" orient="auto-start-reverse">
+                      <path d="M 0 0 L 6 3 L 0 6 z" fill="currentColor"/>
+                    </marker>
+                  </defs>
+                  <g fill="none" stroke="currentColor" stroke-width="1">
+                    <!-- Setpoint Input -->
+                    <line x1="10" y1="53" x2="30" y2="53" marker-end="url(#arrow-an001)"/>
+                    <text x="12" y="48" style="font-family: var(--font-mono);" font-size="6" fill="currentColor" stroke="none">r(t)</text>
+
+                    <!-- Summing Junction -->
+                    <circle cx="36" cy="53" r="6" />
+                    <line x1="32" y1="49" x2="40" y2="57" stroke-width="0.75" />
+                    <line x1="32" y1="57" x2="40" y2="49" stroke-width="0.75" />
+                    <text x="32" y="44" style="font-family: var(--font-mono);" font-size="6" fill="currentColor" stroke="none">+</text>
+                    <text x="44" y="65" style="font-family: var(--font-mono);" font-size="6" fill="currentColor" stroke="none">-</text>
+
+                    <!-- Error signal -->
+                    <line x1="42" y1="53" x2="60" y2="53" marker-end="url(#arrow-an001)"/>
+                    <text x="46" y="48" style="font-family: var(--font-mono);" font-size="6" fill="currentColor" stroke="none">e(t)</text>
+
+                    <!-- Controller (PID) -->
+                    <rect x="60" y="38" width="40" height="30"/>
+                    <text x="80" y="56" style="font-family: var(--font-body); " font-size="8" fill="currentColor" stroke="none" text-anchor="middle">PID</text>
+                    <text x="80" y="45" style="font-family: var(--font-mono);" font-size="4" fill="var(--color-text-secondary)" stroke="none" text-anchor="middle">ARDUINO</text>
+
+                    <!-- Control signal -->
+                    <line x1="100" y1="53" x2="130" y2="53" marker-end="url(#arrow-an001)"/>
+                    <text x="110" y="48" style="font-family: var(--font-mono);" font-size="6" fill="currentColor" stroke="none">u(t)</text>
+
+                    <!-- Plant (Servo + Beam) -->
+                    <rect x="130" y="38" width="60" height="30"/>
+                    <text x="160" y="54" style="font-family: var(--font-mono);" font-size="7" fill="currentColor" stroke="none" text-anchor="middle">SERVO+</text>
+                    <text x="160" y="62" style="font-family: var(--font-body); " font-size="7" fill="currentColor" stroke="none" text-anchor="middle">BEAM</text>
+
+                    <!-- Output signal -->
+                    <line x1="190" y1="53" x2="240" y2="53" marker-end="url(#arrow-an001)"/>
+                    <text x="210" y="48" style="font-family: var(--font-mono);" font-size="6" fill="currentColor" stroke="none">y(t)</text>
+                    <circle cx="205" cy="53" r="1.5" fill="currentColor" />
+
+                    <!-- Feedback (Sensor) -->
+                    <path d="M 205 53 L 205 90 L 145 90" marker-end="url(#arrow-an001)" />
+                    <rect x="95" y="75" width="50" height="30"/>
+                    <text x="120" y="93" style="font-family: var(--font-body); " font-size="8" fill="currentColor" stroke="none" text-anchor="middle">HC-SR04</text>
+                    <text x="120" y="83" style="font-family: var(--font-body); " font-size="4" fill="var(--color-text-secondary)" stroke="none" text-anchor="middle">ULTRASONIC</text>
+
+                    <!-- Feedback signal to summing junction -->
+                    <path d="M 95 90 L 36 90 L 36 65" marker-end="url(#arrow-an001)" />
+                  </g>
+                </svg>
+              </div>
+              <figcaption><strong>AN-001: Closed-Loop Feedback</strong> Block diagram of the PID control loop with ultrasonic sensor and servo.</figcaption>
+            </figure>
+            <div>
+              <div class="app-circuit-row__head">
+                <h3 id="an-001-title">Ball-and-Beam PID Control System</h3>
+                <span class="badge badge--pass">AN-001 · Validated</span>
+              </div>
+              <ul class="app-circuit-row__specs">
+                <li><span class="k">Rise time</span> ≈ 2 s (spec ≤ 5 s)</li>
+                <li><span class="k">Settling time</span> ≈ 14 s (spec ≤ 30 s)</li>
+                <li><span class="k">Steady-state error</span> ≈ 0.8 in (spec ± 1 in)</li>
+                <li><span class="k">Platform</span> Arduino Uno, HC-SR04, SG92 servo</li>
+              </ul>
+              <div class="app-circuit-row__tags">
+                <span class="tag">Arduino</span><span class="tag">PID Control</span><span class="tag">C++</span><span class="tag">MATLAB</span>
+              </div>
+              <a class="read-more" href="projects/an-001-ball-and-beam-pid.html">Read the Application Note →</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="app-circuit-row reveal" aria-labelledby="an-002-title">
+          <div class="l-split l-split--reverse">
+            <figure class="figure figure--hero">
+              <div class="figure__media">
+                <svg viewBox="0 0 260 110" role="img" aria-labelledby="an002-fig-title">
+                  <title id="an002-fig-title">Block diagram: differential input stage to voltage amplification stage to Class AB output stage into 4 ohm load</title>
+                  <defs>
+                    <marker id="arrow2" markerWidth="6" markerHeight="6" refX="5.75" refY="3" orient="auto-start-reverse">
+                      <path d="M 0 0 L 6 3 L 0 6 z" fill="currentColor"/>
+                    </marker>
+                  </defs>
+                  <g fill="none" stroke="currentColor" stroke-width="1">
+                    <!-- Audio Input -->
+                    <line x1="10" y1="53" x2="25" y2="53" marker-end="url(#arrow2)"/>
+                    <text x="10" y="46" style="font-family: var(--font-mono);" font-size="6" fill="currentColor" stroke="none">VIN</text>
+                    
+                    <!-- Summing (Diff Pair input) -->
+                    <circle cx="31" cy="53" r="6" />
+                    <line x1="27" y1="49" x2="35" y2="57" stroke-width="0.75" />
+                    <line x1="27" y1="57" x2="35" y2="49" stroke-width="0.75" />
+                    
+                    <!-- Diff Pair -->
+                    <rect x="45" y="38" width="50" height="30"/>
+                    <text x="70" y="54" style="font-family: var(--font-body); " font-size="8" fill="currentColor" stroke="none" text-anchor="middle">DIFF</text>
+                    <text x="70" y="62" style="font-family: var(--font-body); " font-size="8" fill="currentColor" stroke="none" text-anchor="middle">PAIR</text>
+
+                    <!-- Connection -->
+                    <line x1="37" y1="53" x2="45" y2="53" marker-end="url(#arrow2)"/>
+                    <line x1="95" y1="53" x2="115" y2="53" marker-end="url(#arrow2)"/>
+                    
+                    <!-- VAS -->
+                    <rect x="115" y="38" width="50" height="30"/>
+                    <text x="140" y="56" style="font-family: var(--font-body); " font-size="8" fill="currentColor" stroke="none" text-anchor="middle">VAS</text>
+                    
+                    <!-- Connection -->
+                    <line x1="165" y1="53" x2="185" y2="53" marker-end="url(#arrow2)"/>
+                    
+                    <!-- Class AB Output -->
+                    <path d="M 185 38 L 225 53 L 185 68 Z" />
+                    <text x="198" y="51" style="font-family: var(--font-body); " font-size="5" fill="currentColor" stroke="none" text-anchor="middle">CLASS</text>
+                    <text x="198" y="58" style="font-family: var(--font-body); " font-size="5" fill="currentColor" stroke="none" text-anchor="middle">AB</text>
+                    
+                    <!-- Output line -->
+                    <line x1="225" y1="53" x2="245" y2="53" />
+                    <circle cx="235" cy="53" r="1.5" fill="currentColor" />
+                    
+                    <!-- Load (Speaker/Resistor symbol) -->
+                    <path d="M 245 53 L 245 70 L 235 80 L 255 80 L 245 70" />
+                    <text x="245" y="90" style="font-family: var(--font-mono);" font-size="6" fill="currentColor" stroke="none" text-anchor="middle">4Ω</text>
+
+                    <!-- Negative Feedback Network -->
+                    <path d="M 235 53 L 235 95 L 31 95 L 31 59" marker-end="url(#arrow2)" />
+                    <!-- Feedback Resistor -->
+                    <rect x="120" y="92" width="20" height="6" fill="var(--color-bg-page)" />
+                    <text x="130" y="88" style="font-family: var(--font-mono);" font-size="6" fill="currentColor" stroke="none" text-anchor="middle">NFB</text>
+                  </g>
+                </svg>
+              </div>
+              <figcaption><strong>AN-002: Three-Stage Amplifier</strong> Topology showing the differential pair, voltage amplification stage, and Class AB output.</figcaption>
+            </figure>
+            <div>
+              <div class="app-circuit-row__head">
+                <h3 id="an-002-title">Class AB Audio Power Amplifier</h3>
+                <span class="badge badge--pass">AN-002 · Validated</span>
+              </div>
+              <ul class="app-circuit-row__specs">
+                <li><span class="k">Target output</span> 25 W into 4 Ω</li>
+                <li><span class="k">Measured output</span> 25.18 W (0.72% error)</li>
+                <li><span class="k">Peak voltage error</span> 0.005% vs. simulated</li>
+                <li><span class="k">Conduction angle</span> &gt; 180° (confirmed Class AB)</li>
+              </ul>
+              <div class="app-circuit-row__tags">
+                <span class="tag">LTspice</span><span class="tag">KiCad</span><span class="tag">PCB Fabrication</span><span class="tag">Analog Design</span>
+              </div>
+              <a class="read-more" href="projects/an-002-class-ab-amplifier.html">Read the Application Note →</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="app-circuit-row reveal" aria-labelledby="an-003-title">
+          <div class="l-split">
+            <figure class="figure figure--hero">
+              <div class="figure__media">
+                <svg viewBox="0 0 260 110" role="img" aria-labelledby="an003-fig-title">
+                  <title id="an003-fig-title">Block diagram: Quadrature Amplitude Modulation (QAM) transceiver</title>
+                  <defs>
+                    <marker id="arrow3" markerWidth="6" markerHeight="6" refX="5.75" refY="3" orient="auto-start-reverse">
+                      <path d="M 0 0 L 6 3 L 0 6 z" fill="currentColor"/>
+                    </marker>
+                    <!-- Multiplier Symbol -->
+                    <g id="mixer">
+                      <circle cx="0" cy="0" r="6" fill="var(--color-bg-page)" stroke="currentColor" stroke-width="1"/>
+                      <line x1="-3" y1="-3" x2="3" y2="3" stroke="currentColor" stroke-width="1"/>
+                      <line x1="-3" y1="3" x2="3" y2="-3" stroke="currentColor" stroke-width="1"/>
+                    </g>
+                  </defs>
+                  <g fill="none" stroke="currentColor" stroke-width="1">
+                    <!-- Audio Inputs -->
+                    <line x1="10" y1="25" x2="30" y2="25" marker-end="url(#arrow3)"/>
+                    <text x="12" y="20" style="font-family: var(--font-mono);" font-size="6" fill="currentColor" stroke="none">CH 1</text>
+                    <line x1="10" y1="85" x2="30" y2="85" marker-end="url(#arrow3)"/>
+                    <text x="12" y="80" style="font-family: var(--font-mono);" font-size="6" fill="currentColor" stroke="none">CH 2</text>
+                    
+                    <!-- Resamplers -->
+                    <rect x="30" y="15" width="20" height="20"/>
+                    <text x="40" y="27" style="font-family: var(--font-mono);" font-size="6" fill="currentColor" stroke="none" text-anchor="middle">↑L</text>
+                    <rect x="30" y="75" width="20" height="20"/>
+                    <text x="40" y="87" style="font-family: var(--font-mono);" font-size="6" fill="currentColor" stroke="none" text-anchor="middle">↑L</text>
+
+                    <!-- Mixers -->
+                    <line x1="50" y1="25" x2="74" y2="25" marker-end="url(#arrow3)"/>
+                    <line x1="50" y1="85" x2="74" y2="85" marker-end="url(#arrow3)"/>
+                    <use href="#mixer" x="80" y="25" />
+                    <use href="#mixer" x="80" y="85" />
+                    
+                    <!-- Local Oscillator -->
+                    <circle cx="80" cy="55" r="8" />
+                    <text x="80" y="57.5" style="font-family: var(--font-mono);" font-size="8" fill="currentColor" stroke="none" text-anchor="middle">~</text>
+                    <line x1="80" y1="47" x2="80" y2="31" marker-end="url(#arrow3)"/>
+                    <line x1="80" y1="63" x2="80" y2="79" marker-end="url(#arrow3)"/>
+                    <text x="83" y="44" style="font-family: var(--font-mono);" font-size="5" fill="currentColor" stroke="none">cos</text>
+                    <text x="83" y="70" style="font-family: var(--font-mono);" font-size="5" fill="currentColor" stroke="none">sin</text>
+
+                    <!-- Summing Junction (QAM Modulator) -->
+                    <circle cx="110" cy="55" r="6" />
+                    <line x1="106" y1="51" x2="114" y2="59" stroke-width="0.75" />
+                    <line x1="106" y1="59" x2="114" y2="51" stroke-width="0.75" />
+                    
+                    <!-- Mixer outputs to Summing -->
+                    <path d="M 86 25 L 110 25 L 110 49" marker-end="url(#arrow3)" />
+                    <path d="M 86 85 L 110 85 L 110 61" marker-end="url(#arrow3)" />
+
+                    <!-- Transmission Channel -->
+                    <path d="M 116 55 Q 130 35 145 55 T 174 55" stroke="var(--c-accent)" stroke-width="1.25" marker-end="url(#arrow3)" />
+                    <text x="145" y="45" style="font-family: var(--font-body); " font-size="6" fill="var(--color-text-secondary)" stroke="none" text-anchor="middle">AWGN CHANNEL</text>
+
+                    <!-- Demodulator Block -->
+                    <rect x="174" y="25" width="40" height="60"/>
+                    <text x="194" y="52" style="font-family: var(--font-body); " font-size="7" fill="currentColor" stroke="none" text-anchor="middle">COHERENT</text>
+                    <text x="194" y="62" style="font-family: var(--font-body); " font-size="7" fill="currentColor" stroke="none" text-anchor="middle">DEMOD</text>
+
+                    <!-- Outputs -->
+                    <line x1="214" y1="35" x2="240" y2="35" marker-end="url(#arrow3)"/>
+                    <line x1="214" y1="75" x2="240" y2="75" marker-end="url(#arrow3)"/>
+                    <text x="230" y="30" style="font-family: var(--font-mono);" font-size="6" fill="currentColor" stroke="none">OUT 1</text>
+                    <text x="230" y="70" style="font-family: var(--font-mono);" font-size="6" fill="currentColor" stroke="none">OUT 2</text>
+                  </g>
+                </svg>
+              </div>
+              <figcaption><strong>AN-003: QAM Transceiver</strong> Communication chain block diagram illustrating modulation and coherent demodulation.</figcaption>
+            </figure>
+            <div>
+              <div class="app-circuit-row__head">
+                <h3 id="an-003-title">Communications System</h3>
+                <span class="badge badge--pass">AN-003 · Validated</span>
+              </div>
+              <ul class="app-circuit-row__specs">
+                <li><span class="k">Modulation</span> QAM, 2 independent audio channels on orthogonal I/Q carriers</li>
+                <li><span class="k">Resampling</span> 3× the 100 kHz carrier to avoid Nyquist-edge aliasing</li>
+                <li><span class="k">Recovery filter</span> 4th-order Butterworth, zero-phase (filtfilt)</li>
+                <li><span class="k">Result</span> No audible degradation vs. originals (A/B listening test)</li>
+              </ul>
+              <div class="app-circuit-row__tags">
+                <span class="tag">MATLAB</span><span class="tag">Signal Processing</span><span class="tag">Modulation Theory</span>
+              </div>
+              <a class="read-more" href="projects/an-003-communications-system.html">Read the Application Note →</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="app-circuit-row reveal" aria-labelledby="an-004-title">
+          <div class="l-split l-split--reverse">
+            <figure class="figure figure--hero">
+              <div class="figure__media">
+                <svg viewBox="0 0 260 110" role="img" aria-labelledby="an004-fig-title">
+                  <title id="an004-fig-title">Block diagram: CPU architecture with Ring Counter, Control Matrix, ALU, and Datapath</title>
+                  <defs>
+                    <marker id="arrow4" markerWidth="6" markerHeight="6" refX="5.75" refY="3" orient="auto-start-reverse">
+                      <path d="M 0 0 L 6 3 L 0 6 z" fill="currentColor"/>
+                    </marker>
+                  </defs>
+                  <!-- W-BUS -->
+                  <rect x="15" y="45" width="230" height="4" fill="var(--color-bg-page)" stroke="currentColor" stroke-width="1"/>
+                  <text x="250" y="48" style="font-family: var(--font-mono);" font-size="5" fill="var(--color-text-secondary)" stroke="none">W-BUS</text>
+
+                  <g fill="none" stroke="currentColor" stroke-width="1">
+                    <!-- Instruction Register -->
+                    <rect x="20" y="10" width="50" height="20"/>
+                    <text x="45" y="23" style="font-family: var(--font-body); " font-size="7" fill="currentColor" stroke="none" text-anchor="middle">IR</text>
+                    <path d="M 45 30 L 45 45" marker-end="url(#arrow4)" />
+                    
+                    <!-- Ring Counter / Control -->
+                    <rect x="20" y="65" width="50" height="35"/>
+                    <text x="45" y="78" style="font-family: var(--font-body); " font-size="6" fill="currentColor" stroke="none" text-anchor="middle">CONTROL</text>
+                    <text x="45" y="86" style="font-family: var(--font-body); " font-size="6" fill="currentColor" stroke="none" text-anchor="middle">MATRIX</text>
+                    <text x="45" y="94" style="font-family: var(--font-mono);" font-size="4" fill="var(--color-text-secondary)" stroke="none" text-anchor="middle">(T-STATES)</text>
+                    
+                    <!-- Control signals -->
+                    <path d="M 45 49 L 45 65" marker-end="url(#arrow4)" />
+                    <line x1="70" y1="80" x2="215" y2="80" stroke-width="0.5" stroke-dasharray="2,2"/>
+                    <text x="85" y="77" style="font-family: var(--font-mono);" font-size="4" fill="currentColor" stroke="none">CONTROL LINES</text>
+
+                    <!-- ALU & Registers -->
+                    <!-- Accumulator -->
+                    <rect x="110" y="10" width="40" height="20"/>
+                    <text x="130" y="23" style="font-family: var(--font-mono);" font-size="7" fill="currentColor" stroke="none" text-anchor="middle">ACC (A)</text>
+                    <path d="M 125 30 L 125 45" marker-start="url(#arrow4)" marker-end="url(#arrow4)" />
+                    
+                    <!-- ALU -->
+                    <polygon points="170,10 210,10 200,20 210,30 170,30 175,20" />
+                    <text x="187" y="23" style="font-family: var(--font-body); " font-size="7" fill="currentColor" stroke="none" text-anchor="middle">ALU</text>
+                    <path d="M 150 20 L 170 20" marker-end="url(#arrow4)" />
+                    <path d="M 190 30 L 190 45" marker-end="url(#arrow4)" />
+                    
+                    <!-- Register B / Temp -->
+                    <rect x="220" y="10" width="30" height="20"/>
+                    <text x="235" y="23" style="font-family: var(--font-body); " font-size="7" fill="currentColor" stroke="none" text-anchor="middle">REG B</text>
+                    <path d="M 235 45 L 235 30" marker-end="url(#arrow4)" />
+                    <path d="M 220 20 L 210 20" marker-end="url(#arrow4)" />
+
+                    <!-- Memory -->
+                    <rect x="140" y="65" width="80" height="30"/>
+                    <text x="180" y="80" style="font-family: var(--font-body); " font-size="7" fill="currentColor" stroke="none" text-anchor="middle">MEMORY</text>
+                    <text x="180" y="89" style="font-family: var(--font-mono);" font-size="5" fill="var(--color-text-secondary)" stroke="none" text-anchor="middle">256 B ROM/RAM</text>
+                    <path d="M 160 49 L 160 65" marker-start="url(#arrow4)" marker-end="url(#arrow4)" />
+                    <path d="M 200 65 L 200 49" marker-start="url(#arrow4)" marker-end="url(#arrow4)" />
+                  </g>
+                </svg>
+              </div>
+              <figcaption><strong>AN-004: SAP-2 Architecture</strong> Control-unit block diagram detailing the sequencer and datapath.</figcaption>
+            </figure>
+            <div>
+              <div class="app-circuit-row__head">
+                <h3 id="an-004-title">SAP-2 Architecture</h3>
+                <span class="badge badge--pass">AN-004 · Validated</span>
+              </div>
+              <ul class="app-circuit-row__specs">
+                <li><span class="k">ISA</span> 42 instructions — memory-ref, register, jump/call, logical, special</li>
+                <li><span class="k">Bus</span> 8-bit W-Bus data, 16-bit address, tri-state arbitration</li>
+                <li><span class="k">Memory</span> 256 B (128 B ROM / 128 B RAM)</li>
+                <li><span class="k">Verification</span> Per-instruction ModelSim testbenches + full fetch-decode-execute sim</li>
+              </ul>
+              <div class="app-circuit-row__tags">
+                <span class="tag">Verilog</span><span class="tag">ModelSim</span><span class="tag">Quartus II</span><span class="tag">Computer Architecture</span>
+              </div>
+              <a class="read-more" href="projects/an-004-sap-2-architecture.html">Read the Application Note →</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="app-circuit-row reveal" aria-labelledby="an-005-title">
+          <div class="l-split">
+            <figure class="figure figure--hero">
+              <div class="figure__media">
+                <svg viewBox="0 0 260 110" role="img" aria-labelledby="an005-fig-title">
+                  <title id="an005-fig-title">Block diagram: Network storage architecture with clients, switch, and NAS</title>
+                  <defs>
+                    <!-- PC Icon -->
+                    <g id="pc">
+                      <rect x="0" y="0" width="14" height="10" rx="1" fill="none" stroke="currentColor" stroke-width="1"/>
+                      <line x1="2" y1="12" x2="12" y2="12" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>
+                      <line x1="7" y1="10" x2="7" y2="12" stroke="currentColor" stroke-width="1"/>
+                    </g>
+                    <!-- Switch Icon -->
+                    <g id="switch">
+                      <rect x="0" y="0" width="24" height="12" fill="none" stroke="currentColor" stroke-width="1"/>
+                      <line x1="4" y1="4" x2="20" y2="4" stroke="currentColor" stroke-width="0.5" marker-end="url(#arrow5)"/>
+                      <line x1="20" y1="8" x2="4" y2="8" stroke="currentColor" stroke-width="0.5" marker-end="url(#arrow5)"/>
+                    </g>
+                    <!-- Server Icon -->
+                    <g id="server">
+                      <rect x="0" y="0" width="16" height="24" rx="1" fill="none" stroke="currentColor" stroke-width="1"/>
+                      <line x1="4" y1="6" x2="12" y2="6" stroke="currentColor" stroke-width="1"/>
+                      <line x1="4" y1="12" x2="12" y2="12" stroke="currentColor" stroke-width="1"/>
+                      <line x1="4" y1="18" x2="12" y2="18" stroke="currentColor" stroke-width="1"/>
+                    </g>
+                    <!-- DB Icon -->
+                    <g id="db">
+                      <ellipse cx="10" cy="4" rx="10" ry="3" fill="none" stroke="currentColor" stroke-width="1"/>
+                      <ellipse cx="10" cy="10" rx="10" ry="3" fill="none" stroke="currentColor" stroke-width="1"/>
+                      <ellipse cx="10" cy="16" rx="10" ry="3" fill="none" stroke="currentColor" stroke-width="1"/>
+                      <path d="M 0 4 L 0 16 A 10 3 0 0 0 20 16 L 20 4" fill="none" stroke="currentColor" stroke-width="1"/>
+                    </g>
+                    <marker id="arrow5" markerWidth="6" markerHeight="6" refX="5.75" refY="3" orient="auto-start-reverse">
+                      <path d="M 0 0 L 6 3 L 0 6 z" fill="currentColor"/>
+                    </marker>
+                  </defs>
+                  
+                  <g fill="none" stroke="currentColor" stroke-width="1">
+                    <!-- LAN Clients -->
+                    <use href="#pc" x="15" y="25" />
+                    <use href="#pc" x="15" y="70" />
+                    <text x="22" y="18" style="font-family: var(--font-body); " font-size="5" fill="var(--color-text-secondary)" stroke="none" text-anchor="middle">CLIENT A</text>
+                    <text x="22" y="92" style="font-family: var(--font-body); " font-size="5" fill="var(--color-text-secondary)" stroke="none" text-anchor="middle">CLIENT B</text>
+
+                    <!-- Network connections from clients -->
+                    <path d="M 35 30 L 70 30 L 70 50 L 95 50" stroke-width="0.75" />
+                    <path d="M 35 75 L 70 75 L 70 60 L 95 60" stroke-width="0.75" />
+
+                    <!-- Switch -->
+                    <use href="#switch" x="100" y="49" />
+                    <text x="112" y="44" style="font-family: var(--font-body); " font-size="6" fill="currentColor" stroke="none" text-anchor="middle">GbE SWITCH</text>
+                    <rect x="90" y="30" width="44" height="40" fill="none" stroke="var(--color-text-secondary)" stroke-width="0.5" stroke-dasharray="2,2"/>
+                    
+                    <!-- Network connection to server -->
+                    <line x1="130" y1="55" x2="175" y2="55" stroke-width="1" />
+                    <text x="152" y="52" style="font-family: var(--font-mono);" font-size="5" fill="currentColor" stroke="none" text-anchor="middle">LACP BOND</text>
+
+                    <!-- Server (Linux NAS) -->
+                    <use href="#server" x="180" y="43" />
+                    <text x="188" y="38" style="font-family: var(--font-body); " font-size="6" fill="currentColor" stroke="none" text-anchor="middle">LINUX NAS</text>
+                    <text x="188" y="75" style="font-family: var(--font-mono);" font-size="5" fill="currentColor" stroke="none" text-anchor="middle">SMB/NFS</text>
+
+                    <!-- RAID Array -->
+                    <line x1="200" y1="55" x2="225" y2="55" stroke-width="0.75" />
+                    <use href="#db" x="230" y="45" />
+                    <text x="240" y="72" style="font-family: var(--font-body); " font-size="5" fill="var(--color-text-secondary)" stroke="none" text-anchor="middle">RAID ARRAY</text>
+                  </g>
+                </svg>
+              </div>
+              <figcaption><strong>AN-005: Network Storage</strong> Architecture diagram of LAN clients connected to a Linux NAS and RAID array.</figcaption>
+            </figure>
+            <div>
+              <div class="app-circuit-row__head">
+                <h3 id="an-005-title">Self-Hosted Network Storage Platform</h3>
+                <span class="badge badge--progress">AN-005 · In development</span>
+              </div>
+              <ul class="app-circuit-row__specs">
+                <li><span class="k">OS</span> Linux (Debian-based)</li>
+                <li><span class="k">Protocols</span> SMB, NFS</li>
+                <li><span class="k">Status</span> Hardware configuration and OS install planned</li>
+              </ul>
+              <div class="app-circuit-row__tags">
+                <span class="tag">Linux</span><span class="tag">Networking</span><span class="tag">System Administration</span>
+              </div>
+              <a class="read-more" href="projects/an-005-network-storage.html">Read the Application Note →</a>
+            </div>
+          </div>
+        </article>
+
+      </section>
+
+      <!-- ============================================================
+           5.0 PROFESSIONAL EXPERIENCE
+           ============================================================ -->
+      <section id="sec-experience" class="doc-section" aria-labelledby="h-experience">
+        <div class="section-rule reveal">
+          <div class="section-kicker">§ 5.0 Professional Experience</div>
+          <h2 id="h-experience" class="section-title">Experience &amp; Involvement</h2>
+        </div>
+        
+        
+        <div class="reveal">
+        <table class="spec-table spec-table--reflow">
+          <caption>Table 3 — Professional Experience &amp; Involvement</caption>
+          <thead><tr><th scope="col">Role</th><th scope="col">Organization</th><th scope="col">Dates</th><th scope="col">Description</th></tr></thead>
+          <tbody>
+            <tr>
+              <td data-label="Role">Official Photographer</td>
+              <td data-label="Organization">Engineering Student Council, University of Santo Tomas</td>
+              <td data-label="Dates">2024 – 2025</td>
+              <td data-label="Description">Documented council and college-wide engineering events; organized and maintained the photo archive.</td>
+            </tr>
+            <tr>
+              <td data-label="Role">Embedded Software Contributor</td>
+              <td data-label="Organization">Game Show Buzzer System (team project)</td>
+              <td data-label="Dates">2025 – Present</td>
+              <td data-label="Description">Writing Arduino firmware for a real-time multi-player buzzer system, synchronizing LED displays and audio feedback; managing version control and merging team contributions via Git/GitHub.</td>
+            </tr>
+            <tr>
+              <td data-label="Role">Dean's Lister</td>
+              <td data-label="Organization">University of Santo Tomas, Faculty of Engineering</td>
+              <td data-label="Dates">AY 2023 – 2024</td>
+              <td data-label="Description">Academic distinction awarded for performance in the BS Electronics Engineering programme.</td>
+            </tr>
+            <tr>
+              <td data-label="Role">DOST-SEI Scholar</td>
+              <td data-label="Organization">DOST Science Education Institute</td>
+              <td data-label="Dates">2023 – Present</td>
+              <td data-label="Description">Merit-based national science scholarship supporting undergraduate ECE studies.</td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           6.0 CERTIFICATIONS
+           ============================================================ -->
+      <section id="sec-certifications" class="doc-section" aria-labelledby="h-certifications">
+        <div class="section-rule reveal">
+          <div class="section-kicker">§ 6.0 Certifications</div>
+          <h2 id="h-certifications" class="section-title">Certifications</h2>
+        </div>
+        <div class="reveal">
+          <div class="cert-entry">
+            <div class="cert-entry__thumb">
+              <svg viewBox="0 0 100 130" style="width: 100%; height: auto; display: block;" role="img" aria-hidden="true">
+                <g fill="none" stroke="currentColor" stroke-width="1">
+                  <rect x="15" y="15" width="70" height="100" />
+                  <rect x="20" y="20" width="60" height="90" stroke-width="0.75" />
+                  <!-- Title -->
+                  <line x1="30" y1="35" x2="70" y2="35" stroke-width="1.25" />
+                  <line x1="35" y1="42" x2="65" y2="42" stroke-width="1" />
+                  <line x1="40" y1="48" x2="60" y2="48" stroke-width="1" />
+                  <!-- Text -->
+                  <line x1="25" y1="65" x2="75" y2="65" stroke-width="0.5" />
+                  <line x1="25" y1="71" x2="75" y2="71" stroke-width="0.5" />
+                  <line x1="25" y1="77" x2="55" y2="77" stroke-width="0.5" />
+                  <!-- Seal -->
+                  <circle cx="70" cy="95" r="8" />
+                  <circle cx="70" cy="95" r="5" stroke-width="0.5" />
+                  <!-- Seal ribbon -->
+                  <path d="M66 102 l-3 10 l7 -2 l7 2 l-3 -10" stroke-width="0.75" />
+                </g>
+              </svg>
+            </div>
+            <div>
+              <h3 style="font-size: var(--fs-h3);">Cisco Certified Network Associate 1 (CCNA 1)</h3>
+              <p class="cert-entry__meta">Issuer: Cisco Networking Academy &nbsp;·&nbsp; Status: <span class="badge badge--pass">Completed</span> &nbsp;·&nbsp; Year: 2025</p>
+              <p>Introduction to Networks — foundational routing/switching, addressing, and network media concepts.</p>
+              <div style="display: flex; gap: var(--space-4);">
+                <a class="read-more" href="assets/certificates/CCNA-_Introduction_to_Networks_certificate_jaredasher-mananguit-eng-ust-edu-ph_cee7d42c-76a0-490f-b0ed-85a1c4a6bbc4.pdf" target="_blank" rel="noopener noreferrer">View Certificate →</a>
+              </div>
+            </div>
+          </div>
+          <div class="cert-entry">
+            <div class="cert-entry__thumb">
+              <svg viewBox="0 0 100 130" style="width: 100%; height: auto; display: block;" role="img" aria-hidden="true">
+                <g fill="none" stroke="currentColor" stroke-width="1">
+                  <rect x="15" y="15" width="70" height="100" />
+                  <rect x="20" y="20" width="60" height="90" stroke-width="0.75" />
+                  <!-- Title -->
+                  <line x1="30" y1="35" x2="70" y2="35" stroke-width="1.25" />
+                  <line x1="35" y1="42" x2="65" y2="42" stroke-width="1" />
+                  <line x1="40" y1="48" x2="60" y2="48" stroke-width="1" />
+                  <!-- Text -->
+                  <line x1="25" y1="65" x2="75" y2="65" stroke-width="0.5" />
+                  <line x1="25" y1="71" x2="75" y2="71" stroke-width="0.5" />
+                  <line x1="25" y1="77" x2="55" y2="77" stroke-width="0.5" />
+                  <!-- Seal -->
+                  <circle cx="70" cy="95" r="8" />
+                  <circle cx="70" cy="95" r="5" stroke-width="0.5" />
+                  <!-- Seal ribbon -->
+                  <path d="M66 102 l-3 10 l7 -2 l7 2 l-3 -10" stroke-width="0.75" />
+                </g>
+              </svg>
+            </div>
+            <div>
+              <h3 style="font-size: var(--fs-h3);">Cisco Certified Network Associate 2 (CCNA 2)</h3>
+              <p class="cert-entry__meta">Issuer: Cisco Networking Academy &nbsp;·&nbsp; Status: <span class="badge badge--pass">Completed</span> &nbsp;·&nbsp; Year: 2025</p>
+              <p>Switching, Routing, and Wireless Essentials.</p>
+              <div style="display: flex; gap: var(--space-4);">
+                <a class="read-more" href="assets/certificates/CCNA-_Switching-_Routing-_and_Wireless_Essentials_certificate_jaredasher-mananguit-eng-ust-edu-ph_95d66144-a9a8-4f2a-b6b5-c3fda564c20f.pdf" target="_blank" rel="noopener noreferrer">View Certificate →</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="doc-footer">
+      <p>Specifications subject to change without notice. This document is a self-published engineering-format
+        portfolio and does not represent an official corporate or academic publication.</p>
+      <p>Document Control No. ECE-2026-V1 &nbsp;·&nbsp; Revision D &nbsp;·&nbsp; Issued 2026-07-06 &nbsp;·&nbsp; Copyright © 2026 Jared Asher Mananguit.</p>
+      <div class="console-footer" role="status" aria-live="off">
+        <div class="console-footer__row"><span>Documentation Loaded</span><span class="console-footer__fill"></span><span class="console-footer__status">OK</span></div>
+        <div class="console-footer__row"><span>Projects Verified</span><span class="console-footer__fill"></span><span class="console-footer__status">PASS</span></div>
+        <div class="console-footer__row"><span>System Status</span><span class="console-footer__fill"></span><span class="console-footer__status">ONLINE</span></div>
+      </div>
+    </footer>
+
+  </div>
+</div>
+
+<!-- ================= SEARCH OVERLAY ================= -->
+<div class="search-overlay" id="searchOverlay" hidden role="dialog" aria-modal="true" aria-label="Document search">
+  <div class="search-panel">
+    <div class="search-panel__input-row">
+      <label for="searchInput" class="sr-only">Search this document</label>
+      <input type="text" id="searchInput" placeholder="Search sections, projects, technologies…" autocomplete="off">
+    </div>
+    <ul class="search-panel__results" id="searchResults"></ul>
+  </div>
+</div>
+
+<script type="module" src="js/theme.js"></script>
+<script type="module" src="js/nav.js"></script>
+<script type="module" src="js/search.js"></script>
+<script type="module" src="js/reveal.js"></script>
+<script type="module" src="js/engineering-fx.js"></script>
+<script type="module" src="js/main.js"></script>
+</body>
+</html>

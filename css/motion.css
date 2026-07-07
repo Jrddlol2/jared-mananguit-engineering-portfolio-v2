@@ -1,0 +1,258 @@
+/* ==========================================================================
+   MOTION — subtle engineering-inspired dynamic layer.
+   Everything here is additive chrome: background, scroll progress, hover/
+   focus refinements, diagram signal-flow, status LEDs, console footer.
+   Every animated rule has a `prefers-reduced-motion: reduce` counterpart
+   that disables or freezes the motion without hiding any content.
+   ========================================================================== */
+
+/* ---------------------------------------------------------------------
+   1. BACKGROUND — blueprint grid + faint PCB-trace signal paths
+   Fixed, aria-hidden, never above z-index of content, opacity 2-5%.
+   --------------------------------------------------------------------- */
+.eng-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+.eng-bg__grid {
+  position: absolute;
+  inset: 0;
+  opacity: 0.035;
+  background-image:
+    linear-gradient(var(--color-text-primary) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-text-primary) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+.eng-bg__traces {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.045;
+}
+.eng-bg__traces .trace {
+  fill: none;
+  stroke: var(--c-accent);
+  stroke-width: 1;
+  stroke-dasharray: 20 200;
+  stroke-dashoffset: 100;
+  animation: signalFlow 4s linear infinite;
+}
+.eng-bg__traces .trace--a { animation-delay: 0s; }
+.eng-bg__traces .trace--b { animation-delay: 1.5s; }
+.eng-bg__traces .trace--c { animation-delay: 0.8s; }
+@keyframes signalFlow {
+  0% { stroke-dashoffset: 100; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { stroke-dashoffset: -100; opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .eng-bg__traces .trace { animation: none; }
+}
+@media (max-width: 640px) {
+  .eng-bg__grid { background-size: 36px 36px; }
+}
+
+/* ---------------------------------------------------------------------
+   2. SCROLL PROGRESS INDICATOR
+   --------------------------------------------------------------------- */
+.scroll-progress {
+  position: fixed;
+  top: 0; left: 0;
+  height: 2px;
+  width: 0%;
+  background: var(--c-accent);
+  z-index: 300;
+  transform-origin: left;
+}
+
+/* ---------------------------------------------------------------------
+   3. NAVIGATION — animated underline for link-style utility/TOC items
+   --------------------------------------------------------------------- */
+.utility-bar a,
+.toc-mobile a,
+.bookmark-rail a {
+  position: relative;
+}
+.utility-bar a::after,
+.toc-mobile a::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 100%;
+  bottom: -2px;
+  height: 1px;
+  background: currentColor;
+  transition: right var(--motion-fast) var(--ease-editorial);
+}
+.utility-bar a:hover::after,
+.utility-bar a:focus-visible::after,
+.toc-mobile a:hover::after,
+.toc-mobile a:focus-visible::after { right: 0; }
+
+/* ---------------------------------------------------------------------
+   4. PROJECT CARD (Application Circuit Row) border illumination
+   --------------------------------------------------------------------- */
+.app-circuit-row .figure {
+  transition: box-shadow var(--motion-base) var(--ease-editorial), border-color var(--motion-base) var(--ease-editorial);
+}
+.app-circuit-row:hover .figure,
+.app-circuit-row:focus-within .figure {
+  border-color: var(--c-accent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--c-accent) 35%, transparent);
+}
+
+/* Certification hover */
+.cert-entry { transition: background-color var(--motion-base) var(--ease-editorial); }
+.cert-entry:hover { background: var(--color-bg-accent-tint); }
+.cert-entry:hover .cert-entry__thumb { border-color: var(--c-accent); }
+.cert-entry__thumb { transition: border-color var(--motion-base) var(--ease-editorial); }
+
+/* ---------------------------------------------------------------------
+   5. STATUS LEDS — badge dot becomes a small animated indicator
+   --------------------------------------------------------------------- */
+.badge::before { transition: box-shadow var(--motion-base) var(--ease-editorial); }
+.badge--pass::before { box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-status-pass) 20%, transparent); }
+.badge--progress::before { animation: eng-led-pulse 1.8s ease-in-out infinite; }
+@keyframes eng-led-pulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-status-neutral) 45%, transparent); }
+  50% { opacity: 0.55; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-status-neutral) 0%, transparent); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .badge--progress::before { animation: none; }
+}
+
+/* ---------------------------------------------------------------------
+   6. TERMINAL CURSOR + FIRMWARE / CLOCK CLUSTER (masthead)
+   --------------------------------------------------------------------- */
+.term-cursor {
+  display: inline-block;
+  width: 0.55em;
+  height: 1em;
+  background: var(--c-accent);
+  margin-left: 0.15em;
+  vertical-align: -0.15em;
+  animation: eng-cursor-blink 1.05s steps(1) infinite;
+}
+@keyframes eng-cursor-blink { 50% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .term-cursor { animation: none; opacity: 1; }
+}
+
+.masthead__telemetry {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--tracking-wide);
+  color: var(--color-text-secondary);
+  margin-top: var(--space-3);
+}
+.masthead__telemetry .led {
+  display: inline-block;
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--color-status-pass);
+  margin-right: 0.4em;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-status-pass) 20%, transparent);
+  animation: eng-led-soft-pulse 2.6s ease-in-out infinite;
+}
+@keyframes eng-led-soft-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .masthead__telemetry .led { animation: none; }
+}
+
+.eng-waveform {
+  display: block;
+  height: 28px;
+  width: 120px;
+  opacity: 0.8;
+}
+.eng-waveform path {
+  fill: none;
+  stroke: var(--c-accent);
+  stroke-width: 1.25;
+  stroke-dasharray: 220;
+  animation: eng-waveform-draw 4.5s ease-in-out infinite;
+}
+@keyframes eng-waveform-draw {
+  0% { stroke-dashoffset: 220; }
+  50% { stroke-dashoffset: 0; }
+  100% { stroke-dashoffset: -220; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .eng-waveform path { animation: none; stroke-dashoffset: 0; }
+}
+
+/* ---------------------------------------------------------------------
+   7. BLOCK DIAGRAM SIGNAL FLOW — applies to every .figure__media svg
+   --------------------------------------------------------------------- */
+.figure__media svg line[marker-end],
+.figure__media svg path[marker-end] {
+  stroke-dasharray: 4 5;
+  animation: eng-signal-flow 3.2s linear infinite;
+}
+@keyframes eng-signal-flow { to { stroke-dashoffset: -18; } }
+
+.figure__media svg rect {
+  transition: stroke var(--motion-base) var(--ease-editorial), stroke-width var(--motion-base) var(--ease-editorial);
+}
+.figure:hover .figure__media svg rect,
+.figure:focus-within .figure__media svg rect {
+  stroke: var(--c-accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .figure__media svg line[marker-end],
+  .figure__media svg path[marker-end] { animation: none; }
+}
+
+/* ---------------------------------------------------------------------
+   8. PAGE FADE-IN (restrained "page transition")
+   --------------------------------------------------------------------- */
+body { animation: eng-page-fade var(--motion-slow) var(--ease-editorial) both; }
+@keyframes eng-page-fade { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  body { animation: none; }
+}
+
+/* ---------------------------------------------------------------------
+   9. ENGINEERING CONSOLE FOOTER
+   --------------------------------------------------------------------- */
+.console-footer {
+  margin-top: var(--space-4);
+  padding-top: var(--space-4);
+  border-top: var(--rule-hair) dashed var(--color-border-hairline);
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+}
+.console-footer__row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 1.6em;
+  color: var(--color-text-secondary);
+}
+.console-footer__row + .console-footer__row { margin-top: var(--space-1); }
+.console-footer__fill {
+  flex: 1 1 auto;
+  border-bottom: 1px dotted var(--color-border-hairline);
+  margin: 0 var(--space-2);
+  transform: translateY(-0.3em);
+}
+.console-footer__status {
+  color: var(--c-accent);
+  font-weight: 500;
+  opacity: 1;
+  transition: opacity var(--motion-base) var(--ease-editorial);
+}
+.console-footer__status.is-swapping { opacity: 0; }

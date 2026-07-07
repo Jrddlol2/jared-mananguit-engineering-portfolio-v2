@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AN-001 — Ball-and-Beam PID Control System — Jared Asher Mananguit</title>
+<meta name="description" content="Application Note AN-001: a physical PID control system balancing a ball on a beam using an Arduino Uno, ultrasonic ranging, and a servo actuator.">
+<meta name="color-scheme" content="light dark">
+<script>
+(function(){try{var t=localStorage.getItem('theme');if(!t){t=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
+</script>
+<link rel="preload" href="../assets/fonts/fraunces-600.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../assets/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../css/tokens.css">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/layout.css">
+<link rel="stylesheet" href="../css/components.css">
+<link rel="stylesheet" href="../css/utilities.css">
+<link rel="stylesheet" href="../css/motion.css">
+<link rel="stylesheet" href="../css/print.css" media="print">
+</head>
+<body>
+
+<a class="skip-link" href="#main-content">Skip to main content</a>
+
+<div class="eng-bg" aria-hidden="true">
+  <div class="eng-bg__grid"></div>
+  <svg class="eng-bg__traces" viewBox="0 0 1000 700" preserveAspectRatio="none" focusable="false">
+    <path class="trace trace--a" d="M-20,120 H260 V300 H600 V80 H1020"/>
+    <path class="trace trace--b" d="M-20,480 H340 V620 H720 V420 H1020"/>
+    <path class="trace trace--c" d="M120,-20 V180 H480 V520 H860 V720"/>
+  </svg>
+</div>
+<div class="scroll-progress" aria-hidden="true"></div>
+
+<div class="page-shell" style="grid-template-columns: 1fr;">
+  <div class="content-col" style="max-width: var(--content-max); margin-inline: auto;">
+
+    <div class="utility-bar">
+      <div class="utility-bar__group">
+        <a href="../index.html#sec-projects">← Application Circuits, §4</a>
+      </div>
+      <div class="utility-bar__group">
+        <button type="button" class="link-style" id="themeToggle" aria-pressed="false">Night reading: <span id="themeState">Off</span></button>
+        <button type="button" class="link-style" id="printTrigger">Print</button>
+      </div>
+    </div>
+
+    <header class="masthead reveal">
+      <div class="masthead__eyebrow">
+        <span class="kicker">Application Note AN-001<span class="term-cursor" aria-hidden="true"></span></span>
+        <span class="status-stamp"><span class="led" aria-hidden="true"></span>Validated</span>
+      </div>
+      <h1 class="masthead__name" style="font-size: var(--fs-h1);">Ball-and-Beam PID<br>Control System</h1>
+      <p class="masthead__tagline">A physical closed-loop control demonstration: an unstable double-integrator plant stabilized entirely through a hand-tuned PID controller.</p>
+      <dl class="masthead__meta-table">
+        <div><dt>Prepared By</dt><dd>J. A. Mananguit</dd></div>
+        <div><dt>Classification</dt><dd>Public / Portfolio Release</dd></div>
+        <div><dt>Team</dt><dd>3-person team (2 collaborators)</dd></div>
+        <div><dt>Role</dt><dd>Lead — prototype, tuning, firmware</dd></div>
+      </dl>
+    </header>
+
+    <nav aria-label="Application note sections" class="toc-mobile" style="display:block;">
+      <ol style="columns:2;">
+        <li><a href="#an1-summary">1. Executive Summary</a></li>
+        <li><a href="#an1-problem">2. Problem Statement</a></li>
+        <li><a href="#an1-objectives">3. Design Objectives</a></li>
+        <li><a href="#an1-block">4. Functional Block Diagram</a></li>
+        <li><a href="#an1-architecture">5. System Architecture</a></li>
+        <li><a href="#an1-implementation">6. Implementation</a></li>
+        <li><a href="#an1-testing">7. Testing</a></li>
+        <li><a href="#an1-results">8. Results</a></li>
+        <li><a href="#an1-decisions">9. Engineering Decisions</a></li>
+        <li><a href="#an1-lessons">10. Lessons Learned</a></li>
+        <li><a href="#an1-future">11. Future Improvements</a></li>
+      </ol>
+    </nav>
+
+    <main id="main-content">
+
+      <section id="an1-summary" class="doc-section reveal" aria-labelledby="h-an1-summary">
+        <div class="section-rule"><div class="section-kicker">1</div><h2 id="h-an1-summary" class="section-title">Executive Summary</h2></div>
+        <p class="lede">An Arduino Uno, an HC-SR04 ultrasonic rangefinder, and an SG92 micro servo work together to balance a
+          rolling ball at the center of an 18-inch beam. The beam-angle-to-ball-position plant is an inherently
+          unstable double integrator; it is stabilized entirely through a tuned PID feedback loop running on the
+          Arduino, with no mechanical damping assist. The system met all four target performance specifications
+          (rise time, settling time, overshoot, steady-state error) on physical hardware.</p>
+      </section>
+
+      <section id="an1-problem" class="doc-section reveal" aria-labelledby="h-an1-problem">
+        <div class="section-rule"><div class="section-kicker">2</div><h2 id="h-an1-problem" class="section-title">Problem Statement</h2></div>
+        <p>Demonstrate closed-loop control of an open-loop-unstable plant using low-cost, readily available
+          hardware, and prove the design against explicit, measurable performance targets rather than a
+          qualitative "it balances" outcome. Ultrasonic distance sensing is inherently noisy at this range and
+          sample rate, which the control and filtering design must account for without introducing unacceptable lag.</p>
+      </section>
+
+      <section id="an1-objectives" class="doc-section reveal" aria-labelledby="h-an1-objectives">
+        <div class="section-rule"><div class="section-kicker">3</div><h2 id="h-an1-objectives" class="section-title">Design Objectives</h2></div>
+        <table class="spec-table spec-table--reflow">
+          <caption>Table AN1-1 — Design Targets</caption>
+          <thead><tr><th scope="col">Metric</th><th scope="col">Target</th></tr></thead>
+          <tbody>
+            <tr><td data-label="Metric">Rise time</td><td data-label="Target">≤ 5 s</td></tr>
+            <tr><td data-label="Metric">Settling time</td><td data-label="Target">≤ 30 s</td></tr>
+            <tr><td data-label="Metric">Max overshoot</td><td data-label="Target">≤ 3 in of setpoint</td></tr>
+            <tr><td data-label="Metric">Steady-state error</td><td data-label="Target">± 1 in of setpoint</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="an1-block" class="doc-section reveal" aria-labelledby="h-an1-block">
+        <div class="section-rule"><div class="section-kicker">4</div><h2 id="h-an1-block" class="section-title">Functional Block Diagram</h2></div>
+        <figure class="figure figure--hero">
+          <div class="figure__media">
+            <svg viewBox="0 0 420 140" role="img" aria-labelledby="an1-block-title">
+              <title id="an1-block-title">Closed loop block diagram: setpoint compared to HC-SR04 measured position, error into PID controller on Arduino Uno, output drives SG92 servo which tilts beam, ball position fed back to sensor</title>
+              <g fill="none" stroke="currentColor" stroke-width="1">
+                <circle cx="30" cy="70" r="16"/>
+                <rect x="70" y="50" width="90" height="40"/>
+                <rect x="200" y="50" width="90" height="40"/>
+                <rect x="330" y="50" width="70" height="40"/>
+                <line x1="46" y1="70" x2="70" y2="70" marker-end="url(#a1)"/>
+                <line x1="160" y1="70" x2="200" y2="70" marker-end="url(#a1)"/>
+                <line x1="290" y1="70" x2="330" y2="70" marker-end="url(#a1)"/>
+                <path d="M365,90 L365,120 L30,120 L30,86" marker-end="url(#a1)"/>
+              </g>
+              <defs><marker id="a1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="currentColor"/></marker></defs>
+              <g font-family="IBM Plex Mono, monospace" font-size="10" fill="currentColor" text-anchor="middle">
+                <text x="30" y="74">Σ</text>
+                <text x="115" y="74">PID (Uno)</text>
+                <text x="245" y="74">SG92 Servo</text>
+                <text x="365" y="70">Beam +</text>
+                <text x="365" y="82">Ball</text>
+                <text x="30" y="134" text-anchor="start">HC-SR04 feedback</text>
+              </g>
+            </svg>
+          </div>
+          <figcaption>Fig. 1 — AN-001 closed-loop control block diagram.</figcaption>
+        </figure>
+      </section>
+
+      <section id="an1-architecture" class="doc-section reveal" aria-labelledby="h-an1-architecture">
+        <div class="section-rule"><div class="section-kicker">5</div><h2 id="h-an1-architecture" class="section-title">System Architecture</h2></div>
+        <p>The beam-angle-to-ball-position transfer function was modeled from first principles and reduces to a
+          double integrator, confirming open-loop instability analytically before any hardware was built. The
+          Arduino Uno closes the loop at a fixed sample interval: it reads the HC-SR04 range, converts it to a
+          ball position, computes a PID correction against the setpoint, and writes a corresponding angle to the
+          SG92 servo.</p>
+        <table class="spec-table spec-table--reflow">
+          <caption>Table AN1-2 — Bill of Materials</caption>
+          <thead><tr><th scope="col">Item</th><th scope="col">Designator</th><th scope="col">Qty</th><th scope="col">Description</th></tr></thead>
+          <tbody>
+            <tr><td data-label="Item">Microcontroller</td><td data-label="Designator">U1</td><td data-label="Qty">1</td><td data-label="Description">Arduino Uno</td></tr>
+            <tr><td data-label="Item">Ultrasonic sensor</td><td data-label="Designator">S1</td><td data-label="Qty">1</td><td data-label="Description">HC-SR04</td></tr>
+            <tr><td data-label="Item">Servo actuator</td><td data-label="Designator">M1</td><td data-label="Qty">1</td><td data-label="Description">SG92 micro servo</td></tr>
+            <tr><td data-label="Item">Beam</td><td data-label="Designator">-</td><td data-label="Qty">1</td><td data-label="Description">18-inch balance beam, pivot-mounted</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="an1-implementation" class="doc-section reveal" aria-labelledby="h-an1-implementation">
+        <div class="section-rule"><div class="section-kicker">6</div><h2 id="h-an1-implementation" class="section-title">Implementation</h2></div>
+        <p>Firmware robustness measures were the majority of the implementation effort, since raw ultrasonic
+          readings were too noisy to feed directly into the control loop:</p>
+        <ul>
+          <li>5-sample median filter followed by an exponential moving average on raw ultrasonic readings.</li>
+          <li>±2 cm deadband to suppress micro-corrections once the ball had settled near setpoint.</li>
+          <li>Integral-reset anti-windup and output clamping to keep the servo command within physical limits.</li>
+          <li>Dedicated lost-ball and proximity-recovery routines for out-of-range sensor conditions.</li>
+          <li>Live serial telemetry streamed to a MATLAB script, plotting ball distance and servo angle in real time
+            for tuning and verification.</li>
+        </ul>
+        <p>Final tuned gains: <code>Kp = 1.3</code>, <code>Ki = 0.034</code>, <code>Kd = 0.4</code>.</p>
+      </section>
+
+      <section id="an1-testing" class="doc-section reveal" aria-labelledby="h-an1-testing">
+        <div class="section-rule"><div class="section-kicker">7</div><h2 id="h-an1-testing" class="section-title">Testing</h2></div>
+        <p>Step-response tests were run directly on hardware (not simulation), with ball position and servo angle
+          logged over serial to the MATLAB telemetry script for measurement.</p>
+      </section>
+
+      <section id="an1-results" class="doc-section reveal" aria-labelledby="h-an1-results">
+        <div class="section-rule"><div class="section-kicker">8</div><h2 id="h-an1-results" class="section-title">Results</h2></div>
+        <table class="spec-table spec-table--reflow">
+          <caption>Table AN1-3 — Measured Results vs. Design Targets</caption>
+          <thead><tr><th scope="col">Metric</th><th scope="col">Target</th><th scope="col">Measured</th><th scope="col">Result</th></tr></thead>
+          <tbody>
+            <tr><td data-label="Metric">Rise time</td><td data-label="Target">≤ 5 s</td><td data-label="Measured">≈ 2 s</td><td data-label="Result"><span class="badge badge--pass">Pass</span></td></tr>
+            <tr><td data-label="Metric">Settling time</td><td data-label="Target">≤ 30 s</td><td data-label="Measured">≈ 14 s</td><td data-label="Result"><span class="badge badge--pass">Pass</span></td></tr>
+            <tr><td data-label="Metric">Max overshoot</td><td data-label="Target">≤ 3 in</td><td data-label="Measured">≈ 2.6 in</td><td data-label="Result"><span class="badge badge--pass">Pass</span></td></tr>
+            <tr><td data-label="Metric">Steady-state error</td><td data-label="Target">± 1 in</td><td data-label="Measured">≈ 0.8 in</td><td data-label="Result"><span class="badge badge--pass">Pass</span></td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="an1-decisions" class="doc-section reveal" aria-labelledby="h-an1-decisions">
+        <div class="section-rule"><div class="section-kicker">9</div><h2 id="h-an1-decisions" class="section-title">Engineering Decisions</h2></div>
+        <p>Filtering was chosen over a higher-cost, lower-noise sensor (e.g., a laser rangefinder) to keep the
+          bill of materials low, on the reasoning that a well-tuned median + EMA filter plus deadband could
+          absorb HC-SR04 noise cheaply. This traded a small amount of settling-time margin for a substantially
+          simpler and cheaper sensing stage — the measured results show the margin was not needed.</p>
+      </section>
+
+      <section id="an1-lessons" class="doc-section reveal" aria-labelledby="h-an1-lessons">
+        <div class="section-rule"><div class="section-kicker">10</div><h2 id="h-an1-lessons" class="section-title">Lessons Learned</h2></div>
+        <p>Modeling the plant analytically before touching hardware (confirming the double-integrator instability)
+          made the subsequent tuning process far faster than a pure trial-and-error approach would have been —
+          the analytical model correctly predicted that proportional control alone could not stabilize the plant.</p>
+      </section>
+
+      <section id="an1-future" class="doc-section reveal" aria-labelledby="h-an1-future">
+        <div class="section-rule"><div class="section-kicker">11</div><h2 id="h-an1-future" class="section-title">Future Improvements</h2></div>
+        <ul>
+          <li>Replace ultrasonic ranging with a linear resistive position sensor to remove the filtering-induced lag entirely.</li>
+          <li>Add a second axis (2-DOF platform) to extend the demonstration to planar ball balancing.</li>
+          <li>Auto-tune Kp/Ki/Kd via relay feedback instead of manual tuning.</li>
+        </ul>
+      </section>
+
+      <div class="reference-block reveal">
+        <div class="reference-block__label">See Also</div>
+        <ul>
+          <li>§3 Electrical Characteristics — Embedded C/C++, MATLAB proficiency</li>
+          <li>§4 Typical Application Circuits — AN-002 Class AB Audio Power Amplifier</li>
+          <li>Repository: <span class="cell-na">N/A — pending publication</span></li>
+          <li>Demonstration: <span class="cell-na">N/A — video pending</span></li>
+        </ul>
+      </div>
+
+    </main>
+
+    <footer class="doc-footer">
+      <p>Specifications subject to change without notice.</p>
+      <p>Document Control No. AN-001 &nbsp;·&nbsp; Revision A &nbsp;·&nbsp; Issued 2026-07-06 &nbsp;·&nbsp; Copyright © 2026 Jared Asher Mananguit.</p>
+      <div class="console-footer" role="status" aria-live="off">
+        <div class="console-footer__row"><span>Documentation Loaded</span><span class="console-footer__fill"></span><span class="console-footer__status">OK</span></div>
+        <div class="console-footer__row"><span>Projects Verified</span><span class="console-footer__fill"></span><span class="console-footer__status">PASS</span></div>
+        <div class="console-footer__row"><span>System Status</span><span class="console-footer__fill"></span><span class="console-footer__status">ONLINE</span></div>
+      </div>
+    </footer>
+
+  </div>
+</div>
+
+<script type="module" src="../js/theme.js"></script>
+<script type="module" src="../js/reveal.js"></script>
+<script type="module" src="../js/engineering-fx.js"></script>
+<script type="module" src="../js/main.js"></script>
+</body>
+</html>

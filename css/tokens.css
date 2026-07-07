@@ -1,0 +1,223 @@
+/* ==========================================================================
+   DESIGN TOKENS — v2 "Editorial Instrument"
+   Document Control No. DSS-2026-V2 · Rev C
+   Warm editorial palette + a three-family type system (display serif / UI
+   sans / technical mono), self-hosted, zero runtime external requests.
+   ========================================================================== */
+
+/* ---------------------------------------------------------------------
+   TYPEFACES — self-hosted, subset to Latin (~200KB total, all weights)
+   --------------------------------------------------------------------- */
+@font-face {
+  font-family: 'Fraunces';
+  font-style: normal; font-weight: 400; font-display: swap;
+  src: url('../assets/fonts/fraunces-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Fraunces';
+  font-style: italic; font-weight: 400; font-display: swap;
+  src: url('../assets/fonts/fraunces-italic-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Fraunces';
+  font-style: normal; font-weight: 600; font-display: swap;
+  src: url('../assets/fonts/fraunces-600.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Fraunces';
+  font-style: normal; font-weight: 900; font-display: swap;
+  src: url('../assets/fonts/fraunces-900.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal; font-weight: 400; font-display: swap;
+  src: url('../assets/fonts/inter-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal; font-weight: 500; font-display: swap;
+  src: url('../assets/fonts/inter-500.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal; font-weight: 600; font-display: swap;
+  src: url('../assets/fonts/inter-600.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal; font-weight: 700; font-display: swap;
+  src: url('../assets/fonts/inter-700.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal; font-weight: 400; font-display: swap;
+  src: url('../assets/fonts/plexmono-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal; font-weight: 500; font-display: swap;
+  src: url('../assets/fonts/plexmono-500.woff2') format('woff2');
+}
+
+:root {
+  /* ---------------------------------------------------------------------
+     COLOR — "Ink, Paper & Copper": a warm editorial palette with a single
+     engineering-inspired accent (oxidized copper — PCB trace / solder).
+     --------------------------------------------------------------------- */
+  --c-paper: #F0F4F8; /* drafting vellum */   /* warm bone/ivory, not stark white */
+  --c-paper-alt: #E2E8F0; /* deeper vellum */   /* deeper cream for alternating panels   */
+  --c-ink: #0F172A; /* slate near-black */   /* rich near-black, warm charcoal        */
+  --c-ink-secondary: #475569; /* slate gray */   /* warm gray — captions/metadata         */
+  --c-ink-faint: #94A3B8;
+
+  --c-accent:         #96481F;   /* copper — AA-safe on paper, for text   */
+  --c-accent-bright:  #C2672F;   /* copper — decorative/large-scale only  */
+  --c-accent-tint:    #F0DDCB;   /* pale copper wash for subtle fills     */
+
+  --c-border-subtle: #CBD5E1;   /* warm hairline — most rules            */
+  --c-border-strong: #0F172A;   /* reserved for a few intentional rules  */
+
+  --color-bg-page:        var(--c-paper);
+  --color-bg-panel:       var(--c-paper-alt);
+  --color-bg-inverted:    var(--c-ink);
+  --color-bg-accent-tint: var(--c-accent-tint);
+  --color-bg-crosshatch: #CBD5E1;
+  --color-bg-field:       var(--c-paper);
+  --color-bg-code:        var(--c-paper-alt);
+
+  --color-text-primary:   var(--c-ink);
+  --color-text-secondary: var(--c-ink-secondary);
+  --color-text-faint:     var(--c-ink-faint);
+  --color-text-disabled:  var(--c-ink-faint);
+  --color-text-inverted:  var(--c-paper);
+
+  --color-link:            var(--c-accent);
+  --color-signal-primary:  #7A5C3D;   /* muted bronze — 1st graph trace   */
+  --color-signal-secondary: #96481F;  /* copper — 2nd trace               */
+  --color-signal-tertiary:  #4B6358;  /* muted pine green — 3rd trace     */
+  --color-signal-quaternary: #3D5A73; /* muted instrument blue — 4th trace*/
+
+  --color-status-pass:    #4B6B4E;
+  --color-status-fail:    #A13F26;
+  --color-status-warn:    #A13F26;
+  --color-status-neutral: var(--c-ink-secondary);
+
+  --color-border-hairline: var(--c-border-subtle);
+  --color-border-heavy:    var(--c-border-strong);
+  --color-border-frame:    var(--c-border-subtle);
+  --color-border-subtle:   var(--c-border-subtle);
+  --color-border-focus:    var(--c-ink);
+
+  /* ---------------------------------------------------------------------
+     TYPOGRAPHY — three-family system
+     --------------------------------------------------------------------- */
+  --font-display: 'Fraunces', Georgia, 'Iowan Old Style', 'Times New Roman', serif;
+  --font-heading: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --font-body:    'Inter', -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-mono:    'IBM Plex Mono', 'JetBrains Mono', 'SF Mono', Consolas, 'Liberation Mono', monospace;
+
+  /* Editorial fluid scale — large, confident headings */
+  --fs-display: clamp(3rem, 2rem + 5.5vw, 6.5rem);
+  --fs-h1:      clamp(2.25rem, 1.6rem + 3vw, 4rem);
+  --fs-h2:      clamp(1.75rem, 1.4rem + 1.6vw, 2.75rem);
+  --fs-h3:      clamp(1.25rem, 1.05rem + 0.7vw, 1.625rem);
+  --fs-h4:      clamp(1.05rem, 0.95rem + 0.3vw, 1.2rem);
+  --fs-body:    1.0625rem;
+  --fs-body-lg: clamp(1.125rem, 1.05rem + 0.3vw, 1.3rem);
+  --fs-small:   0.9rem;
+  --fs-micro:   0.75rem;
+  --fs-kicker:  0.8125rem;
+
+  --lh-display: 1.02;
+  --lh-heading: 1.1;
+  --lh-body:    1.65;
+  --lh-mono:    1.5;
+
+  --tracking-tight:  -0.02em;
+  --tracking-normal: 0;
+  --tracking-wide:   0.09em;
+  --tracking-wider:  0.16em;
+
+  /* ---------------------------------------------------------------------
+     SPACING — editorial scale: generous, air-first
+     --------------------------------------------------------------------- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.875rem;
+  --space-4: 1.25rem;
+  --space-5: 2rem;
+  --space-6: 3rem;
+  --space-7: 4.5rem;
+  --space-8: 7rem;
+  --space-9: 10rem;
+
+  --rule-hair:  1px;
+  --rule-heavy: 2px;
+  --radius:     0;
+
+  /* ---------------------------------------------------------------------
+     LAYOUT
+     --------------------------------------------------------------------- */
+  --content-max:  1360px;
+  --measure-max:  38rem;
+  --measure-wide: 52rem;
+  --margin-inline: clamp(1.25rem, 3vw + 0.5rem, 6rem);
+  --gutter: clamp(1.5rem, 3vw, 3.5rem);
+
+  --motion-fast:   180ms;
+  --motion-base:   420ms;
+  --motion-slow:   700ms;
+  --ease-editorial: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ---------------------------------------------------------------------
+   DARK / "NEGATIVE" MODE — deep espresso, not a stark black SaaS theme
+   --------------------------------------------------------------------- */
+[data-theme="dark"] {
+  --c-paper: #0F172A; /* CAD dark */
+  --c-paper-alt: #1E293B; /* CAD dark alt */
+  --c-ink: #F8FAFC;
+  --c-ink-secondary: #94A3B8;
+  --c-ink-faint: #475569;
+
+  --c-accent:         #E08A4F;
+  --c-accent-bright:  #F0A868;
+  --c-accent-tint: #431407;
+
+  --c-border-subtle: #334155;
+  --c-border-strong: #F8FAFC;
+
+  --color-bg-page:        var(--c-paper);
+  --color-bg-panel:       var(--c-paper-alt);
+  --color-bg-inverted:    var(--c-ink);
+  --color-bg-accent-tint: var(--c-accent-tint);
+  --color-bg-crosshatch: #1E293B;
+  --color-bg-field:       var(--c-paper-alt);
+  --color-bg-code:        var(--c-paper-alt);
+
+  --color-text-primary:   var(--c-ink);
+  --color-text-secondary: var(--c-ink-secondary);
+  --color-text-faint:     var(--c-ink-faint);
+  --color-text-disabled:  var(--c-ink-faint);
+  --color-text-inverted:  var(--c-paper);
+
+  --color-link:            var(--c-accent);
+  --color-signal-primary:  #C7A47C;
+  --color-signal-secondary: #E08A4F;
+  --color-signal-tertiary:  #7FA893;
+  --color-signal-quaternary: #7FA0BD;
+
+  --color-status-pass:    #7FA37F;
+  --color-status-fail:    #E08A6B;
+  --color-status-warn:    #E08A6B;
+
+  --color-border-hairline: var(--c-border-subtle);
+  --color-border-heavy:    var(--c-border-strong);
+  --color-border-frame:    var(--c-border-subtle);
+  --color-border-subtle:   var(--c-border-subtle);
+  --color-border-focus:    var(--c-ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --motion-fast: 0ms; --motion-base: 0ms; --motion-slow: 0ms; }
+}

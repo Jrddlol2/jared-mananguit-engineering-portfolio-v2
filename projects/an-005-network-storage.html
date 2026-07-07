@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AN-005 — Self-Hosted Network Storage Platform — Jared Asher Mananguit</title>
+<meta name="description" content="Application Note AN-005: a self-hosted Linux network storage platform — treated as a systems engineering project spanning hardware, OS, network, storage, security, and backup design.">
+<meta name="color-scheme" content="light dark">
+<script>
+(function(){try{var t=localStorage.getItem('theme');if(!t){t=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
+</script>
+<link rel="preload" href="../assets/fonts/fraunces-600.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../assets/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../css/tokens.css">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/layout.css">
+<link rel="stylesheet" href="../css/components.css">
+<link rel="stylesheet" href="../css/utilities.css">
+<link rel="stylesheet" href="../css/motion.css">
+<link rel="stylesheet" href="../css/print.css" media="print">
+</head>
+<body>
+
+<a class="skip-link" href="#main-content">Skip to main content</a>
+
+<div class="eng-bg" aria-hidden="true">
+  <div class="eng-bg__grid"></div>
+  <svg class="eng-bg__traces" viewBox="0 0 1000 700" preserveAspectRatio="none" focusable="false">
+    <path class="trace trace--a" d="M-20,120 H260 V300 H600 V80 H1020"/>
+    <path class="trace trace--b" d="M-20,480 H340 V620 H720 V420 H1020"/>
+    <path class="trace trace--c" d="M120,-20 V180 H480 V520 H860 V720"/>
+  </svg>
+</div>
+<div class="scroll-progress" aria-hidden="true"></div>
+
+<div class="page-shell" style="grid-template-columns: 1fr;">
+  <div class="content-col" style="max-width: var(--content-max); margin-inline: auto;">
+
+    <div class="utility-bar">
+      <div class="utility-bar__group">
+        <a href="../index.html#sec-projects">← Application Circuits, §4</a>
+      </div>
+      <div class="utility-bar__group">
+        <button type="button" class="link-style" id="themeToggle" aria-pressed="false">Night reading: <span id="themeState">Off</span></button>
+        <button type="button" class="link-style" id="printTrigger">Print</button>
+      </div>
+    </div>
+
+    <header class="masthead reveal">
+      <div class="masthead__eyebrow">
+        <span class="kicker">Application Note AN-005<span class="term-cursor" aria-hidden="true"></span></span>
+        <span class="status-stamp"><span class="led" aria-hidden="true"></span>Planned</span>
+      </div>
+      <h1 class="masthead__name" style="font-size: var(--fs-h1);">Self-Hosted Network<br>Storage Platform</h1>
+      <p class="masthead__tagline">A systems-engineering project spanning hardware selection, Linux administration, network configuration, storage design, security, and backup strategy — treated end-to-end, not as an appliance unboxing.</p>
+      <dl class="masthead__meta-table">
+        <div><dt>Prepared By</dt><dd>J. A. Mananguit</dd></div>
+        <div><dt>Classification</dt><dd>Public / Portfolio Release</dd></div>
+        <div><dt>Team</dt><dd>Independent project</dd></div>
+        <div><dt>Status</dt><dd>Design phase complete; hardware build and OS install planned</dd></div>
+      </dl>
+      <div class="callout callout--note reveal" style="margin-top: var(--space-5);">
+        <span class="callout__label">Note</span>
+        <span>This Application Note documents a planned systems project. Design decisions below reflect the finalized architecture; implementation, testing, and validation data will populate as the build proceeds.</span>
+      </div>
+    </header>
+
+    <nav aria-label="Application note sections" class="toc-mobile" style="display:block;">
+      <ol style="columns:2;">
+        <li><a href="#an5-summary">1. Executive Summary</a></li>
+        <li><a href="#an5-problem">2. Problem Statement</a></li>
+        <li><a href="#an5-objectives">3. Design Objectives</a></li>
+        <li><a href="#an5-block">4. Functional Block Diagram</a></li>
+        <li><a href="#an5-hardware">5. Hardware Configuration</a></li>
+        <li><a href="#an5-os">6. Linux Operating System</a></li>
+        <li><a href="#an5-network">7. Network Configuration</a></li>
+        <li><a href="#an5-storage">8. Storage Configuration</a></li>
+        <li><a href="#an5-security">9. Security Considerations</a></li>
+        <li><a href="#an5-backup">10. Backup Strategy</a></li>
+        <li><a href="#an5-performance">11. Performance &amp; Validation</a></li>
+        <li><a href="#an5-decisions">12. Engineering Decisions</a></li>
+        <li><a href="#an5-challenges">13. Challenges</a></li>
+        <li><a href="#an5-lessons">14. Lessons Learned</a></li>
+        <li><a href="#an5-future">15. Future Improvements</a></li>
+      </ol>
+    </nav>
+
+    <main id="main-content">
+
+      <section id="an5-summary" class="doc-section reveal" aria-labelledby="h-an5-summary">
+        <div class="section-rule"><div class="section-kicker">1</div><h2 id="h-an5-summary" class="section-title">Executive Summary</h2></div>
+        <p class="lede">A self-hosted network-attached storage platform, designed as a full systems-engineering exercise:
+          hardware selection, Linux installation and hardening, network configuration, redundant storage layout,
+          access security, and an automated backup strategy — rather than deploying a commercial NAS appliance
+          as-is. The goal is centralized, resilient file storage for personal and project use, administered
+          entirely from the command line.</p>
+      </section>
+
+      <section id="an5-problem" class="doc-section reveal" aria-labelledby="h-an5-problem">
+        <div class="section-rule"><div class="section-kicker">2</div><h2 id="h-an5-problem" class="section-title">Problem Statement</h2></div>
+        <p>Project files, datasets, and media were scattered across individual machines with no redundancy and no
+          single point of access from the local network. A single-disk backup is not fault-tolerant, and cloud
+          storage alone does not provide the low-latency LAN access needed for large engineering files (KiCad
+          projects, LTspice runs, simulation data).</p>
+      </section>
+
+      <section id="an5-objectives" class="doc-section reveal" aria-labelledby="h-an5-objectives">
+        <div class="section-rule"><div class="section-kicker">3</div><h2 id="h-an5-objectives" class="section-title">Design Objectives</h2></div>
+        <table class="spec-table spec-table--reflow">
+          <caption>Table AN5-1 — Design Targets</caption>
+          <thead><tr><th scope="col">Metric</th><th scope="col">Target</th></tr></thead>
+          <tbody>
+            <tr><td data-label="Metric">Redundancy</td><td data-label="Target">Tolerate single-disk failure without data loss (RAID 1 or RAID-Z1 equivalent)</td></tr>
+            <tr><td data-label="Metric">LAN throughput</td><td data-label="Target">≥ 100 MB/s sustained over Gigabit Ethernet</td></tr>
+            <tr><td data-label="Metric">Access protocols</td><td data-label="Target">SMB (Windows/macOS clients), NFS (Linux clients)</td></tr>
+            <tr><td data-label="Metric">Backup cadence</td><td data-label="Target">Automated daily incremental, weekly full</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="an5-block" class="doc-section reveal" aria-labelledby="h-an5-block">
+        <div class="section-rule"><div class="section-kicker">4</div><h2 id="h-an5-block" class="section-title">Functional Block Diagram</h2></div>
+        <figure class="figure figure--hero">
+          <div class="figure__media">
+            <svg viewBox="0 0 420 140" role="img" aria-labelledby="an5-block-title">
+              <title id="an5-block-title">Block diagram: LAN clients through a Gigabit switch to a Linux storage server, which manages a RAID array and runs a scheduled backup job to external storage</title>
+              <g fill="none" stroke="currentColor" stroke-width="1">
+                <rect x="8" y="50" width="80" height="40"/>
+                <rect x="140" y="50" width="70" height="40"/>
+                <rect x="262" y="30" width="100" height="40"/>
+                <rect x="262" y="90" width="100" height="30"/>
+                <line x1="88" y1="70" x2="140" y2="70" marker-end="url(#a5)"/>
+                <line x1="210" y1="65" x2="262" y2="50" marker-end="url(#a5)"/>
+                <line x1="312" y1="70" x2="312" y2="90" marker-end="url(#a5)"/>
+              </g>
+              <defs><marker id="a5" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="currentColor"/></marker></defs>
+              <g font-family="IBM Plex Mono, monospace" font-size="9" fill="currentColor" text-anchor="middle">
+                <text x="48" y="66">LAN CLIENTS</text>
+                <text x="48" y="78">(SMB/NFS)</text>
+                <text x="175" y="74">SWITCH</text>
+                <text x="312" y="46">LINUX SERVER</text>
+                <text x="312" y="58">+ RAID ARRAY</text>
+                <text x="312" y="109">BACKUP TARGET</text>
+              </g>
+            </svg>
+          </div>
+          <figcaption>Fig. 1 — AN-005 planned network storage architecture.</figcaption>
+        </figure>
+        <div class="figure-gallery" style="margin-top: var(--space-6);">
+          <figure class="figure"><div class="figure__media empty-state"><span class="empty-state__label">Network diagram — pending</span></div><figcaption>Fig. 2 — Detailed network topology (pending build).</figcaption></figure>
+          <figure class="figure"><div class="figure__media empty-state"><span class="empty-state__label">Rack / hardware photo — pending</span></div><figcaption>Fig. 3 — Physical hardware (pending build).</figcaption></figure>
+          <figure class="figure"><div class="figure__media empty-state"><span class="empty-state__label">Dashboard screenshot — pending</span></div><figcaption>Fig. 4 — Monitoring dashboard (pending build).</figcaption></figure>
+        </div>
+      </section>
+
+      <section id="an5-hardware" class="doc-section reveal" aria-labelledby="h-an5-hardware">
+        <div class="section-rule"><div class="section-kicker">5</div><h2 id="h-an5-hardware" class="section-title">Hardware Configuration</h2></div>
+        <table class="spec-table spec-table--reflow">
+          <caption>Table AN5-2 — Planned Hardware Configuration</caption>
+          <thead><tr><th scope="col">Component</th><th scope="col">Specification</th></tr></thead>
+          <tbody>
+            <tr><td data-label="Component">Host</td><td data-label="Specification">Repurposed desktop-class hardware (planned)</td></tr>
+            <tr><td data-label="Component">Storage</td><td data-label="Specification">≥ 2 HDDs/SSDs in redundant array</td></tr>
+            <tr><td data-label="Component">Network Interface</td><td data-label="Specification">Gigabit Ethernet, wired connection to LAN switch</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="an5-os" class="doc-section reveal" aria-labelledby="h-an5-os">
+        <div class="section-rule"><div class="section-kicker">6</div><h2 id="h-an5-os" class="section-title">Linux Operating System</h2></div>
+        <p>A Debian-based Linux distribution is planned as the host OS, administered entirely via SSH/CLI —
+          deliberately avoiding a GUI-first NAS appliance OS to keep the full stack transparent and directly
+          configurable (systemd units, filesystem tools, and firewall rules under direct control).</p>
+      </section>
+
+      <section id="an5-network" class="doc-section reveal" aria-labelledby="h-an5-network">
+        <div class="section-rule"><div class="section-kicker">7</div><h2 id="h-an5-network" class="section-title">Network Configuration</h2></div>
+        <p>Static IP addressing on the LAN segment, SMB for Windows/macOS client access, and NFS for Linux client
+          access. Reverse-proxied access for any web-facing management dashboard, kept off the public internet
+          behind the home router's firewall.</p>
+      </section>
+
+      <section id="an5-storage" class="doc-section reveal" aria-labelledby="h-an5-storage">
+        <div class="section-rule"><div class="section-kicker">8</div><h2 id="h-an5-storage" class="section-title">Storage Configuration</h2></div>
+        <p>Redundant array (RAID 1 or RAID-Z1 equivalent, depending on final disk count) to tolerate a single-disk
+          failure without data loss, with periodic scrub/integrity checks scheduled via cron/systemd timers.</p>
+      </section>
+
+      <section id="an5-security" class="doc-section reveal" aria-labelledby="h-an5-security">
+        <div class="section-rule"><div class="section-kicker">9</div><h2 id="h-an5-security" class="section-title">Security Considerations</h2></div>
+        <ul>
+          <li>SSH key-based authentication only; password authentication disabled.</li>
+          <li>Per-user share permissions rather than a single shared-everything volume.</li>
+          <li>Host firewall restricting SMB/NFS access to the local subnet only.</li>
+          <li>Regular OS/package updates on a defined patch cadence.</li>
+        </ul>
+      </section>
+
+      <section id="an5-backup" class="doc-section reveal" aria-labelledby="h-an5-backup">
+        <div class="section-rule"><div class="section-kicker">10</div><h2 id="h-an5-backup" class="section-title">Backup Strategy</h2></div>
+        <p>Automated daily incremental and weekly full backups to a separate physical backup target, following a
+          3-2-1 pattern (three copies, two media types, one off-site/offline) as far as available hardware permits.</p>
+      </section>
+
+      <section id="an5-performance" class="doc-section reveal" aria-labelledby="h-an5-performance">
+        <div class="section-rule"><div class="section-kicker">11</div><h2 id="h-an5-performance" class="section-title">Performance &amp; Validation</h2></div>
+        <div class="empty-state"><span class="empty-state__label">Performance / validation data — pending build</span></div>
+      </section>
+
+      <section id="an5-decisions" class="doc-section reveal" aria-labelledby="h-an5-decisions">
+        <div class="section-rule"><div class="section-kicker">12</div><h2 id="h-an5-decisions" class="section-title">Engineering Decisions</h2></div>
+        <p>Chose a hand-configured Debian base over a turnkey NAS distribution to maximize transparency and
+          control over every layer of the stack — accepting a steeper initial setup cost in exchange for full
+          visibility into the network, storage, and security configuration, consistent with the systems-level
+          approach applied throughout this document.</p>
+      </section>
+
+      <section id="an5-challenges" class="doc-section reveal" aria-labelledby="h-an5-challenges">
+        <div class="section-rule"><div class="section-kicker">13</div><h2 id="h-an5-challenges" class="section-title">Challenges</h2></div>
+        <div class="empty-state"><span class="empty-state__label">N/A — project not yet built</span></div>
+      </section>
+
+      <section id="an5-lessons" class="doc-section reveal" aria-labelledby="h-an5-lessons">
+        <div class="section-rule"><div class="section-kicker">14</div><h2 id="h-an5-lessons" class="section-title">Lessons Learned</h2></div>
+        <div class="empty-state"><span class="empty-state__label">N/A — project not yet built</span></div>
+      </section>
+
+      <section id="an5-future" class="doc-section reveal" aria-labelledby="h-an5-future">
+        <div class="section-rule"><div class="section-kicker">15</div><h2 id="h-an5-future" class="section-title">Future Improvements</h2></div>
+        <ul>
+          <li>Add a monitoring dashboard (disk health, throughput, backup job status).</li>
+          <li>Evaluate ZFS for native checksumming and snapshot-based backups.</li>
+          <li>Add VPN-based remote access for off-LAN retrieval without exposing SMB/NFS publicly.</li>
+        </ul>
+      </section>
+
+      <div class="reference-block reveal">
+        <div class="reference-block__label">See Also</div>
+        <ul>
+          <li>§3 Electrical Characteristics — Linux/System Administration, Networking (CCNA) proficiency</li>
+          <li>§6 Certifications — CCNA 1 / CCNA 2</li>
+          <li>§4 Typical Application Circuits — AN-003 Communications System</li>
+          <li>Repository: <span class="cell-na">N/A — pending publication</span></li>
+        </ul>
+      </div>
+
+    </main>
+
+    <footer class="doc-footer">
+      <p>Specifications subject to change without notice.</p>
+      <p>Document Control No. AN-005 &nbsp;·&nbsp; Revision A &nbsp;·&nbsp; Issued 2026-07-06 &nbsp;·&nbsp; Copyright © 2026 Jared Asher Mananguit.</p>
+      <div class="console-footer" role="status" aria-live="off">
+        <div class="console-footer__row"><span>Documentation Loaded</span><span class="console-footer__fill"></span><span class="console-footer__status">OK</span></div>
+        <div class="console-footer__row"><span>Projects Verified</span><span class="console-footer__fill"></span><span class="console-footer__status">PASS</span></div>
+        <div class="console-footer__row"><span>System Status</span><span class="console-footer__fill"></span><span class="console-footer__status">ONLINE</span></div>
+      </div>
+    </footer>
+
+  </div>
+</div>
+
+<script type="module" src="../js/theme.js"></script>
+<script type="module" src="../js/reveal.js"></script>
+<script type="module" src="../js/engineering-fx.js"></script>
+<script type="module" src="../js/main.js"></script>
+</body>
+</html>

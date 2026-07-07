@@ -1,0 +1,20 @@
+{
+  "name": "jared-mananguit-engineering-portfolio",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Engineering portfolio of Jared Asher Mananguit, presented as a digital engineering datasheet.",
+  "scripts": {
+    "dev": "npx --yes serve -l 3000 .",
+    "lint:html": "npx --yes htmlhint index.html \"projects/*.html\"",
+    "lint:css": "npx --yes stylelint \"css/**/*.css\"",
+    "lint": "npm run lint:html && npm run lint:css",
+    "build": "node scripts/build.mjs",
+    "test": "node scripts/check-links.mjs"
+  },
+  "devDependencies": {
+    "htmlhint": "^1.1.4",
+    "stylelint": "^16.9.0",
+    "stylelint-config-standard": "^36.0.1",
+    "serve": "^14.2.3"
+  }
+}
