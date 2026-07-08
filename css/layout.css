@@ -150,31 +150,6 @@
 
 .l-stack > * + * { margin-top: var(--space-4); }
 
-
-/* Full-bleed band — breaks out of the content column for hero imagery */
-
-
-
-/* Subtle blueprint background grid */
-
-
-
-
-/* Engineering Continuation Line (Desktop only) */
-@media (min-width: 1024px) {
-  .page-shell {
-    position: relative;
-  }
-  
-  
-  /* Make doc-sections relative to this line */
-  
-}
-
-/* Coordinate Overlays */
-
-
-
 /* ---------------------------------------------------------------------
    ENGINEERING PUBLICATION OVERLAYS
    --------------------------------------------------------------------- */

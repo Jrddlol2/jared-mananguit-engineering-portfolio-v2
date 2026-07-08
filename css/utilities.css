@@ -2,8 +2,6 @@
    UTILITIES — single-purpose helpers only (ITCSS: 06-utilities)
    ========================================================================== */
 
-
-
 .u-text-secondary { color: var(--color-text-secondary); }
 
 .sr-only {

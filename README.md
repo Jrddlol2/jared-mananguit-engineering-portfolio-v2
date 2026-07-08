@@ -7,22 +7,20 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-444444?style=flat-square)](LICENSE)
 ![No framework](https://img.shields.io/badge/frontend-vanilla%20HTML%2FCSS%2FJS-444444?style=flat-square)
 
-![Homepage screenshot](docs/screenshot-homepage.png)
+![Homepage](docs/images/desktop/homepage.png)
 
 ## Table of Contents
 
 - [Overview](#overview)
-- [Status: this is V2, in progress](#status-this-is-v2-in-progress)
+- [Live Demo](#live-demo)
 - [Features](#features)
-- [Screenshots](#screenshots)
-- [Responsive Design](#responsive-design)
-- [Project Structure](#project-structure)
-- [Technologies](#technologies)
-- [Design Philosophy](#design-philosophy)
-- [AI-Assisted Development](#ai-assisted-development)
-- [Local Development](#local-development)
-- [End-to-End Testing](#end-to-end-testing)
-- [Deployment](#deployment)
+- [Technology Stack](#technology-stack)
+- [Folder Structure](#folder-structure)
+- [Installation](#installation)
+- [Testing](#testing)
+- [Documentation Images](#documentation-images)
+- [Performance](#performance)
+- [Accessibility](#accessibility)
 - [Future Improvements](#future-improvements)
 - [Author](#author)
 - [License](#license)
@@ -31,221 +29,107 @@
 
 ## Overview
 
-This is the personal engineering portfolio of **Jared Asher Mananguit**, a BS Electronics Engineering student at the University of Santo Tomas.
+### Purpose
 
-The site is built on a simple premise: a screenshot and a one-line caption don't communicate engineering competence — the reasoning behind a design does. So instead of a conventional portfolio layout (hero photo, skills cloud, project thumbnails), content is organized like a technical publication: each project is a full case study — problem, objectives, design decisions, validation, lessons learned — not a portfolio blurb.
+This is the personal engineering portfolio of **Jared Asher Mananguit**, a BS Electronics Engineering student at the University of Santo Tomas. Its job is to let an engineering manager, a technical recruiter, or a peer evaluate *how someone thinks*, not just skim a list of what they built.
 
-**Intended audience:** engineering managers, technical recruiters, and peers evaluating how someone thinks, not just what they built.
+### Design Philosophy
 
-The site is a **dependency-free static site** — semantic HTML5, modular hand-written CSS, and vanilla ES modules. No framework, no backend, no database, no build step required to run it.
+A screenshot and a one-line caption don't communicate engineering competence — the reasoning behind a design does. So the site rejects the conventional portfolio layout (hero photo, skills cloud, project thumbnails) in favor of one built like a piece of technical documentation: numbered sections (`§1.0`, `§2.0`, …), a sidebar bookmark rail in place of a nav bar, and document-control metadata borrowed from IEEE papers and semiconductor application notes.
 
-## Status: this is V2, in progress
+Every layout decision is checked against one question: *would this be believable inside official documentation from an IEEE journal or a semiconductor datasheet?* CSS is layered by responsibility (`tokens` → `base` → `layout` → `components` → `utilities` → `motion` → `print`), so a color or spacing change is safe to make in one place instead of hunting through component files. Full rationale, token values, and the color/type system live in [`docs/DESIGN_SYSTEM.md`](docs/DESIGN_SYSTEM.md).
 
-This repository is a deliberate fork of [`jared-mananguit-engineering-portfolio`](https://github.com/Jrddlol2/jared-mananguit-engineering-portfolio) (V1 — a stable, complete "engineering datasheet" styled site), created to host a ground-up editorial redesign without touching or risking the original.
+### Editorial Approach
 
-**Redesigned so far:** the color system, typography, and the homepage hero.
-**Not yet redesigned:** everything below the hero (Features, Characteristics, Projects, Experience, Certifications) still uses V1's document/datasheet structure — it automatically inherited the new color palette and typography (both are set via shared CSS custom properties), but its layout hasn't been rebuilt yet.
+Each of the five projects under [`projects/`](projects/) is written and laid out as a full **Application Note** — problem statement, design decisions, validation, lessons learned — not a portfolio blurb. The homepage itself reads as a chapter-by-chapter publication: scrolling promotes the active section in the Contents rail (heavier weight, larger size, an animated indicator line), each `§` section fades and settles into place like a chapter opening, and the page background shifts almost imperceptibly between warm and cool neutral tones to mark the transition — motion that supports reading rather than competing with it. It respects `prefers-reduced-motion` throughout.
 
-This README, the documentation in [`docs/`](docs/), the CI pipeline, the GitHub Pages deployment, and the Playwright test suite all describe and verify the site **as it exists right now** — a valid, tested, deployable state — not a finished vision of the full redesign.
+## Live Demo
+
+| Host | URL | Status |
+| :--- | :--- | :--- |
+| **GitHub Pages** | [jrddlol2.github.io/jared-mananguit-engineering-portfolio-v2](https://jrddlol2.github.io/jared-mananguit-engineering-portfolio-v2/) | Live — auto-deploys from `main` via [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) |
+| **Vercel** | Not published under this repository yet | Fully configured via [`vercel.json`](vercel.json) — see [Installation → Deploy](#deploy) to stand up your own instance in one command |
 
 ## Features
 
-- **Engineering-documentation-inspired UI** — numbered sections (`§1.0`, `§2.0`, …), a sidebar bookmark rail instead of a nav bar, and document-control metadata, borrowed from IEEE papers and semiconductor application notes rather than conventional portfolio templates.
-- **Responsive design** — a two-column bookmark-rail-and-reading-column layout above ~1080px that collapses to a single column with a `<details>`-based mobile table of contents below it; verified from 320px through ultrawide.
-- **Engineering illustrations** — every diagram (block diagrams, control loops, CPU architecture, network topology) is a hand-authored inline SVG, not a raster image or embedded drawing tool export.
-- **Technical project pages** — five in-depth Application Note pages under [`projects/`](projects/), each a self-contained case study with its own local masthead, table of contents, and section-by-section write-up.
-- **Certificate management** — certifications are listed with issuer, status, and year, linking directly to the real PDF, opened in a new tab rather than forced to download.
-- **Dark mode** ("night reading") — persisted per-browser via `localStorage`, respects the OS `prefers-color-scheme` on first visit, and is contrast-checked independently rather than just inverted.
-- **Command palette search** (`Ctrl+K` / `Cmd+K`) — a keyboard-driven overlay indexing every section, project, and named technology, with arrow-key navigation and `Enter` to jump.
-- **Responsive SVG diagrams** — `vector-effect="non-scaling-stroke"` keeps line weight constant as diagrams shrink, and `currentColor` strokes mean every diagram inverts automatically between themes with no duplicate dark-mode asset.
-- **Accessibility considerations** — a working skip link (with a focusable target — see [Design Philosophy](#design-philosophy)), correct heading hierarchy, `prefers-reduced-motion` support throughout, and automated `axe-core` scans in the test suite.
+| Feature | What it actually does |
+| :--- | :--- |
+| **Responsive Design** | A two-column bookmark-rail-and-reading-column layout above ~1080px collapses to a single column with a `<details>`-based mobile Contents menu below it. Fluid `clamp()` type scaling — not fixed breakpoint jumps — verified from 320px through ultrawide by [`tests/e2e/responsive.spec.ts`](tests/e2e/responsive.spec.ts). |
+| **Editorial UI** | Numbered `§` sections, alternating warm/cool section backgrounds, split layouts, pull quotes, and full-bleed diagram moments create visual rhythm across the page instead of one repeating card pattern. |
+| **Dark Mode** | A minimalist icon toggle (moon/sun) in the utility bar — `aria-label`, `aria-pressed`, and full keyboard support — persisted per-browser via `localStorage` and respecting the OS `prefers-color-scheme` on first visit. |
+| **Accessibility** | A working skip link with a focusable target, correct heading hierarchy, `prefers-reduced-motion` support throughout, and automated `axe-core` scans in CI. See [Accessibility](#accessibility). |
+| **Animations** | Scroll-triggered `.reveal` fades/motion, a scroll-progress bar, an active-chapter indicator that settles-then-arrives on each section change, and a subtle blueprint-grid background — all built with plain CSS transitions and one shared `IntersectionObserver`, no animation library. |
+| **Project Showcase** | Five in-depth Application Note pages under [`projects/`](projects/), each a self-contained case study with its own local masthead, mobile Contents menu, and section-by-section write-up. |
+| **Engineering Timeline** | A structured Professional Experience & Involvement table (§5) — role, organization, dates, description — covering academic distinctions and applied work, not just job titles. |
+| **Resume** | Presented as a curated publication: a real cover-image thumbnail (generated from the PDF's first page) linking straight to the current résumé PDF, not a blind download link. |
+| **Certificates** | Both CCNA certificates (Cisco Networking Academy) presented the same way — cover-image card, issuer, status, year — linking to the real certificate PDFs. |
 
-## Screenshots
+## Technology Stack
 
-<table>
-<tr>
-<td width="50%">
+| Layer | Choice | Why |
+| :--- | :--- | :--- |
+| **Framework** | None — semantic HTML5 | No virtual DOM, no hydration, no build step required to run the site at all. |
+| **Language** | Vanilla JavaScript (ES modules) | Progressive enhancement only — [`js/`](js/) holds `theme.js`, `nav.js`, `search.js`, `reveal.js`, `engineering-fx.js`, `main.js`. Every module starts with an early-return guard and no-ops safely if its markup is absent. |
+| **Styling** | Modular CSS3, ITCSS-inspired | Seven layers loaded in a deliberate order — `tokens` → `base` → `layout` → `components` → `utilities` → `motion` → `print` — so a global token change is safe to make in one file. See [`docs/DESIGN_SYSTEM.md`](docs/DESIGN_SYSTEM.md). |
+| **Typography** | Newsreader (variable) + Inter + IBM Plex Mono | Self-hosted `woff2`; serif for editorial headings, sans for high-density body copy, mono for anything that reads as data (kickers, specs, table headers). |
+| **Icons** | Hand-authored inline SVG | Every diagram and header icon (search, dark-mode toggle) is real DOM SVG using `currentColor` strokes, so it inverts automatically between themes with no duplicate dark-mode asset and `vector-effect="non-scaling-stroke"` keeps line weight constant at any size. |
+| **Deployment** | GitHub Pages (automatic) + Vercel (configured) | Both serve the exact same `npm run build` output — see [Live Demo](#live-demo) and [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md). |
+| **Testing** | Playwright + axe-core | 84 end-to-end tests across two browser projects (Desktop Chrome, Pixel 7), plus automated accessibility scans. See [Testing](#testing). |
+| **Automation** | GitHub Actions, npm scripts, Node.js | CI (lint → build → test) on every push/PR ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)), automatic Pages deploy on `main` ([`.github/workflows/deploy.yml`](.github/workflows/deploy.yml)), and local npm scripts for dev/lint/build/link-checking — no bundler anywhere in the chain. |
 
-**Hero**
-![Hero](docs/screenshot-hero.png)
-
-</td>
-<td width="50%">
-
-**Dark mode**
-![Dark mode](docs/screenshot-dark-mode.png)
-
-</td>
-</tr>
-<tr>
-<td width="50%">
-
-**Engineering Projects section**
-![Projects section](docs/screenshot-projects-section.png)
-
-</td>
-<td width="50%">
-
-**Certifications**
-![Certifications](docs/screenshot-certifications.png)
-
-</td>
-</tr>
-<tr>
-<td width="50%">
-
-**Project detail page**
-![Project detail page](docs/screenshot-project-detail.png)
-
-</td>
-<td width="50%">
-
-**Engineering illustration** (AN-004, SAP-2 CPU architecture)
-![Engineering illustration](docs/screenshot-illustration.png)
-
-</td>
-</tr>
-</table>
-
-### Mobile (iPhone 15 Pro, 393×852 @ 3x)
-
-Captured against the actual current site — where a requested shot didn't match an existing section (no standalone "Featured Project" or "Contact" section yet, and "Experience" is a table rather than a visual timeline — see [Status](#status-this-is-v2-in-progress)), the closest real equivalent is shown and captioned accordingly rather than invented.
-
-<table>
-<tr>
-<td width="33%">
-
-**Hero**
-<img src="docs/screenshot-mobile-hero.png" alt="Mobile hero" width="260">
-
-</td>
-<td width="33%">
-
-**Mobile navigation** (expanded)
-<img src="docs/screenshot-mobile-nav.png" alt="Mobile navigation expanded" width="260">
-
-</td>
-<td width="33%">
-
-**Dark mode**
-<img src="docs/screenshot-mobile-dark.png" alt="Mobile dark mode" width="260">
-
-</td>
-</tr>
-<tr>
-<td width="33%">
-
-**Projects** (closest match for "Featured Project" — there isn't a single spotlighted project yet)
-<img src="docs/screenshot-mobile-projects.png" alt="Mobile projects section" width="260">
-
-</td>
-<td width="33%">
-
-**Project case study**
-<img src="docs/screenshot-mobile-project-case-study.png" alt="Mobile project case study page" width="260">
-
-</td>
-<td width="33%">
-
-**Skills / Technologies** (the "Technical Competencies" section)
-<img src="docs/screenshot-mobile-skills.png" alt="Mobile skills and technologies" width="260">
-
-</td>
-</tr>
-<tr>
-<td width="33%">
-
-**Experience** (currently a table, not a visual timeline)
-<img src="docs/screenshot-mobile-experience.png" alt="Mobile experience section" width="260">
-
-</td>
-<td width="33%">
-
-**Contact** (a link in the hero's action row — there's no standalone contact section yet)
-<img src="docs/screenshot-mobile-contact.png" alt="Mobile contact link" width="260">
-
-</td>
-<td width="33%">
-
-**Footer**
-<img src="docs/screenshot-mobile-footer.png" alt="Mobile footer" width="260">
-
-</td>
-</tr>
-</table>
-
-## Responsive Design
-
-The layout is built mobile-up from a single CSS breakpoint: above ~1080px, the bookmark rail sits alongside a wide reading column; below it, the rail is replaced by the collapsible `<details>` mobile table of contents shown above, and the reading column takes the full viewport width. Every other adjustment (hero type scale, section padding, card grids) uses fluid `clamp()` sizing rather than a series of fixed breakpoints — see [`docs/DESIGN_SYSTEM.md`](docs/DESIGN_SYSTEM.md#typography) for the exact scale.
-
-| | Desktop | Mobile |
-| :--- | :---: | :---: |
-| **Hero** | <img src="docs/screenshot-hero.png" width="320"> | <img src="docs/screenshot-mobile-hero.png" width="160"> |
-| **Project case study** | <img src="docs/screenshot-project-detail.png" width="320"> | <img src="docs/screenshot-mobile-project-case-study.png" width="160"> |
-
-This is verified, not just designed-and-assumed: [`tests/e2e/responsive.spec.ts`](tests/e2e/responsive.spec.ts) checks rail/ToC visibility at desktop, tablet, and mobile widths, confirms the mobile ToC actually opens on click, asserts zero horizontal overflow, and checks the hero name never overflows its container from 375px through 1600px — see [End-to-End Testing](#end-to-end-testing).
-
-## Project Structure
+## Folder Structure
 
 ```text
 (repo root)
-├── index.html              # Homepage
-├── css/                     # tokens, base, layout, components, utilities, motion, print
-├── js/                      # theme, nav, search, reveal, engineering-fx, main
-├── projects/                # AN-00x Application Note case-study pages
-├── assets/                  # fonts/, certificates/
-├── Jared_Mananguit_Resume.pdf
-├── scripts/                 # build.mjs, check-links.mjs
-├── tests/e2e/               # Playwright end-to-end test suite
+├── index.html               # Homepage: hero + six numbered document sections
+├── css/                      # ITCSS-inspired layers, loaded in this exact order
+│   ├── tokens.css              # 1. color / type / spacing custom properties
+│   ├── base.css                 # 2. element resets, base typography, .reveal/.sr-only
+│   ├── layout.css                # 3. .page-shell grid, .doc-section rhythm
+│   ├── components.css             # 4. masthead, bookmark rail, search panel, cards
+│   ├── utilities.css               # 5. small single-purpose helper classes
+│   ├── motion.css                   # 6. all @keyframes and transition rules
+│   └── print.css                     # 7. print-only overrides
+├── js/                       # Vanilla ES modules, each independent and defensive
+│   ├── theme.js                # dark/light toggle + localStorage persistence
+│   ├── nav.js                   # bookmark-rail scroll-spy (IntersectionObserver)
+│   ├── search.js                  # command palette (index.html only)
+│   ├── reveal.js                    # scroll-triggered .reveal animations
+│   ├── engineering-fx.js             # scroll-progress bar, console-footer rotator
+│   └── main.js                        # print button wiring
+├── projects/                # Five Application Note case-study pages (AN-001..AN-005)
+├── assets/
+│   ├── fonts/                  # self-hosted woff2 (Newsreader, Inter, IBM Plex Mono)
+│   ├── certificates/             # published certificate PDFs
+│   └── previews/                  # generated cover images for résumé/certificates
+├── Jared_Mananguit_Resume.pdf # published résumé, linked from the hero and §6
+├── scripts/                  # build.mjs, check-links.mjs, screenshot/preview generators
+├── tests/e2e/                # Playwright end-to-end test suite (see Testing)
 ├── playwright.config.ts
-├── docs/                    # extended documentation, screenshots
-└── CV/                      # source material not published on the site
-    ├── READ/ProjectCV.md    # original V1 design brief
-    └── Resume/, Certificates/ # source copies of published PDFs
-
-project_documents/           # raw coursework PDFs — content backlog for
-                              # future Application Notes (see docs/ARCHITECTURE.md)
+├── docs/                     # extended documentation + docs/images/ screenshot library
+└── CV/, project_documents/   # source material, not linked from the published site
 ```
 
-See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for what each directory is responsible for and why it's organized this way.
+See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for what each directory is responsible for, the CSS/JS load order, and why it's organized this way.
 
-## Technologies
-
-| Technology | Role |
-| :--- | :--- |
-| **Semantic HTML5** | Document structure and content — no JS framework mounts a virtual DOM over it. |
-| **Modular CSS3** (ITCSS-inspired) | The entire visual design system: color/type/spacing tokens, then base, layout, components, utilities, motion, and print, layered by responsibility. |
-| **Vanilla JavaScript** (ES modules) | Progressive enhancement only — search, theme toggle, scroll-spy nav, scroll reveal. Every script no-ops safely if its markup is absent. |
-| **Newsreader + Inter + IBM Plex Mono** | Self-hosted `woff2` type system — serif display, sans body, mono for data/labels. |
-| **Node.js + npm scripts** | Local dev server, linting, link-checking, build packaging — no bundler, because none is needed. |
-| **htmlhint / stylelint** | Static analysis for HTML validity and real CSS defects (duplicate selectors, invalid rules). |
-| **Playwright + axe-core** | End-to-end and automated accessibility testing — see [End-to-End Testing](#end-to-end-testing). |
-| **GitHub Actions** | CI (lint, build, test) on every push/PR, plus automatic GitHub Pages deployment on `main`. |
-
-## Design Philosophy
-
-- **Engineering-publication aesthetic.** Every layout decision is checked against one question: *would this be believable inside official documentation from an IEEE journal or a semiconductor application note?*
-- **Modular architecture.** CSS is layered by responsibility (`tokens` → `base` → `layout` → `components` → `utilities` → `motion` → `print`), so a color or spacing change is safe to make in one place instead of hunting through component files.
-- **Responsive layout.** The bookmark-rail-plus-reading-column structure only makes sense above ~1080px; every breakpoint decision is driven by content legibility, not device categories.
-- **Illustration system.** Diagrams are real DOM SVG, not images — see [Features](#features) above for why that matters technically. Full rationale in [`docs/DESIGN_SYSTEM.md`](docs/DESIGN_SYSTEM.md).
-- **Typography.** *Newsreader* (serif) carries headings and standfirst copy with an editorial, literary register; *Inter* (sans) carries body copy for legibility at high information density; *IBM Plex Mono* is reserved for anything that reads as data.
-- **Color system.** A warm ivory/graphite palette with a single muted forest-green accent, used sparingly — chosen deliberately over the more common "SaaS/dashboard" cool-gray-plus-bright-accent palette. Full palette values and rationale in [`docs/DESIGN_SYSTEM.md`](docs/DESIGN_SYSTEM.md).
-
-## AI-Assisted Development
-
-AI was used as an engineering assistant at two points in this project's history — architecture inspection, implementation planning, refactoring, and QA support, with every change reviewed, tested, and directed by the author. It was not used to autonomously generate the design or content.
-
-See [`docs/PROMPT_ENGINEERING.md`](docs/PROMPT_ENGINEERING.md) for the detailed, structured-prompting workflow used, and [`CHANGELOG.md`](CHANGELOG.md) for the specific, dated record of what changed and why.
-
-## Local Development
+## Installation
 
 **Prerequisites:** Python 3 (simplest static server) or Node.js 18+ (for lint/test/dev/build scripts).
+
+### Clone
 
 ```bash
 git clone https://github.com/Jrddlol2/jared-mananguit-engineering-portfolio-v2.git
 cd jared-mananguit-engineering-portfolio-v2
+```
+
+### Install
+
+```bash
 npm install
 ```
+
+### Run
 
 ```bash
 # Option A — zero dependencies
@@ -253,142 +137,140 @@ python -m http.server 8080
 
 # Option B — via npm scripts
 npm run dev      # serves the site on http://localhost:3000
-npm run lint     # HTML + CSS linting
-npm run build    # assembles a deployable copy in dist/
 ```
 
-> [!NOTE]
-> **No environment variables required.** This is a static site with no backend.
-
-## End-to-End Testing
-
-### Why End-to-End Testing
-
-The site has no server and no application logic to unit-test — its risk lives entirely in the browser: does the hero render, does search actually filter, does the theme toggle persist, does a certificate link resolve to a real PDF. End-to-end (E2E) testing exercises those things directly in a real browser instead of asserting them from the markup, which is what catches regressions that pure HTML/CSS linting cannot — see [Existing Test Coverage](#existing-test-coverage) below for concrete examples this suite has already caught.
-
-**User journeys validated:** landing on the homepage and reading the hero, navigating via the bookmark rail and skip link, opening a project's Application Note page, using the command palette to jump to a section or project, toggling and persisting dark mode, following a certificate/résumé link through to a real file, and using the site on a phone-sized viewport.
-
-### Testing Framework
-
-- **[Playwright](https://playwright.dev/)** (`@playwright/test`), configured in [`playwright.config.ts`](playwright.config.ts).
-- **Browsers actually configured:** two Playwright *projects*, both using the machine's real installed **Google Chrome** (`channel: 'chrome'`, not Playwright's bundled Chromium) — `chromium` (Desktop Chrome viewport) and `mobile-chrome` (Pixel 7 device emulation). Firefox and WebKit are not currently configured; see [Missing/Optional Follow-ups](#missing--optional-follow-ups-not-yet-implemented) below.
-- **Why Chrome via `channel`, not Playwright's bundled browser:** it reuses an already-installed browser for local development instead of downloading a second one; CI installs the same channel explicitly (`npx playwright install --with-deps chrome`) so local and CI runs match.
-- **Headless vs. headed:** tests run **headless** by default (`headless` is left unset in the config, which defaults to `true`). Run with `--headed` to watch them execute in a visible browser window — see [Running Tests](#running-tests).
-
-### Test File Layout
-
-```text
-playwright.config.ts     # Playwright configuration (browsers, web server, reporters)
-tests/e2e/                # every test file — no fixtures/ or utils/ directory yet, each spec is self-contained
-├── navigation.spec.ts     # bookmark rail, skip link, back-links, full internal-link crawl
-├── homepage.spec.ts        # title, hero content, all six sections, load-time smoke test
-├── projects.spec.ts        # each of the 5 Application Note pages
-├── certificates.spec.ts    # certificate + résumé links, including a real PDF fetch check
-├── responsive.spec.ts      # desktop/tablet/mobile layout behavior
-├── search.spec.ts          # the Ctrl+K command palette
-├── theme.spec.ts           # dark mode toggle + persistence
-└── accessibility.spec.ts   # axe-core scans + heading hierarchy + keyboard reachability
-```
-
-Generated, gitignored output (not committed): `test-results/` (per-test traces/screenshots on failure) and `playwright-report/` (the HTML report).
-
-### Installation
+### Build
 
 ```bash
-npm install                              # installs @playwright/test and @axe-core/playwright
-npx playwright install --with-deps chrome   # only needed if Google Chrome isn't already installed
+npm run build     # assembles a deployable copy in dist/ (no bundling — a plain file copy)
+npm run lint       # HTML + CSS linting (htmlhint + stylelint)
 ```
 
-### Running Tests
-
-All of the following are real, currently-working commands in this repository:
+### Deploy
 
 ```bash
-npm test                          # link-check (scripts/check-links.mjs) + the full Playwright suite
-npm run test:e2e                   # Playwright suite only, both browser projects
+# GitHub Pages — automatic on every push to main, no action needed
+# (one-time repo setting: Settings → Pages → Source → "GitHub Actions")
 
-npx playwright test tests/e2e/search.spec.ts     # a single test file
-npx playwright test --headed                      # headed (visible browser) mode
-npx playwright test --debug                        # Playwright's step-through debug mode
-npx playwright test --project=chromium              # a single browser project (chromium or mobile-chrome)
-
-npm run test:e2e:ui                # Playwright's interactive UI mode (npx playwright test --ui)
-npm run test:e2e:report            # opens the last HTML report (npx playwright show-report)
-```
-
-### Existing Test Coverage
-
-Based on the actual spec files in `tests/e2e/` — 84 tests total across both browser projects:
-
-- **Navigation** — every bookmark rail link scrolls its target section into view, the skip link is keyboard-reachable and actually moves focus (not just scrolls), project-page back-links return to the right homepage section, and every unique internal link across all 6 pages is crawled and fetched to confirm it doesn't 404.
-- **Homepage** — correct page title, zero console errors, hero content (name/standfirst/byline/actions), presence of all six document sections, and a load-time smoke check.
-- **Project pages** — each of the 5 Application Notes: correct title/heading, its SVG diagram renders with an accessible name, zero console errors.
-- **Certificates & résumé** — both certificate links and the résumé link are checked for correct `target`/`rel`, *and* the linked PDF is actually fetched and asserted to return `200` with a PDF content type.
-- **Responsive layouts** — bookmark rail vs. mobile table-of-contents visibility across desktop/tablet/mobile widths, the mobile ToC actually opens on click, no horizontal overflow, and the hero name never overflows from 375px to 1600px.
-- **Search** — opening via `Ctrl+K` and via the trigger button, live filtering, the empty-results state, `Enter`-to-navigate, `Escape`-to-close with focus restoration, and backdrop-click-to-close.
-- **Theme** — respecting the OS `prefers-color-scheme` on first visit, the toggle flipping both the `data-theme` attribute and its visible label, and persistence across a reload and across navigating to a project page.
-- **Accessibility** — automated `@axe-core/playwright` scans of the homepage and a project page (failing on `serious`/`critical` violations), every diagram having an accessible name, correct heading hierarchy, and keyboard reachability of the skip link and utility-bar controls.
-
-This list intentionally does not include a few items from common E2E checklists that this suite does not cover yet — see below.
-
-### Adding New Tests
-
-- New spec files go in `tests/e2e/`, named `<area>.spec.ts` to match the existing convention (`navigation.spec.ts`, `theme.spec.ts`, etc.) — Playwright picks up anything matching `*.spec.ts` under `testDir` automatically, no registration needed.
-- Keep one `test.describe` block per feature area, with individual `test()`s for each specific behavior — that's the pattern every existing file follows.
-- Prefer asserting on real user-visible outcomes (text content, attribute values, visibility, a fetched resource's status code) over implementation details, so tests stay valid across visual redesigns.
-- If a new project page is added, `navigation.spec.ts`'s internal-link crawl and `projects.spec.ts`'s per-project loop both need a new entry — they intentionally hardcode the current 5 pages so an omission is caught rather than silently skipped.
-- Run `npm run test:e2e` locally before committing; see [`docs/TESTING.md`](docs/TESTING.md) for debugging tips and the specific reasoning behind this suite's configuration choices (why `python -m http.server` instead of `serve`, why `workers` is capped, etc.).
-
-### Continuous Integration
-
-Yes — [`.github/workflows/ci.yml`](.github/workflows/ci.yml) runs on every push and pull request to `main`. It installs dependencies and Playwright's Chrome, then runs `npm run lint`, `npm run build`, and `npm run test` (link-check + the full Playwright suite) in that order. The HTML test report is uploaded as a workflow artifact on every run (`if: always()`), so a failure's report is downloadable even though the job itself failed. A failing step turns the workflow red on the commit/PR; there is no separate "flaky test auto-retry in CI beyond what's configured" — see `retries` in `playwright.config.ts` for the one automatic retry that already applies to both local and CI runs.
-
-### Missing / Optional Follow-ups (not yet implemented)
-
-In the interest of not overstating coverage: this suite does not currently include cross-browser testing beyond Chrome (no Firefox/WebKit projects), a dedicated performance budget beyond the one load-time smoke assertion, or visual regression (screenshot-diff) testing. None of these are configured today — if any of them would be valuable, they'd need to be added deliberately rather than assumed to exist.
-
-## Deployment
-
-The site is a static build with no server-side dependency, so it deploys the same way to any static host. Two are set up:
-
-### GitHub Pages (automatic)
-
-Pushes to `main` automatically build and deploy via [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) — no action needed beyond pushing.
-
-### Vercel
-
-[`vercel.json`](vercel.json) configures the project:
-
-```json
-{
-  "buildCommand": "npm run build",
-  "outputDirectory": "dist",
-  "cleanUrls": false
-}
-```
-
-`outputDirectory: "dist"` matters here specifically: the repo root also contains `project_documents/`, `docs/`, `CV/`, and `tests/`, none of which are meant to be public. Pointing Vercel at the `npm run build` output (the same `dist/` folder GitHub Pages deploys) ensures only the intended files are served, rather than Vercel serving the raw repo root as-is. `cleanUrls: false` is explicit rather than left to Vercel's default for the same reason it mattered during local testing (see [`docs/TESTING.md`](docs/TESTING.md)): the site's internal links use literal `.html` extensions, and clean-URL rewriting would break them.
-
-**To deploy:**
-
-```bash
-npm install -g vercel   # if you don't already have the CLI
+# Vercel
+npm install -g vercel
 vercel                   # first run: links the project, deploys a preview
 vercel --prod            # promotes to the production URL
 ```
 
-Or connect the GitHub repository directly from the [Vercel dashboard](https://vercel.com/new) — it will detect `vercel.json` automatically. No environment variables are required either way.
+> [!NOTE]
+> **No environment variables required.** This is a static site with no backend. Full deployment mechanics, troubleshooting, and why `vercel.json` sets an explicit `outputDirectory` are in [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md).
 
-**Live URL:** not yet deployed — this section will be updated with the production URL once available.
+## Testing
 
-See [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) for how the GitHub Pages workflow works, manual deployment steps for either host, and troubleshooting.
+### Why Playwright
+
+The site has no server and no application logic to unit-test — its risk lives entirely in the browser: does the hero render, does search actually filter, does the theme toggle persist, does a certificate link resolve to a real PDF. **[Playwright](https://playwright.dev/)** (`@playwright/test`, configured in [`playwright.config.ts`](playwright.config.ts)) exercises those things directly in a real, installed **Google Chrome** (`channel: 'chrome'`, not Playwright's bundled Chromium) across two projects: `chromium` (Desktop Chrome viewport) and `mobile-chrome` (Pixel 7 device emulation).
+
+### Running Tests
+
+```bash
+npm install                                  # installs @playwright/test and @axe-core/playwright
+npx playwright install --with-deps chrome    # only needed if Google Chrome isn't already installed
+
+npm test                                     # link-check + the full Playwright suite
+npm run test:e2e                             # Playwright suite only, both browser projects
+npx playwright test tests/e2e/search.spec.ts # a single test file
+npx playwright test --headed                 # visible-browser mode
+npx playwright test --project=chromium       # a single browser project
+npm run test:e2e:ui                          # Playwright's interactive UI mode
+npm run test:e2e:report                      # opens the last HTML report
+```
+
+### Coverage
+
+**84 tests across 8 spec files**, verified live against this repository (`npx playwright test --list`):
+
+| Spec file | Covers |
+| :--- | :--- |
+| `navigation.spec.ts` | Every bookmark-rail link scrolls its target into view, skip link keyboard focus, project-page back-links, and a full crawl of every internal link across all 6 pages for 404s. |
+| `homepage.spec.ts` | Page title, zero console errors, hero content, presence of all six document sections, load-time smoke test. |
+| `projects.spec.ts` | Each of the 5 Application Note pages — title/heading, SVG diagram accessible name, zero console errors. |
+| `certificates.spec.ts` | Certificate and résumé link `target`/`rel` correctness, and a real fetch of the linked PDF asserting `200` + PDF content type. |
+| `responsive.spec.ts` | Rail vs. mobile-ToC visibility at desktop/tablet/mobile widths, mobile ToC opens on click, zero horizontal overflow, hero name never overflows from 375px–1600px. |
+| `search.spec.ts` | `Ctrl+K` and trigger-button open, live filtering, empty-results state, `Enter`-to-navigate, `Escape`-to-close with focus restoration, backdrop-click-to-close. |
+| `theme.spec.ts` | OS `prefers-color-scheme` on first visit, toggle flips `data-theme` + visible state, persistence across reload and across page navigation. |
+| `accessibility.spec.ts` | `@axe-core/playwright` scans (fails on `serious`/`critical`), every diagram has an accessible name, heading hierarchy, keyboard reachability. |
+
+**Not yet covered**, stated plainly rather than left ambiguous: cross-browser testing beyond Chrome (no Firefox/WebKit projects), a dedicated performance budget beyond the CI smoke assertion, and visual regression (screenshot-diff) testing.
+
+**CI:** [`.github/workflows/ci.yml`](.github/workflows/ci.yml) runs `npm run lint`, `npm run build`, and `npm run test` on every push/PR to `main`; the HTML report uploads as an artifact even on failure. See [`docs/TESTING.md`](docs/TESTING.md) for debugging tips and the reasoning behind specific configuration choices.
+
+## Documentation Images
+
+Generated with Playwright at high resolution, capturing the site as it currently stands. Source script: [`scripts/generate-doc-screenshots.mjs`](scripts/generate-doc-screenshots.mjs).
+
+### Desktop (1440×900)
+
+| | |
+| :---: | :---: |
+| **Homepage** <br> ![Homepage](docs/images/desktop/homepage.png) | **Full Page** <br> ![Full page](docs/images/desktop/full-page.png) |
+| **Dark Mode** <br> ![Dark mode](docs/images/desktop/dark-mode.png) | **Navigation (Contents rail)** <br> ![Navigation](docs/images/desktop/navigation.png) |
+| **About (§1 Introduction)** <br> ![About](docs/images/desktop/about.png) | **Skills (§3 Technical Competencies)** <br> ![Skills](docs/images/desktop/skills.png) |
+| **Projects (§4 Engineering Projects)** <br> ![Projects](docs/images/desktop/projects.png) | **Project Cards** <br> ![Project cards](docs/images/desktop/project-cards.png) |
+| **Experience (§5)** <br> ![Experience](docs/images/desktop/experience.png) | **Timeline (Experience table)** <br> ![Timeline](docs/images/desktop/timeline.png) |
+| **Résumé Preview (§6)** <br> ![Resume preview](docs/images/desktop/resume-preview.png) | **Certificate Preview (§6)** <br> ![Certificate preview](docs/images/desktop/certificate-preview.png) |
+| **Contact (hero action row)** <br> ![Contact](docs/images/desktop/contact.png) | **Editorial Scrolling (mid-scroll state)** <br> ![Editorial scrolling](docs/images/desktop/editorial-scrolling.png) |
+| **Research (Application Note case study)** <br> ![Research](docs/images/desktop/research.png) | |
+
+### Tablet (834×1194)
+
+| | | |
+| :---: | :---: | :---: |
+| **Homepage** <br> ![Tablet homepage](docs/images/tablet/homepage.png) | **Projects** <br> ![Tablet projects](docs/images/tablet/projects.png) | **Contact** <br> ![Tablet contact](docs/images/tablet/contact.png) |
+
+### Mobile (iPhone 15 Pro, 393×852)
+
+| | | |
+| :---: | :---: | :---: |
+| **Homepage** <br> ![Mobile homepage](docs/images/mobile/homepage.png) | **About** <br> ![Mobile about](docs/images/mobile/about.png) | **Projects** <br> ![Mobile projects](docs/images/mobile/projects.png) |
+| **Contact** <br> ![Mobile contact](docs/images/mobile/contact.png) | **Navigation menu (expanded)** <br> ![Mobile navigation](docs/images/mobile/navigation.png) | **Dark Mode** <br> ![Mobile dark mode](docs/images/mobile/dark-mode.png) |
+
+## Performance
+
+Measured with **Lighthouse 13.4.0** against a local production-equivalent server (`python -m http.server`), 2026-07-08 — reproducible with:
+
+```bash
+npx lighthouse http://localhost:8080/index.html --preset=desktop --chrome-flags="--headless"
+npx lighthouse http://localhost:8080/index.html --chrome-flags="--headless"   # mobile preset (default)
+```
+
+| Metric | Desktop | Mobile |
+| :--- | :---: | :---: |
+| **Performance score** | 99 | 91 |
+| **First Contentful Paint** | 0.7 s | 2.4 s |
+| **Largest Contentful Paint** | 0.8 s | 3.1 s |
+| **Total Blocking Time** | 0 ms | 0 ms |
+| **Cumulative Layout Shift** | 0 | 0.006 |
+| **Speed Index** | 0.7 s | 2.4 s |
+| **Total page weight** | 298 KiB | 298 KiB |
+
+The gap between desktop and mobile scores is entirely simulated network/CPU throttling in Lighthouse's mobile preset, not a heavier page — total byte weight is identical on both. No framework runtime, no render-blocking JS bundle, and no unused CSS shipped to the client (every stylesheet is hand-written and used) are the main reasons the page loads this fast without any dedicated performance-tuning work.
+
+## Accessibility
+
+- **Score: 100/100** on Lighthouse's Accessibility category (see [Performance](#performance) for how it was measured), on both desktop and mobile.
+- **Skip link** to `#main-content` that is actually keyboard-reachable and moves focus, not just a visually-hidden anchor.
+- **Correct heading hierarchy** verified by [`tests/e2e/accessibility.spec.ts`](tests/e2e/accessibility.spec.ts), not just eyeballed.
+- **Automated `@axe-core/playwright` scans** of the homepage and a project page in the E2E suite, failing the build on any `serious`/`critical` violation.
+- **Every SVG diagram has an accessible name** (`<title>` + `role="img"`/`aria-labelledby`), asserted per-project by the test suite.
+- **`prefers-reduced-motion` respected throughout** — every scroll-reveal, chapter-indicator transition, and background shift either shortens or disables itself for users who request less motion.
+- **Dark mode toggle and search trigger** are real `<button>` elements with `aria-label`/`aria-pressed`/`aria-haspopup` as appropriate, keyboard-operable, and screen-reader-labeled — not `<div>`s with click handlers.
+- **Keyboard reachability** of the skip link and all utility-bar controls is asserted directly, not assumed.
 
 ## Future Improvements
 
-- Redesign the remaining sections (Features, Characteristics, Projects grid, Experience, Certifications) to match the new editorial hero.
-- Content backlog: several raw coursework reports in `project_documents/` aren't yet written up as Application Notes, including a Multi-Agent Reinforcement Learning thesis manuscript — a strong candidate for a future "Featured Project."
+- Content backlog: several raw coursework reports in [`project_documents/`](project_documents/) aren't yet written up as Application Notes, including a Multi-Agent Reinforcement Learning thesis manuscript — a strong candidate for a future featured project.
+- Cross-browser E2E coverage beyond Chrome (Firefox/WebKit Playwright projects).
+- Visual regression (screenshot-diff) testing, now that a documented baseline set exists under [`docs/images/`](docs/images/).
 - Interactive diagrams — hover states on SVG nodes revealing detailed tooltips.
 - Automated résumé PDF generation from the live HTML, so the two can't drift out of sync.
+- A published Vercel deployment alongside the existing GitHub Pages one, once account access is available to complete the one-time link/import step.
 
 ## Author
 

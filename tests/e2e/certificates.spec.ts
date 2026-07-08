@@ -6,7 +6,9 @@ test.describe('Certificates & résumé', () => {
     const section = page.locator('#sec-certifications');
     await section.scrollIntoViewIfNeeded();
 
-    const entries = section.locator('.cert-entry');
+    // .cert-entry also wraps the résumé card in this section (same curated-publication
+    // treatment) — filter to the two entries that are actually certificates.
+    const entries = section.locator('.cert-entry').filter({ hasText: 'View Certificate' });
     await expect(entries).toHaveCount(2);
 
     const links = section.locator('a.read-more', { hasText: 'View Certificate' });
