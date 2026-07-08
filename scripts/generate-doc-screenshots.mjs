@@ -111,12 +111,8 @@ await withPage({ viewport: DESKTOP_VIEWPORT }, async (page) => {
   await page.waitForTimeout(900);
   await shoot(page, track('desktop', 'editorial-scrolling.png'));
 
-  // Full page.
-  await page.evaluate(() => window.scrollTo(0, 0));
-  await page.waitForTimeout(300);
-  await shoot(page, track('desktop', 'full-page.png'), { fullPage: true });
-
   // Dark mode.
+  await page.evaluate(() => window.scrollTo(0, 0));
   await setTheme(page, `${BASE_URL}/index.html`, 'dark');
   await page.waitForTimeout(500);
   await shoot(page, track('desktop', 'dark-mode.png'));

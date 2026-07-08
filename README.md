@@ -7,7 +7,10 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-444444?style=flat-square)](LICENSE)
 ![No framework](https://img.shields.io/badge/frontend-vanilla%20HTML%2FCSS%2FJS-444444?style=flat-square)
 
-![Homepage](docs/images/desktop/homepage.png)
+<p align="center">
+  <img src="docs/images/desktop/homepage.png" alt="Editorial homepage layout of Jared Asher Mananguit's engineering portfolio" width="100%">
+</p>
+<p align="center"><sub><strong>The homepage</strong> — an engineering portfolio designed and read like a technical publication.</sub></p>
 
 ## Table of Contents
 
@@ -203,33 +206,163 @@ npm run test:e2e:report                      # opens the last HTML report
 
 ## Documentation Images
 
-Generated with Playwright at high resolution, capturing the site as it currently stands. Source script: [`scripts/generate-doc-screenshots.mjs`](scripts/generate-doc-screenshots.mjs).
+A visual walkthrough of the portfolio, in the same order a visitor experiences it while scrolling — generated with Playwright at high resolution ([`scripts/generate-doc-screenshots.mjs`](scripts/generate-doc-screenshots.mjs)), captured against the site as it currently stands.
 
-### Desktop (1440×900)
+### Homepage
 
-| | |
-| :---: | :---: |
-| **Homepage** <br> ![Homepage](docs/images/desktop/homepage.png) | **Full Page** <br> ![Full page](docs/images/desktop/full-page.png) |
-| **Dark Mode** <br> ![Dark mode](docs/images/desktop/dark-mode.png) | **Navigation (Contents rail)** <br> ![Navigation](docs/images/desktop/navigation.png) |
-| **About (§1 Introduction)** <br> ![About](docs/images/desktop/about.png) | **Skills (§3 Technical Competencies)** <br> ![Skills](docs/images/desktop/skills.png) |
-| **Projects (§4 Engineering Projects)** <br> ![Projects](docs/images/desktop/projects.png) | **Project Cards** <br> ![Project cards](docs/images/desktop/project-cards.png) |
-| **Experience (§5)** <br> ![Experience](docs/images/desktop/experience.png) | **Timeline (Experience table)** <br> ![Timeline](docs/images/desktop/timeline.png) |
-| **Résumé Preview (§6)** <br> ![Resume preview](docs/images/desktop/resume-preview.png) | **Certificate Preview (§6)** <br> ![Certificate preview](docs/images/desktop/certificate-preview.png) |
-| **Contact (hero action row)** <br> ![Contact](docs/images/desktop/contact.png) | **Editorial Scrolling (mid-scroll state)** <br> ![Editorial scrolling](docs/images/desktop/editorial-scrolling.png) |
-| **Research (Application Note case study)** <br> ![Research](docs/images/desktop/research.png) | |
+<p align="center">
+  <img src="docs/images/desktop/homepage.png" alt="Editorial homepage layout of Jared Asher Mananguit's engineering portfolio" width="960">
+</p>
+<p align="center"><sub><strong>The homepage</strong> — the publication's editorial masthead, hero standfirst, and Contents rail.</sub></p>
 
-### Tablet (834×1194)
+<table>
+<tr>
+<td width="50%" align="center">
+<img src="docs/images/desktop/editorial-scrolling.png" width="380"><br>
+<sub><strong>Editorial scroll rhythm</strong> — background tone shifting subtly between sections mid-scroll.</sub>
+</td>
+<td width="50%" align="center">
+<img src="docs/images/desktop/contact.png" width="380"><br>
+<sub><strong>Hero contact action</strong> — a direct link to email, right in the masthead.</sub>
+</td>
+</tr>
+</table>
 
-| | | |
-| :---: | :---: | :---: |
-| **Homepage** <br> ![Tablet homepage](docs/images/tablet/homepage.png) | **Projects** <br> ![Tablet projects](docs/images/tablet/projects.png) | **Contact** <br> ![Tablet contact](docs/images/tablet/contact.png) |
+### About
 
-### Mobile (iPhone 15 Pro, 393×852)
+<table>
+<tr>
+<td width="65%" align="center">
+<img src="docs/images/desktop/about.png" width="480"><br>
+<sub><strong>Introduction (§1)</strong> — engineering focus areas and background, presented as the publication's opening chapter.</sub>
+</td>
+<td width="35%" align="center">
+<img src="docs/images/mobile/about.png" width="180"><br>
+<sub><strong>Introduction</strong> — mobile.</sub>
+</td>
+</tr>
+</table>
 
-| | | |
-| :---: | :---: | :---: |
-| **Homepage** <br> ![Mobile homepage](docs/images/mobile/homepage.png) | **About** <br> ![Mobile about](docs/images/mobile/about.png) | **Projects** <br> ![Mobile projects](docs/images/mobile/projects.png) |
-| **Contact** <br> ![Mobile contact](docs/images/mobile/contact.png) | **Navigation menu (expanded)** <br> ![Mobile navigation](docs/images/mobile/navigation.png) | **Dark Mode** <br> ![Mobile dark mode](docs/images/mobile/dark-mode.png) |
+### Skills
+
+<p align="center">
+  <img src="docs/images/desktop/skills.png" alt="Technical Competencies section listing programming, simulation, and hardware skills" width="800">
+</p>
+<p align="center"><sub><strong>Technical Competencies (§3)</strong> — tools and platforms grouped by discipline.</sub></p>
+
+### Projects & Research
+
+<table>
+<tr>
+<td width="50%" align="center">
+<img src="docs/images/desktop/projects.png" width="380"><br>
+<sub><strong>Project showcase</strong> — Engineering Projects (§4), each a full Application Note case study.</sub>
+</td>
+<td width="50%" align="center">
+<img src="docs/images/desktop/project-cards.png" width="380"><br>
+<sub><strong>Application Note card</strong> — block diagram, spec table, and validated results at a glance.</sub>
+</td>
+</tr>
+</table>
+<p align="center">
+  <img src="docs/images/desktop/research.png" alt="Ball-and-Beam PID Control System Application Note case study page" width="800">
+</p>
+<p align="center"><sub><strong>Research / Publications</strong> — a full Application Note case-study page (AN-001, Ball-and-Beam PID Control System).</sub></p>
+
+### Experience
+
+<table>
+<tr>
+<td width="50%" align="center">
+<img src="docs/images/desktop/experience.png" width="380"><br>
+<sub><strong>Experience & Involvement (§5)</strong> — roles, organizations, and dates.</sub>
+</td>
+<td width="50%" align="center">
+<img src="docs/images/desktop/timeline.png" width="380"><br>
+<sub><strong>Engineering timeline</strong> — a closer look at the structured experience table.</sub>
+</td>
+</tr>
+</table>
+
+### Resume Viewer
+
+<p align="center">
+  <img src="docs/images/desktop/resume-preview.png" alt="Résumé presented as a curated publication card with a cover image" width="800">
+</p>
+<p align="center"><sub><strong>Résumé, as a publication</strong> — a real cover-page thumbnail linking straight to the PDF, not a blind download link.</sub></p>
+
+### Certificate Viewer
+
+<p align="center">
+  <img src="docs/images/desktop/certificate-preview.png" alt="CCNA certificate presented as a curated publication card with a cover image" width="800">
+</p>
+<p align="center"><sub><strong>Certificates, as publications</strong> — issuer, status, and year alongside a real cover thumbnail.</sub></p>
+
+### Navigation
+
+<table>
+<tr>
+<td width="50%" align="center">
+<img src="docs/images/desktop/navigation.png" width="380"><br>
+<sub><strong>Desktop Contents rail</strong> — an active reading guide that tracks scroll position.</sub>
+</td>
+<td width="50%" align="center">
+<img src="docs/images/mobile/navigation.png" width="220"><br>
+<sub><strong>Mobile Contents menu</strong>, expanded — the same six sections, collapsed for small screens.</sub>
+</td>
+</tr>
+</table>
+
+### Dark Mode
+
+<table>
+<tr>
+<td width="50%" align="center">
+<img src="docs/images/desktop/homepage.png" width="380"><br>
+<sub><strong>Light mode</strong> — warm ivory paper tone.</sub>
+</td>
+<td width="50%" align="center">
+<img src="docs/images/desktop/dark-mode.png" width="380"><br>
+<sub><strong>Dark mode reading experience</strong> — warm espresso, not cool charcoal.</sub>
+</td>
+</tr>
+<tr>
+<td width="50%" align="center">
+<img src="docs/images/mobile/homepage.png" width="220"><br>
+<sub><strong>Light mode</strong> — mobile.</sub>
+</td>
+<td width="50%" align="center">
+<img src="docs/images/mobile/dark-mode.png" width="220"><br>
+<sub><strong>Dark mode</strong> — mobile, same persisted preference.</sub>
+</td>
+</tr>
+</table>
+
+### Responsive Design
+
+Desktop (1440×900), tablet (834×1194), and mobile (iPhone 15 Pro, 393×852) side by side, for the three views that exist across all three breakpoints:
+
+<table>
+<tr><th align="center">Desktop</th><th align="center">Tablet</th><th align="center">Mobile</th></tr>
+<tr>
+<td width="40%" align="center"><img src="docs/images/desktop/homepage.png" width="260"></td>
+<td width="30%" align="center"><img src="docs/images/tablet/homepage.png" width="180"></td>
+<td width="30%" align="center"><img src="docs/images/mobile/homepage.png" width="140"></td>
+</tr>
+<tr><td colspan="3" align="center"><sub><strong>Homepage</strong> — fluid <code>clamp()</code> type scaling, no fixed breakpoint jumps.</sub></td></tr>
+<tr>
+<td width="40%" align="center"><img src="docs/images/desktop/projects.png" width="260"></td>
+<td width="30%" align="center"><img src="docs/images/tablet/projects.png" width="180"></td>
+<td width="30%" align="center"><img src="docs/images/mobile/projects.png" width="140"></td>
+</tr>
+<tr><td colspan="3" align="center"><sub><strong>Responsive project showcase</strong> — cards reflow from a two-column to a single-column reading order.</sub></td></tr>
+<tr>
+<td width="40%" align="center"><img src="docs/images/desktop/contact.png" width="260"></td>
+<td width="30%" align="center"><img src="docs/images/tablet/contact.png" width="180"></td>
+<td width="30%" align="center"><img src="docs/images/mobile/contact.png" width="140"></td>
+</tr>
+<tr><td colspan="3" align="center"><sub><strong>Responsive mobile navigation and contact action</strong> — the same hero action row at every width, verified by <a href="tests/e2e/responsive.spec.ts"><code>responsive.spec.ts</code></a>.</sub></td></tr>
+</table>
 
 ## Performance
 
